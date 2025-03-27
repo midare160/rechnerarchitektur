@@ -1,8 +1,5 @@
 package com.lhmd.rechnerarchitektur;
 
-import com.lhmd.rechnerarchitektur.Common.IntTools;
-import com.lhmd.rechnerarchitektur.Common.Tuple;
-
 import java.io.*;
 import java.util.List;
 
@@ -22,9 +19,9 @@ public class LstParser {
         var comment = line.substring(25);
 
         return new Instruction(
-                IntTools.tryParse(programCounter, 16),
-                IntTools.tryParse(instruction, 16),
-                Integer.parseInt(lineNumber),
+                programCounter,
+                instruction,
+                lineNumber,
                 comment.trim(),
                 line);
     }

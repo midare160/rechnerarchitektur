@@ -1,13 +1,14 @@
 package com.lhmd.rechnerarchitektur;
 
+@SuppressWarnings({"ClassCanBeRecord", "unused"})
 public final class Instruction {
-    private final Integer programCounter;
-    private final Integer instruction;
-    private final int lineNumber;
+    private final String programCounter;
+    private final String instruction;
+    private final String lineNumber;
     private final String comment;
     private final String rawText;
 
-    public Instruction(Integer programCounter, Integer instruction, int lineNumber, String comment, String rawText) {
+    public Instruction(String programCounter, String instruction, String lineNumber, String comment, String rawText) {
         this.programCounter = programCounter;
         this.instruction = instruction;
         this.lineNumber = lineNumber;
@@ -15,15 +16,17 @@ public final class Instruction {
         this.rawText = rawText;
     }
 
-    public Integer getProgramCounter() {
+    // Do NOT rename getter methods, they're expected from the FXML
+
+    public String getProgramCounter() {
         return programCounter;
     }
 
-    public Integer getInstruction() {
+    public String getInstruction() {
         return instruction;
     }
 
-    public int getLineNumber() {
+    public String getLineNumber() {
         return lineNumber;
     }
 
