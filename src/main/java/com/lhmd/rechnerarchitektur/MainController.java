@@ -1,14 +1,18 @@
 package com.lhmd.rechnerarchitektur;
 
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-import java.io.File;
+import java.io.*;
+import java.util.List;
 
 public class MainController {
+
+    private List<Instruction> instructions;
 
     private Stage stage;
 
@@ -20,6 +24,9 @@ public class MainController {
 
     @FXML
     private Menu openRecentMenu;
+
+    @FXML
+    private TableView<Instruction> instructionsTableView;
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -55,6 +62,10 @@ public class MainController {
 
             themeMenu.getItems().add(menuItem);
         }
+    }
+
+    private void initializeInstructionsTableView() {
+
     }
 
     private void onThemeMenuItemAction(ActionEvent e) {
@@ -99,11 +110,16 @@ public class MainController {
     }
 
     private void openFile(File file) {
-        // TODO actual implementation
-        var alert = new Alert(Alert.AlertType.WARNING, file.getAbsolutePath());
-        alert.initOwner(stage);
-        alert.show();
-        // TODO actual implementation
+        if (!file.exists()) {
+            return;
+        }
+
+        try {
+            instructions = LstParser.parseFile(file.getPath());
+        } catch (IOException e) {
+        }
+
+        instructionsTableView.setItems(FXCollections.observableList(instructions));
 
         Configuration.addRecentFile(file.getPath());
         initializeOpenRecentMenu();
