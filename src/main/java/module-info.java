@@ -7,4 +7,6 @@ module com.lhmd.rechnerarchitektur {
 
 	opens com.lhmd.rechnerarchitektur to javafx.fxml;
 	exports com.lhmd.rechnerarchitektur;
+	exports com.lhmd.rechnerarchitektur.Instructions;
+	opens com.lhmd.rechnerarchitektur.Instructions to javafx.fxml;
 }

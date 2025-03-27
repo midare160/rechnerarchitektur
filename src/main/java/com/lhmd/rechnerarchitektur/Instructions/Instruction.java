@@ -1,14 +1,18 @@
-package com.lhmd.rechnerarchitektur;
+package com.lhmd.rechnerarchitektur.Instructions;
+
+import java.util.UUID;
 
 @SuppressWarnings({"ClassCanBeRecord", "unused"})
-public final class Instruction {
+public class Instruction {
+    private final UUID id;
     private final String programCounter;
     private final String instruction;
     private final String lineNumber;
     private final String comment;
     private final String rawText;
 
-    public Instruction(String programCounter, String instruction, String lineNumber, String comment, String rawText) {
+    public Instruction(UUID id, String programCounter, String instruction, String lineNumber, String comment, String rawText) {
+        this.id = id;
         this.programCounter = programCounter;
         this.instruction = instruction;
         this.lineNumber = lineNumber;
@@ -16,7 +20,15 @@ public final class Instruction {
         this.rawText = rawText;
     }
 
-    // Do NOT rename getter methods, they're expected from the FXML
+    public UUID getId() {
+        return id;
+    }
+
+    public String getRawText() {
+        return rawText;
+    }
+
+    // Do NOT rename the following methods, they're expected by the FXML
 
     public String getProgramCounter() {
         return programCounter;
@@ -34,7 +46,4 @@ public final class Instruction {
         return comment;
     }
 
-    public String getRawText() {
-        return rawText;
-    }
 }

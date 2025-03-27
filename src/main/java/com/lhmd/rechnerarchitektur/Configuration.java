@@ -1,5 +1,7 @@
 package com.lhmd.rechnerarchitektur;
 
+import com.lhmd.rechnerarchitektur.Common.StringUtils;
+
 import java.io.*;
 import java.util.*;
 
@@ -47,7 +49,7 @@ public class Configuration {
     public static String[] getRecentFiles() {
         var recentFiles = properties.getProperty(RECENT_FILES);
 
-        if (recentFiles == null || recentFiles.isEmpty()) {
+        if (StringUtils.isNullOrEmpty(recentFiles)) {
             return new String[0];
         }
 

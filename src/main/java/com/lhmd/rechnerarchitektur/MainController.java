@@ -1,5 +1,7 @@
 package com.lhmd.rechnerarchitektur;
 
+import com.lhmd.rechnerarchitektur.Instructions.Instruction;
+import com.lhmd.rechnerarchitektur.Instructions.LstParser;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -35,6 +37,7 @@ public class MainController {
     public void initialize() {
         initializeOpenRecentMenu();
         initializeThemeMenu();
+        initializeInstructionsTableView();
 
         aboutMenuItem.setText("About " + ProgramInfo.PROGRAM_NAME);
     }
@@ -65,7 +68,7 @@ public class MainController {
     }
 
     private void initializeInstructionsTableView() {
-
+        // TODO
     }
 
     private void onThemeMenuItemAction(ActionEvent e) {

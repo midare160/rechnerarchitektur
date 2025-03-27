@@ -1,11 +1,15 @@
 package com.lhmd.rechnerarchitektur.Common;
 
-public class IntTools {
+public class IntUtils {
     public static Integer tryParse(String value) {
         return tryParse(value, 10);
     }
 
     public static Integer tryParse(String value, int radix) {
+        if (StringUtils.isNullOrWhitespace(value)) {
+            return null;
+        }
+
         try {
             return Integer.parseInt(value, radix);
         } catch (NumberFormatException e) {

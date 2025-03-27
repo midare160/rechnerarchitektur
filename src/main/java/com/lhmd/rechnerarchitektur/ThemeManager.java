@@ -1,6 +1,7 @@
 package com.lhmd.rechnerarchitektur;
 
 import atlantafx.base.theme.*;
+import com.lhmd.rechnerarchitektur.Common.StringUtils;
 import javafx.application.Application;
 
 import java.util.*;
@@ -21,7 +22,7 @@ public class ThemeManager {
     public static void setCurrentThemeName(String value) {
         var themePath = themeMap.get(value);
 
-        if (themePath == null) {
+        if (StringUtils.isNullOrEmpty(themePath)) {
             value = DEFAULT_THEME;
             themePath = themeMap.get(value);
         }
