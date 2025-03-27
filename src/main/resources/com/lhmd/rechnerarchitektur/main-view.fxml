@@ -65,24 +65,24 @@
                <children>
                   <TableView fx:id="instructionsTableView" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <columns>
-                        <TableColumn prefWidth="100.0" text="Program counter">
+                        <TableColumn prefWidth="100.0" sortable="false" text="Program counter">
                             <cellValueFactory>
-                                <PropertyValueFactory property="programCounter"/>
+                                <PropertyValueFactory property="programCounter" />
                             </cellValueFactory>
                         </TableColumn>
-                        <TableColumn prefWidth="100.0" text="Instruction">
+                        <TableColumn prefWidth="100.0" sortable="false" text="Instruction">
                             <cellValueFactory>
-                                <PropertyValueFactory property="instruction"/>
+                                <PropertyValueFactory property="instruction" />
                             </cellValueFactory>
                         </TableColumn>
-                        <TableColumn prefWidth="100.0" text="Line number">
+                        <TableColumn prefWidth="100.0" sortable="false" text="Line number">
                             <cellValueFactory>
-                                <PropertyValueFactory property="lineNumber"/>
+                                <PropertyValueFactory property="lineNumber" />
                             </cellValueFactory>
                         </TableColumn>
-                        <TableColumn prefWidth="100.0" text="Comment">
+                        <TableColumn prefWidth="100.0" sortable="false" text="Comment">
                             <cellValueFactory>
-                                <PropertyValueFactory property="comment"/>
+                                <PropertyValueFactory property="comment" />
                             </cellValueFactory>
                         </TableColumn>
                     </columns>
