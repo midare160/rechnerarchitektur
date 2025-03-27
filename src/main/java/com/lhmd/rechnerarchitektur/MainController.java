@@ -117,6 +117,7 @@ public class MainController {
         try {
             instructions = LstParser.parseFile(file.getPath());
         } catch (IOException e) {
+            ExceptionHandler.handle(e);
         }
 
         instructionsTableView.setItems(FXCollections.observableList(instructions));

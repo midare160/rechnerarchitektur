@@ -16,13 +16,13 @@ public class LstParser {
         var programCounter = line.substring(0, 4);
         var instruction = line.substring(5, 9);
         var lineNumber = line.substring(20, 25);
-        var comment = line.substring(25);
+        var comment = line.substring(25).trim();
 
         return new Instruction(
                 programCounter,
                 instruction,
                 lineNumber,
-                comment.trim(),
+                comment,
                 line);
     }
 }
