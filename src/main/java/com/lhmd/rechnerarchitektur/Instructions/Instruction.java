@@ -45,5 +45,4 @@ public class Instruction {
     public String getComment() {
         return comment;
     }
-
 }

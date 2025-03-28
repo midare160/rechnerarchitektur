@@ -65,6 +65,7 @@
                <children>
                   <TableView fx:id="instructionsTableView" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <columns>
+                        <TableColumn fx:id="breakpointColumn" prefWidth="25.0" resizable="false" sortable="false" style="-fx-alignment: CENTER;" />
                         <TableColumn prefWidth="100.0" sortable="false" text="Program counter">
                             <cellValueFactory>
                                 <PropertyValueFactory property="programCounter" />

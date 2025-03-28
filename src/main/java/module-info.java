@@ -1,6 +1,7 @@
 module com.lhmd.rechnerarchitektur {
 	requires javafx.fxml;
 	requires atlantafx.base;
+    requires org.girod.javafx.svgimage;
 
 //	requires org.controlsfx.controls;
 //	requires com.dlsc.formsfx;

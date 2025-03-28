@@ -1,13 +1,16 @@
 package com.lhmd.rechnerarchitektur;
 
+import com.lhmd.rechnerarchitektur.Common.StringUtils;
 import com.lhmd.rechnerarchitektur.Instructions.Instruction;
 import com.lhmd.rechnerarchitektur.Instructions.LstParser;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Cursor;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.girod.javafx.svgimage.SVGLoader;
 
 import java.io.*;
 import java.util.List;
@@ -29,6 +32,9 @@ public class MainController {
 
     @FXML
     private TableView<Instruction> instructionsTableView;
+
+    @FXML
+    private TableColumn<Instruction, Void> breakpointColumn;
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -68,7 +74,45 @@ public class MainController {
     }
 
     private void initializeInstructionsTableView() {
-        // TODO
+        var breakpointEnabledSvgUrl = getClass().getResource("breakpoint-enabled.svg");
+        var breakpointDisabledSvgUrl = getClass().getResource("breakpoint-disabled.svg");
+        var disableBreakpointSvgUrl = getClass().getResource("disable-breakpoint.svg");
+
+        // TODO extract to BreakpointCell class
+        breakpointColumn.setCellFactory(p -> {
+            // SVG nodes have to be loaded separately for every individual cell
+            var breakpointEnabledSvg = SVGLoader.load(breakpointEnabledSvgUrl);
+            var breakpointDisabledSvg = SVGLoader.load(breakpointDisabledSvgUrl);
+            var disableBreakpointSvg = SVGLoader.load(disableBreakpointSvgUrl);
+
+            var cell = new SvgImageCell<Instruction>();
+
+            cell.setOnMouseClicked(e -> {
+                var oldImage = cell.getSvgImage();
+                var newImage = oldImage == null || oldImage == breakpointDisabledSvg ? disableBreakpointSvg : breakpointDisabledSvg;
+
+                cell.setSvgImage(newImage);
+
+                var isStyleless = StringUtils.isNullOrEmpty(cell.getTableRow().getStyle());
+                cell.getTableRow().setStyle(isStyleless ? "-fx-background-color: #40252B" : null);
+            });
+
+            cell.setOnMouseEntered(e -> {
+                stage.getScene().setCursor(Cursor.HAND);
+
+                var newImage = cell.getSvgImage() == null ? breakpointDisabledSvg : disableBreakpointSvg;
+                cell.setSvgImage(newImage);
+            });
+
+            cell.setOnMouseExited(e -> {
+                stage.getScene().setCursor(Cursor.DEFAULT);
+
+                var newImage = cell.getSvgImage() == disableBreakpointSvg ? breakpointEnabledSvg : null;
+                cell.setSvgImage(newImage);
+            });
+
+            return cell;
+        });
     }
 
     private void onThemeMenuItemAction(ActionEvent e) {
