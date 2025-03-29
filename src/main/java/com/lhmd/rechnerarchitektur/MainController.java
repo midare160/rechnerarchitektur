@@ -74,9 +74,9 @@ public class MainController {
     }
 
     private void initializeInstructionsTableView() {
-        var breakpointEnabledSvgUrl = getClass().getResource("breakpoint-enabled.svg");
-        var breakpointDisabledSvgUrl = getClass().getResource("breakpoint-disabled.svg");
-        var disableBreakpointSvgUrl = getClass().getResource("disable-breakpoint.svg");
+        var breakpointEnabledSvgUrl = getClass().getResource("svgs/breakpoint-enabled.svg");
+        var breakpointDisabledSvgUrl = getClass().getResource("svgs/breakpoint-disabled.svg");
+        var disableBreakpointSvgUrl = getClass().getResource("svgs/disable-breakpoint.svg");
 
         // TODO extract to BreakpointCell class
         breakpointColumn.setCellFactory(p -> {
@@ -86,6 +86,8 @@ public class MainController {
             var disableBreakpointSvg = SVGLoader.load(disableBreakpointSvgUrl);
 
             var cell = new SvgImageCell<Instruction>();
+
+            // TODO check if breakpoint makes sense (no instruction, just comment)
 
             cell.setOnMouseClicked(e -> {
                 var oldImage = cell.getSvgImage();

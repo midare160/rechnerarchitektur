@@ -19,7 +19,7 @@ public class Launcher extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        var loader = new FXMLLoader(getClass().getResource("main-view.fxml"));
+        var loader = new FXMLLoader(getClass().getResource("views/main-view.fxml"));
         var scene = new Scene(loader.load());
         var controller = loader.<MainController>getController();
 

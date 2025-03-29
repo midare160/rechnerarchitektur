@@ -6,6 +6,7 @@ import javafx.application.Application;
 
 import java.util.*;
 
+// TODO create ThemeColors for dark/light theme
 public class ThemeManager {
     private static final String DEFAULT_THEME = "Primer Light";
 
