@@ -1,0 +1,7 @@
+.table-row-breakpoint {
+    -fx-background-color: -red-highlight-color;
+}
+
+.align-center {
+    -fx-alignment: CENTER;
+}

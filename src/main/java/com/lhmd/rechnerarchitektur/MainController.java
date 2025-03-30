@@ -3,6 +3,7 @@ package com.lhmd.rechnerarchitektur;
 import com.lhmd.rechnerarchitektur.Common.StringUtils;
 import com.lhmd.rechnerarchitektur.Instructions.Instruction;
 import com.lhmd.rechnerarchitektur.Instructions.LstParser;
+import com.lhmd.rechnerarchitektur.themes.ThemeManager;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -62,11 +63,11 @@ public class MainController {
     private void initializeThemeMenu() {
         themeMenu.getItems().clear();
 
-        for (var themeEntry : ThemeManager.getAllThemes().entrySet()) {
-            var menuItem = new CheckMenuItem(themeEntry.getKey());
+        for (var themeName : ThemeManager.getAllThemes().keySet()) {
+            var menuItem = new CheckMenuItem(themeName);
             menuItem.setOnAction(this::onThemeMenuItemAction);
 
-            var isCurrentTheme = themeEntry.getKey().equals(ThemeManager.getCurrentThemeName());
+            var isCurrentTheme = themeName.equals(ThemeManager.getCurrentThemeName());
             menuItem.setSelected(isCurrentTheme);
 
             themeMenu.getItems().add(menuItem);
@@ -74,9 +75,9 @@ public class MainController {
     }
 
     private void initializeInstructionsTableView() {
-        var breakpointEnabledSvgUrl = getClass().getResource("svgs/breakpoint-enabled.svg");
-        var breakpointDisabledSvgUrl = getClass().getResource("svgs/breakpoint-disabled.svg");
-        var disableBreakpointSvgUrl = getClass().getResource("svgs/disable-breakpoint.svg");
+        var breakpointEnabledSvgUrl = Launcher.class.getResource("svgs/breakpoint-enabled.svg");
+        var breakpointDisabledSvgUrl = Launcher.class.getResource("svgs/breakpoint-disabled.svg");
+        var disableBreakpointSvgUrl = Launcher.class.getResource("svgs/disable-breakpoint.svg");
 
         // TODO extract to BreakpointCell class
         breakpointColumn.setCellFactory(p -> {
@@ -95,8 +96,14 @@ public class MainController {
 
                 cell.setSvgImage(newImage);
 
-                var isStyleless = StringUtils.isNullOrEmpty(cell.getTableRow().getStyle());
-                cell.getTableRow().setStyle(isStyleless ? "-fx-background-color: #40252B" : null);
+                var styleClass = cell.getTableRow().getStyleClass();
+
+                if (styleClass.contains("table-row-breakpoint")) {
+                    styleClass.remove("table-row-breakpoint");
+                    return;
+                }
+
+                styleClass.add("table-row-breakpoint");
             });
 
             cell.setOnMouseEntered(e -> {
@@ -119,7 +126,9 @@ public class MainController {
 
     private void onThemeMenuItemAction(ActionEvent e) {
         var menuItem = (CheckMenuItem) e.getSource();
+
         ThemeManager.setCurrentThemeName(menuItem.getText());
+        ThemeManager.applyCurrentStylesheet(stage.getScene());
 
         for (var item : themeMenu.getItems()) {
             var checkMenuItem = (CheckMenuItem) item;

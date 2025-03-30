@@ -1,0 +1,6 @@
+@import "theme-base.css";
+
+/* JavaFX specification: variables are declared with ONE hyphen, the regular TWO are NOT permitted! */
+* {
+    -red-highlight-color: #faeae6;
+}
