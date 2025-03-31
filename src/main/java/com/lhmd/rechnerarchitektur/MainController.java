@@ -1,19 +1,17 @@
 package com.lhmd.rechnerarchitektur;
 
-import com.lhmd.rechnerarchitektur.Common.StringUtils;
 import com.lhmd.rechnerarchitektur.Instructions.Instruction;
 import com.lhmd.rechnerarchitektur.Instructions.LstParser;
 import com.lhmd.rechnerarchitektur.themes.ThemeManager;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Cursor;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import org.girod.javafx.svgimage.SVGLoader;
 
 import java.io.*;
+import java.net.URL;
 import java.util.List;
 
 public class MainController {
@@ -35,7 +33,7 @@ public class MainController {
     private TableView<Instruction> instructionsTableView;
 
     @FXML
-    private TableColumn<Instruction, Void> breakpointColumn;
+    private TableColumn<Instruction, URL> breakpointColumn;
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -75,53 +73,7 @@ public class MainController {
     }
 
     private void initializeInstructionsTableView() {
-        var breakpointEnabledSvgUrl = Launcher.class.getResource("svgs/breakpoint-enabled.svg");
-        var breakpointDisabledSvgUrl = Launcher.class.getResource("svgs/breakpoint-disabled.svg");
-        var disableBreakpointSvgUrl = Launcher.class.getResource("svgs/disable-breakpoint.svg");
-
-        // TODO extract to BreakpointCell class
-        breakpointColumn.setCellFactory(p -> {
-            // SVG nodes have to be loaded separately for every individual cell
-            var breakpointEnabledSvg = SVGLoader.load(breakpointEnabledSvgUrl);
-            var breakpointDisabledSvg = SVGLoader.load(breakpointDisabledSvgUrl);
-            var disableBreakpointSvg = SVGLoader.load(disableBreakpointSvgUrl);
-
-            var cell = new SvgImageCell<Instruction>();
-
-            // TODO check if breakpoint makes sense (no instruction, just comment)
-
-            cell.setOnMouseClicked(e -> {
-                var oldImage = cell.getSvgImage();
-                var newImage = oldImage == null || oldImage == breakpointDisabledSvg ? disableBreakpointSvg : breakpointDisabledSvg;
-
-                cell.setSvgImage(newImage);
-
-                var styleClass = cell.getTableRow().getStyleClass();
-
-                if (styleClass.contains("table-row-breakpoint")) {
-                    styleClass.remove("table-row-breakpoint");
-                    return;
-                }
-
-                styleClass.add("table-row-breakpoint");
-            });
-
-            cell.setOnMouseEntered(e -> {
-                stage.getScene().setCursor(Cursor.HAND);
-
-                var newImage = cell.getSvgImage() == null ? breakpointDisabledSvg : disableBreakpointSvg;
-                cell.setSvgImage(newImage);
-            });
-
-            cell.setOnMouseExited(e -> {
-                stage.getScene().setCursor(Cursor.DEFAULT);
-
-                var newImage = cell.getSvgImage() == disableBreakpointSvg ? breakpointEnabledSvg : null;
-                cell.setSvgImage(newImage);
-            });
-
-            return cell;
-        });
+        breakpointColumn.setCellFactory(p -> new BreakpointCell<>(Instruction::setBreakpointSvgUrl));
     }
 
     private void onThemeMenuItemAction(ActionEvent e) {

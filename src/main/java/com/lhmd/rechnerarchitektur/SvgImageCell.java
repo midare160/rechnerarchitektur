@@ -1,24 +1,23 @@
 package com.lhmd.rechnerarchitektur;
 
 import javafx.scene.control.TableCell;
-import org.girod.javafx.svgimage.SVGImage;
+import org.girod.javafx.svgimage.SVGLoader;
 
-public class SvgImageCell<S> extends TableCell<S, Void> {
-    private SVGImage svgImage;
+import java.net.URL;
 
-    public SVGImage getSvgImage() {
-        return svgImage;
-    }
-
-    public void setSvgImage(SVGImage svgImage) {
-        this.svgImage = svgImage;
-        updateItem(null, svgImage == null);
-    }
-
+public class SvgImageCell<S> extends TableCell<S, URL> {
     @Override
-    protected void updateItem(Void t, boolean empty) {
-        super.updateItem(t, empty);
+    protected void updateItem(URL item, boolean empty) {
+        super.updateItem(item, empty);
 
+        if (item == null || empty) {
+            setText(null);
+            setGraphic(null);
+
+            return;
+        }
+
+        var svgImage = SVGLoader.load(item);
         setGraphic(svgImage);
     }
 }
