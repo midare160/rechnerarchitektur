@@ -9,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.io.*;
 import java.net.URL;
@@ -139,6 +140,12 @@ public class MainController {
 
     @FXML
     public void onQuitMenuItemAction(ActionEvent e) {
-        System.exit(0);
+        var eventArgs = new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST);
+
+        stage.fireEvent(eventArgs);
+
+        if (eventArgs.isConsumed()) {
+            stage.close();
+        }
     }
 }
