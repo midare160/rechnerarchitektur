@@ -108,4 +108,9 @@ public class MainController {
         Configuration.addRecentFile(file.getPath());
         initializeOpenRecentMenu();
     }
+
+    @FXML
+    public void onQuitMenuItemAction(ActionEvent e) {
+        System.exit(0);
+    }
 }
