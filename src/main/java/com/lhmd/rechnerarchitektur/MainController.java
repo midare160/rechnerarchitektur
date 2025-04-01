@@ -73,6 +73,7 @@ public class MainController {
     }
 
     private void initializeInstructionsTableView() {
+        //instructionsTableView.setRowFactory(p -> new BreakpointRow<>(i -> i.getBreakpointSvgUrl() != null));
         breakpointColumn.setCellFactory(p -> new BreakpointCell<>(Instruction::setBreakpointSvgUrl));
     }
 
