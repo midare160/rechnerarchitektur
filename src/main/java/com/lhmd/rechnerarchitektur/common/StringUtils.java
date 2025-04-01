@@ -1,4 +1,4 @@
-package com.lhmd.rechnerarchitektur.Common;
+package com.lhmd.rechnerarchitektur.common;
 
 public class StringUtils {
     public static boolean isNullOrEmpty(String str) {

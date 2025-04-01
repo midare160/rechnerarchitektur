@@ -1,4 +1,4 @@
-package com.lhmd.rechnerarchitektur.Instructions;
+package com.lhmd.rechnerarchitektur.instructions;
 
 import java.util.UUID;
 

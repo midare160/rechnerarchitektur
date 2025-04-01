@@ -1,4 +1,4 @@
-package com.lhmd.rechnerarchitektur.Common;
+package com.lhmd.rechnerarchitektur.common;
 
 public class IntUtils {
     public static Integer tryParse(String value) {

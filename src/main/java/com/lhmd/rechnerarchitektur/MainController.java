@@ -1,7 +1,7 @@
 package com.lhmd.rechnerarchitektur;
 
-import com.lhmd.rechnerarchitektur.Instructions.Instruction;
-import com.lhmd.rechnerarchitektur.Instructions.LstParser;
+import com.lhmd.rechnerarchitektur.instructions.Instruction;
+import com.lhmd.rechnerarchitektur.instructions.LstParser;
 import com.lhmd.rechnerarchitektur.themes.ThemeManager;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;

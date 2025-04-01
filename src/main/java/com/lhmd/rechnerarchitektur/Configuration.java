@@ -1,6 +1,6 @@
 package com.lhmd.rechnerarchitektur;
 
-import com.lhmd.rechnerarchitektur.Common.StringUtils;
+import com.lhmd.rechnerarchitektur.common.StringUtils;
 
 import java.io.*;
 import java.util.*;

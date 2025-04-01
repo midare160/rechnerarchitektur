@@ -1,6 +1,6 @@
-package com.lhmd.rechnerarchitektur.Instructions;
+package com.lhmd.rechnerarchitektur.instructions;
 
-import com.lhmd.rechnerarchitektur.Common.IntUtils;
+import com.lhmd.rechnerarchitektur.common.IntUtils;
 
 import java.io.*;
 import java.util.*;
