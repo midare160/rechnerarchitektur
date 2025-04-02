@@ -1,6 +1,6 @@
 package com.lhmd.rechnerarchitektur.instructions;
 
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 
 import java.net.URL;
 import java.util.UUID;
@@ -14,7 +14,8 @@ public class Instruction {
     private final String comment;
     private final String rawText;
 
-    private final SimpleObjectProperty<URL> breakpointSvgUrl;
+    private final BooleanProperty isBreakpointActive;
+    private final ObjectProperty<URL> breakpointSvgUrl;
 
     public Instruction(UUID id, String programCounter, String instruction, String lineNumber, String comment, String rawText) {
         this.id = id;
@@ -24,6 +25,7 @@ public class Instruction {
         this.comment = comment;
         this.rawText = rawText;
 
+        isBreakpointActive = new SimpleBooleanProperty(false);
         breakpointSvgUrl = new SimpleObjectProperty<>();
     }
 
@@ -35,9 +37,21 @@ public class Instruction {
         return rawText;
     }
 
+    public BooleanProperty isBreakpointActiveProperty() {
+        return isBreakpointActive;
+    }
+
+    public boolean isBreakpointActive() {
+        return isBreakpointActive.get();
+    }
+
+    public void setIsBreakpointActive(boolean active) {
+        isBreakpointActive.set(active);
+    }
+
     // Do NOT rename the following methods, they're expected by the FXML
 
-    public SimpleObjectProperty<URL> breakpointSvgUrlProperty() {
+    public ObjectProperty<URL> breakpointSvgUrlProperty() {
         return breakpointSvgUrl;
     }
 

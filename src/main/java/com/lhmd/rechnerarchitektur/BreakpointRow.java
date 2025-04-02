@@ -1,25 +1,16 @@
 package com.lhmd.rechnerarchitektur;
 
+import com.lhmd.rechnerarchitektur.instructions.Instruction;
 import javafx.scene.control.TableRow;
 
-import java.util.function.Predicate;
-
-public class BreakpointRow<S> extends TableRow<S> {
-    private final Predicate<S> isHighlighted;
-
-    public BreakpointRow(Predicate<S> isHighlighted) {
-        this.isHighlighted = isHighlighted;
-    }
+public class BreakpointRow extends TableRow<Instruction> {
 
     @Override
-    protected void updateItem(S item, boolean empty) {
-        super.updateItem(item, empty);
+    public void updateIndex(int i) {
+        super.updateIndex(i);
 
-        final var activeBreakpointClass = "table-row-breakpoint";
-
-        if (empty || item == null || !isHighlighted.test(item)) {
+        if (i < 0 || getItem() == null || !getItem().isBreakpointActive()) {
             setStyle("");
-            setGraphic(null);
             return;
         }
 

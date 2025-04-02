@@ -1,34 +1,33 @@
 package com.lhmd.rechnerarchitektur;
 
+import com.lhmd.rechnerarchitektur.instructions.Instruction;
 import javafx.scene.Cursor;
 import javafx.scene.input.MouseEvent;
 
 import java.net.URL;
-import java.util.function.BiConsumer;
 
-public class BreakpointCell<S> extends SvgImageCell<S> {
+public class BreakpointCell extends SvgImageCell<Instruction> {
     private static final URL breakpointEnabledSvgUrl = Launcher.class.getResource("svgs/breakpoint-enabled.svg");
     private static final URL breakpointDisabledSvgUrl = Launcher.class.getResource("svgs/breakpoint-disabled.svg");
     private static final URL disableBreakpointSvgUrl = Launcher.class.getResource("svgs/disable-breakpoint.svg");
 
-    private final BiConsumer<S, URL> setUrl;
-
-    public BreakpointCell(BiConsumer<S, URL> setUrl) {
-        this.setUrl = setUrl;
-
+    public BreakpointCell() {
         setOnMouseClicked(this::onMouseClicked);
         setOnMouseEntered(this::onMouseEntered);
         setOnMouseExited(this::onMouseExited);
     }
 
     private void onMouseClicked(MouseEvent mouseEvent) {
+        var isBreakpointActive = false;
         var newSvgUrl = breakpointDisabledSvgUrl;
 
         if (getItem() == null || getItem() == breakpointDisabledSvgUrl) {
+            isBreakpointActive = true;
             newSvgUrl = disableBreakpointSvgUrl;
         }
 
-        setUrl.accept(getTableRow().getItem(), newSvgUrl);
+        getTableRow().getItem().setIsBreakpointActive(isBreakpointActive);
+        setBreakpointSvgUrl(newSvgUrl);
     }
 
     private void onMouseEntered(MouseEvent mouseEvent) {
@@ -38,7 +37,7 @@ public class BreakpointCell<S> extends SvgImageCell<S> {
             newSvgUrl = breakpointDisabledSvgUrl;
         }
 
-        setUrl.accept(getTableRow().getItem(), newSvgUrl);
+        setBreakpointSvgUrl(newSvgUrl);
         getScene().setCursor(Cursor.HAND);
     }
 
@@ -49,7 +48,11 @@ public class BreakpointCell<S> extends SvgImageCell<S> {
             newSvgUrl = breakpointEnabledSvgUrl;
         }
 
-        setUrl.accept(getTableRow().getItem(), newSvgUrl);
+        setBreakpointSvgUrl(newSvgUrl);
         getScene().setCursor(Cursor.DEFAULT);
+    }
+
+    private void setBreakpointSvgUrl(URL url) {
+        getTableRow().getItem().setBreakpointSvgUrl(url);
     }
 }
