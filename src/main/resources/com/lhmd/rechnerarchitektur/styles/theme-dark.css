@@ -3,4 +3,5 @@
 /* JavaFX specification: variables are declared with ONE hyphen, the regular TWO are NOT permitted! */
 * {
     -red-highlight-color: #40252b;
+    -blue-highlight-color: #2a5091;
 }
