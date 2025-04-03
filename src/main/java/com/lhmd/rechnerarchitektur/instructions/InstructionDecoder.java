@@ -6,11 +6,16 @@ import java.util.HashMap;
 
 public class InstructionDecoder {
 
-    private static final HashMap<Integer, Class<?>> OPCODES = new HashMap<>();
+    private static final HashMap<Integer, Class<? extends Instruction>> OPCODES = new HashMap<>();
 
     static {
-        OPCODES.put(0b11_0000_0000_0000, Movlw.class);
+        OPCODES.put(0b11_1110_0000_0000, Addlw.class);
         OPCODES.put(0b11_1001_0000_0000, Andlw.class);
+        OPCODES.put(0b10_1000_0000_0000, Goto.class);
+        OPCODES.put(0b11_1000_0000_0000, Iorlw.class);
+        OPCODES.put(0b11_0000_0000_0000, Movlw.class);
+        OPCODES.put(0b11_1100_0000_0000, Sublw.class);
+        OPCODES.put(0b11_1010_0000_0000, Xorlw.class);
     }
 
     public static Instruction decode(String instruction) throws ReflectiveOperationException {
@@ -25,7 +30,7 @@ public class InstructionDecoder {
                 continue;
             }
 
-            return (Instruction) kvp.getValue()
+            return kvp.getValue()
                     .getDeclaredConstructor(int.class)
                     .newInstance(hexOpCode);
         }
