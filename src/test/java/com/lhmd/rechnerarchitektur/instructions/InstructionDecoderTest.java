@@ -28,6 +28,13 @@ class InstructionDecoderTest {
     }
 
     @Test
+    public void decode_retlw() throws ReflectiveOperationException {
+        var instruction = InstructionDecoder.decode("3477");
+
+        assertInstanceOf(Retlw.class, instruction);
+    }
+
+    @Test
     public void decode_sublw() throws ReflectiveOperationException {
         var instruction = InstructionDecoder.decode("3C3D");
 
@@ -53,5 +60,26 @@ class InstructionDecoderTest {
         var instruction = InstructionDecoder.decode("2806");
 
         assertInstanceOf(Goto.class, instruction);
+    }
+
+    @Test
+    public void decode_call() throws ReflectiveOperationException {
+        var instruction = InstructionDecoder.decode("2006");
+
+        assertInstanceOf(Call.class, instruction);
+    }
+
+    @Test
+    public void decode_return() throws ReflectiveOperationException {
+        var instruction = InstructionDecoder.decode("0008");
+
+        assertInstanceOf(Return.class, instruction);
+    }
+
+    @Test
+    public void decode_nop() throws ReflectiveOperationException {
+        var instruction = InstructionDecoder.decode("0000");
+
+        assertInstanceOf(Nop.class, instruction);
     }
 }
