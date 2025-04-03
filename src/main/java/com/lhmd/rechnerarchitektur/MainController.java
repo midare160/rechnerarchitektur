@@ -148,4 +148,24 @@ public class MainController {
             stage.close();
         }
     }
+
+    @FXML
+    public void onRun(ActionEvent actionEvent) {
+        System.out.println("Run Button pressed");
+    }
+
+    @FXML
+    public void onStop(ActionEvent actionEvent) {
+        System.out.println("Stop Button pressed");
+    }
+
+    @FXML
+    public void onStep(ActionEvent actionEvent) {
+        System.out.println("Step Button pressed");
+    }
+
+    @FXML
+    public void onReset(ActionEvent actionEvent) {
+        System.out.println("Reset Button pressed");
+    }
 }
