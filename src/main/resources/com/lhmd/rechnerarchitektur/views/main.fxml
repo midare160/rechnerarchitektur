@@ -63,16 +63,16 @@
       <items>
         <AnchorPane>
                <children>
-                  <TableView fx:id="instructionsTableView" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <TableView fx:id="instructionsTableView" styleClass="small-rows" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <columns>
                         <TableColumn fx:id="breakpointColumn" prefWidth="25.0" resizable="false" sortable="false" styleClass="align-center">
                             <cellValueFactory>
                                 <PropertyValueFactory property="breakpointSvgUrl" />
                             </cellValueFactory>
                         </TableColumn>
-                        <TableColumn prefWidth="100.0" sortable="false" text="Program counter">
+                        <TableColumn prefWidth="100.0" sortable="false" text="Address">
                             <cellValueFactory>
-                                <PropertyValueFactory property="programCounter" />
+                                <PropertyValueFactory property="address" />
                             </cellValueFactory>
                         </TableColumn>
                         <TableColumn prefWidth="100.0" sortable="false" text="Instruction">

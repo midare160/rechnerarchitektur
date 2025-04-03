@@ -1,6 +1,6 @@
 package com.lhmd.rechnerarchitektur;
 
-import com.lhmd.rechnerarchitektur.instructions.Instruction;
+import com.lhmd.rechnerarchitektur.instructions.InstructionViewModel;
 import com.lhmd.rechnerarchitektur.instructions.LstParser;
 import com.lhmd.rechnerarchitektur.themes.ThemeManager;
 import javafx.collections.FXCollections;
@@ -17,9 +17,9 @@ import java.util.List;
 
 public class MainController {
 
-    private List<Instruction> instructions;
-
+    private List<InstructionViewModel> instructions;
     private Stage stage;
+    private boolean changeIntern;
 
     @FXML
     private Menu themeMenu;
@@ -31,10 +31,10 @@ public class MainController {
     private Menu openRecentMenu;
 
     @FXML
-    private TableView<Instruction> instructionsTableView;
+    private TableView<InstructionViewModel> instructionsTableView;
 
     @FXML
-    private TableColumn<Instruction, URL> breakpointColumn;
+    private TableColumn<InstructionViewModel, URL> breakpointColumn;
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -74,6 +74,8 @@ public class MainController {
     }
 
     private void initializeInstructionsTableView() {
+        instructionsTableView.setSelectionModel(null);
+
         instructionsTableView.setRowFactory(p -> new BreakpointRow());
         breakpointColumn.setCellFactory(p -> new BreakpointCell());
     }
@@ -141,11 +143,6 @@ public class MainController {
     @FXML
     public void onQuitMenuItemAction(ActionEvent e) {
         var eventArgs = new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST);
-
         stage.fireEvent(eventArgs);
-
-        if (eventArgs.isConsumed()) {
-            stage.close();
-        }
     }
 }

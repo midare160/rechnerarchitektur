@@ -1,3 +1,7 @@
+.small-rows .table-row-cell {
+    -fx-cell-size: 25;
+}
+
 .table-row-cell:breakpoint-active {
     -fx-background-color: -red-highlight-color;
 }
