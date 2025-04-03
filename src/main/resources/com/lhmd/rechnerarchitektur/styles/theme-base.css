@@ -1,0 +1,11 @@
+.table-row-cell:breakpoint-active {
+    -fx-background-color: -red-highlight-color;
+}
+
+/*.table-row-cell:breakpoint-active:selected {*/
+/*    -fx-background-color: -blue-highlight-color;*/
+/*}*/
+
+.align-center {
+    -fx-alignment: CENTER;
+}

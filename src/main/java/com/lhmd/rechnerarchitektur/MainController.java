@@ -1,14 +1,23 @@
 package com.lhmd.rechnerarchitektur;
 
+import com.lhmd.rechnerarchitektur.instructions.Instruction;
+import com.lhmd.rechnerarchitektur.instructions.LstParser;
+import com.lhmd.rechnerarchitektur.themes.ThemeManager;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
-import java.io.File;
+import java.io.*;
+import java.net.URL;
+import java.util.List;
 
 public class MainController {
+
+    private List<Instruction> instructions;
 
     private Stage stage;
 
@@ -21,6 +30,12 @@ public class MainController {
     @FXML
     private Menu openRecentMenu;
 
+    @FXML
+    private TableView<Instruction> instructionsTableView;
+
+    @FXML
+    private TableColumn<Instruction, URL> breakpointColumn;
+
     public void setStage(Stage stage) {
         this.stage = stage;
     }
@@ -28,6 +43,7 @@ public class MainController {
     public void initialize() {
         initializeOpenRecentMenu();
         initializeThemeMenu();
+        initializeInstructionsTableView();
 
         aboutMenuItem.setText("About " + ProgramInfo.PROGRAM_NAME);
     }
@@ -46,20 +62,27 @@ public class MainController {
     private void initializeThemeMenu() {
         themeMenu.getItems().clear();
 
-        for (var themeEntry : ThemeManager.getAllThemes().entrySet()) {
-            var menuItem = new CheckMenuItem(themeEntry.getKey());
+        for (var themeName : ThemeManager.getAllThemes().keySet()) {
+            var menuItem = new CheckMenuItem(themeName);
             menuItem.setOnAction(this::onThemeMenuItemAction);
 
-            var isCurrentTheme = themeEntry.getKey().equals(ThemeManager.getCurrentThemeName());
+            var isCurrentTheme = themeName.equals(ThemeManager.getCurrentThemeName());
             menuItem.setSelected(isCurrentTheme);
 
             themeMenu.getItems().add(menuItem);
         }
     }
 
+    private void initializeInstructionsTableView() {
+        instructionsTableView.setRowFactory(p -> new BreakpointRow());
+        breakpointColumn.setCellFactory(p -> new BreakpointCell());
+    }
+
     private void onThemeMenuItemAction(ActionEvent e) {
         var menuItem = (CheckMenuItem) e.getSource();
+
         ThemeManager.setCurrentThemeName(menuItem.getText());
+        ThemeManager.applyCurrentStylesheet(stage.getScene());
 
         for (var item : themeMenu.getItems()) {
             var checkMenuItem = (CheckMenuItem) item;
@@ -99,11 +122,17 @@ public class MainController {
     }
 
     private void openFile(File file) {
-        // TODO actual implementation
-        var alert = new Alert(Alert.AlertType.WARNING, file.getAbsolutePath());
-        alert.initOwner(stage);
-        alert.show();
-        // TODO actual implementation
+        if (!file.exists()) {
+            return;
+        }
+
+        try {
+            instructions = LstParser.parseFile(file.getPath());
+        } catch (IOException e) {
+            ExceptionHandler.handle(e);
+        }
+
+        instructionsTableView.setItems(FXCollections.observableList(instructions));
 
         Configuration.addRecentFile(file.getPath());
         initializeOpenRecentMenu();
@@ -111,6 +140,12 @@ public class MainController {
 
     @FXML
     public void onQuitMenuItemAction(ActionEvent e) {
-        System.exit(0);
+        var eventArgs = new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST);
+
+        stage.fireEvent(eventArgs);
+
+        if (eventArgs.isConsumed()) {
+            stage.close();
+        }
     }
 }
