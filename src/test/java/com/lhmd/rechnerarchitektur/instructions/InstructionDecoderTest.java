@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class InstructionDecoderTest {
+public class InstructionDecoderTest {
 
     @Test
     public void decode_movlw() throws ReflectiveOperationException {
