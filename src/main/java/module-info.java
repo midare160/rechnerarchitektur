@@ -14,4 +14,6 @@ module com.lhmd.rechnerarchitektur {
     opens com.lhmd.rechnerarchitektur.themes to javafx.fxml;
     exports com.lhmd.rechnerarchitektur.registers;
     opens com.lhmd.rechnerarchitektur.registers to javafx.fxml;
+    exports com.lhmd.rechnerarchitektur.memory;
+    opens com.lhmd.rechnerarchitektur.memory to javafx.fxml;
 }
