@@ -8,4 +8,8 @@ public class WRegister {
     public static IntegerProperty instance() {
         return instance;
     }
+
+    public static void reset() {
+        instance.set(0);
+    }
 }

@@ -1,7 +1,7 @@
 package com.lhmd.rechnerarchitektur.instructions;
 
 import com.lhmd.rechnerarchitektur.common.IntUtils;
-import com.lhmd.rechnerarchitektur.registers.StatusRegister;
+import com.lhmd.rechnerarchitektur.memory.DataMemory;
 import com.lhmd.rechnerarchitektur.registers.WRegister;
 
 public class Xorlw extends Instruction {
@@ -19,6 +19,6 @@ public class Xorlw extends Instruction {
         var result = wRegister.get() ^ literal;
 
         wRegister.set(result);
-        StatusRegister.instance().Z().set(result == 0);
+        DataMemory.instance().status().setZ(result == 0);
     }
 }

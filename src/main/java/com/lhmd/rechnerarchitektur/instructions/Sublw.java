@@ -1,7 +1,7 @@
 package com.lhmd.rechnerarchitektur.instructions;
 
 import com.lhmd.rechnerarchitektur.common.IntUtils;
-import com.lhmd.rechnerarchitektur.registers.StatusRegister;
+import com.lhmd.rechnerarchitektur.memory.DataMemory;
 import com.lhmd.rechnerarchitektur.registers.WRegister;
 
 public class Sublw extends Instruction {
@@ -16,12 +16,12 @@ public class Sublw extends Instruction {
     @Override
     public void execute() {
         var wRegister = WRegister.instance();
-        var statusRegister = StatusRegister.instance();
+        var statusRegister = DataMemory.instance().status();
         var result = (literal - wRegister.get()) % 256;
 
-        statusRegister.C().set(literal >= wRegister.get());
+        statusRegister.setC(literal >= wRegister.get());
         wRegister.set(result);
-        statusRegister.Z().set(result == 0);
+        statusRegister.setZ(result == 0);
 
         // TODO set DC flag
     }

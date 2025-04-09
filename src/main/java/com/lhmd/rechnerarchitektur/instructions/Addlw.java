@@ -1,9 +1,10 @@
 package com.lhmd.rechnerarchitektur.instructions;
 
 import com.lhmd.rechnerarchitektur.common.IntUtils;
-import com.lhmd.rechnerarchitektur.registers.StatusRegister;
-import com.lhmd.rechnerarchitektur.registers.WRegister;
 
+/**
+ * The contents of the W register are added to the eight bit literal ’k’ and the result is placed in the W register.
+ */
 public class Addlw extends Instruction {
     private final int literal;
 
@@ -15,14 +16,13 @@ public class Addlw extends Instruction {
 
     @Override
     public void execute() {
-        var wRegister = WRegister.instance();
-        var statusRegister = StatusRegister.instance();
-        var result = (wRegister.get() + literal) % 256;
+        var currentW = getW();
+        var result = (currentW + literal) % 256;
 
-        statusRegister.C().set(wRegister.get() + literal > 255);
-        wRegister.set(result);
-        statusRegister.Z().set(result == 0);
+        setW(result);
 
-        // TODO set DC flag
+        setC_Add(currentW, literal);
+        setDC_Add(currentW, literal);
+        setZ(result);
     }
 }

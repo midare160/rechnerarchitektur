@@ -1,9 +1,10 @@
 package com.lhmd.rechnerarchitektur.instructions;
 
-import com.lhmd.rechnerarchitektur.registers.StatusRegister;
-import com.lhmd.rechnerarchitektur.registers.WRegister;
 import com.lhmd.rechnerarchitektur.common.IntUtils;
 
+/**
+ * The contents of W register are AND’ed with the eight bit literal 'k'. The result is placed in the W register.
+ */
 public class Andlw extends Instruction {
     private final int literal;
 
@@ -15,10 +16,9 @@ public class Andlw extends Instruction {
 
     @Override
     public void execute() {
-        var wRegister = WRegister.instance();
-        var result = wRegister.get() & literal;
+        var result = getW() & literal;
 
-        wRegister.set(result);
-        StatusRegister.instance().Z().set(result == 0);
+        setW(result);
+        setZ(result);
     }
 }

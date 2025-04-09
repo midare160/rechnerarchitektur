@@ -1,46 +1,46 @@
 package com.lhmd.rechnerarchitektur.registers;
 
-import javafx.beans.property.*;
+import javafx.beans.property.IntegerProperty;
 
-public class StatusRegister {
-    private static StatusRegister instance = new StatusRegister();
+public class StatusRegister extends Register {
+    private static final int C_INDEX = 0;
+    private static final int DC_INDEX = 1;
+    private static final int Z_INDEX = 2;
+    private static final int RP0_INDEX = 5;
 
-    public static StatusRegister instance() {
-        return instance;
+    public StatusRegister(IntegerProperty register) {
+        super(register);
     }
 
-    public static void reset() {
-        instance = new StatusRegister();
+    public boolean getC() {
+        return isBitSet(C_INDEX);
     }
 
-    private final BooleanProperty rp0 = new SimpleBooleanProperty();
-    private final BooleanProperty to = new SimpleBooleanProperty(true);
-    private final BooleanProperty pd = new SimpleBooleanProperty(true);
-    private final BooleanProperty z = new SimpleBooleanProperty();
-    private final BooleanProperty dc = new SimpleBooleanProperty();
-    private final BooleanProperty c = new SimpleBooleanProperty();
-
-    public BooleanProperty RP0() {
-        return rp0;
+    public void setC(boolean value) {
+        setBit(C_INDEX, value);
     }
 
-    public BooleanProperty TO() {
-        return to;
+    public boolean getDC() {
+        return isBitSet(DC_INDEX);
     }
 
-    public BooleanProperty PD() {
-        return pd;
+    public void setDC(boolean value) {
+        setBit(DC_INDEX, value);
     }
 
-    public BooleanProperty Z() {
-        return z;
+    public boolean getZ() {
+        return isBitSet(Z_INDEX);
     }
 
-    public BooleanProperty DC() {
-        return dc;
+    public void setZ(boolean value) {
+        setBit(Z_INDEX, value);
     }
 
-    public BooleanProperty C() {
-        return c;
+    public boolean getRP0() {
+        return isBitSet(RP0_INDEX);
+    }
+
+    public void setRP0(boolean value) {
+        setBit(RP0_INDEX, value);
     }
 }

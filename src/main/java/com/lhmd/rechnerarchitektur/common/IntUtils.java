@@ -17,20 +17,20 @@ public class IntUtils {
         }
     }
 
-    public boolean isBitSet(int value, int index) {
+    public static boolean isBitSet(int value, int index) {
         ensureValidBitIndex(index);
 
         return ((value >> index) & 1) != 0;
     }
 
-    public static int setBit(int value, int index, boolean isSet) {
+    public static int changeBit(int value, int index, boolean isSet) {
         ensureValidBitIndex(index);
 
         if (isSet) {
             return setBit(value, index);
         }
 
-        return unsetBit(value, index);
+        return cleartBit(value, index);
     }
 
     public static int setBit(int value, int index) {
@@ -39,7 +39,7 @@ public class IntUtils {
         return value | (1 << index);
     }
 
-    public static int unsetBit(int value, int index) {
+    public static int cleartBit(int value, int index) {
         ensureValidBitIndex(index);
 
         return value & ~(1 << index);
