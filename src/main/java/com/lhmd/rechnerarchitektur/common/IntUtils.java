@@ -17,6 +17,34 @@ public class IntUtils {
         }
     }
 
+    public boolean isBitSet(int value, int index) {
+        ensureValidBitIndex(index);
+
+        return ((value >> index) & 1) != 0;
+    }
+
+    public static int setBit(int value, int index, boolean isSet) {
+        ensureValidBitIndex(index);
+
+        if (isSet) {
+            return setBit(value, index);
+        }
+
+        return unsetBit(value, index);
+    }
+
+    public static int setBit(int value, int index) {
+        ensureValidBitIndex(index);
+
+        return value | (1 << index);
+    }
+
+    public static int unsetBit(int value, int index) {
+        ensureValidBitIndex(index);
+
+        return value & ~(1 << index);
+    }
+
     /**
      * Extracts a specified range of bits from an integer.
      *
@@ -38,5 +66,11 @@ public class IntUtils {
         int mask = (1 << numBits) - 1;
 
         return (value >>> from) & mask;
+    }
+
+    private static void ensureValidBitIndex(int index) {
+        if (index < 0 || index > 31) {
+            throw new IndexOutOfBoundsException(index);
+        }
     }
 }
