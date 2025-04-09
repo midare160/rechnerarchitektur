@@ -59,16 +59,12 @@
           </items>
         </Menu>
             <Menu fx:id="themeMenu" mnemonicParsing="false" text="Theme" />
+              <Menu mnemonicParsing="false" text="Start" onAction="#onRunButtonAction"/>
+              <Menu mnemonicParsing="false" text="Stop" onAction="#onStopButtonAction"/>
+              <Menu mnemonicParsing="false" text="Pause" onAction="#onStepButtonAction"/>
+              <Menu mnemonicParsing="false" text="Step" onAction="#onResetButtonAction"/>
       </menus>
     </MenuBar>
-      <GridPane hgap="10" vgap="10" alignment="CENTER" fx:id="programActions">
-          <children>
-              <Button fx:id="runButton" text="_Run" GridPane.columnIndex="0"  onAction="#onRun"/>
-              <Button fx:id="stopButton" text="_Stop" GridPane.columnIndex="1"  onAction="#onStop"/>
-              <Button fx:id="stepButton" text="S_tep" GridPane.columnIndex="2"  onAction="#onStep"/>
-              <Button fx:id="resetButton" text="R_eset" GridPane.columnIndex="3"  onAction="#onReset"/>
-          </children>
-      </GridPane>
     <SplitPane dividerPositions="0.7506" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
       <items>
         <AnchorPane>

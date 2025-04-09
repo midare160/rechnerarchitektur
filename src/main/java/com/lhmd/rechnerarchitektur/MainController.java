@@ -31,6 +31,18 @@ public class MainController {
     private Menu openRecentMenu;
 
     @FXML
+    private Menu runMenu;
+
+    @FXML
+    private Menu stopMenu;
+
+    @FXML
+    private Menu stepMenu;
+
+    @FXML
+    private Menu resetMenu;
+
+    @FXML
     private TableView<Instruction> instructionsTableView;
 
     @FXML
@@ -150,22 +162,20 @@ public class MainController {
     }
 
     @FXML
-    public void onRun(ActionEvent actionEvent) {
-        System.out.println("Run Button pressed");
-    }
+    public void onRunButtonAction(ActionEvent actionEvent) { System.out.println("Run Button pressed"); }
 
     @FXML
-    public void onStop(ActionEvent actionEvent) {
+    public void onStopButtonAction(ActionEvent actionEvent) {
         System.out.println("Stop Button pressed");
     }
 
     @FXML
-    public void onStep(ActionEvent actionEvent) {
+    public void onStepButtonAction(ActionEvent actionEvent) {
         System.out.println("Step Button pressed");
     }
 
     @FXML
-    public void onReset(ActionEvent actionEvent) {
+    public void onResetButtonAction(ActionEvent actionEvent) {
         System.out.println("Reset Button pressed");
     }
 }
