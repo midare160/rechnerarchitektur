@@ -7,6 +7,10 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.input.Mnemonic;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -31,6 +35,18 @@ public class MainController {
     private Menu openRecentMenu;
 
     @FXML
+    private Button runButton;
+
+    @FXML
+    private Button stopButton;
+
+    @FXML
+    private Button stepButton;
+
+    @FXML
+    private Button pauseButton;
+
+    @FXML
     private TableView<Instruction> instructionsTableView;
 
     @FXML
@@ -38,6 +54,7 @@ public class MainController {
 
     public void setStage(Stage stage) {
         this.stage = stage;
+        onStageInitialized();
     }
 
     public void initialize() {
@@ -46,6 +63,28 @@ public class MainController {
         initializeInstructionsTableView();
 
         aboutMenuItem.setText("About " + ProgramInfo.PROGRAM_NAME);
+    }
+
+    private void onStageInitialized() {
+        initializeRunButtons();
+    }
+
+    private void initializeRunButtons() {
+        stage.getScene().setOnKeyPressed(e -> {
+            var startCombination = KeyCodeCombination.valueOf("F5");
+            var stopCombination = KeyCodeCombination.valueOf("SHIFT+F5");
+            var stepCombination = KeyCodeCombination.valueOf("F10");
+            var pauseCombination = KeyCodeCombination.valueOf("CTRL+ALT+B");
+            if (startCombination.match(e)) {
+                onRunButtonAction();
+            } else if (stopCombination.match(e)) {
+                onStopButtonAction();
+            } else if (stepCombination.match(e)) {
+                onStepButtonAction();
+            } else if (pauseCombination.match(e)) {
+                onResetButtonAction();
+            }
+        });
     }
 
     private void initializeOpenRecentMenu() {
@@ -105,7 +144,7 @@ public class MainController {
     }
 
     @FXML
-    public void onAboutMenuItemAction(ActionEvent e) {
+    public void onAboutMenuItemAction() {
         var alert = new Alert(Alert.AlertType.INFORMATION);
         alert.initOwner(stage);
         alert.setTitle("About " + ProgramInfo.PROGRAM_NAME);
@@ -147,5 +186,24 @@ public class MainController {
         if (eventArgs.isConsumed()) {
             stage.close();
         }
+    }
+
+
+    @FXML
+    public void onRunButtonAction() { System.out.println("Run Button pressed"); }
+
+    @FXML
+    public void onStopButtonAction() {
+        System.out.println("Stop Button pressed");
+    }
+
+    @FXML
+    public void onStepButtonAction() {
+        System.out.println("Step Button pressed");
+    }
+
+    @FXML
+    public void onResetButtonAction() {
+        System.out.println("Reset Button pressed");
     }
 }
