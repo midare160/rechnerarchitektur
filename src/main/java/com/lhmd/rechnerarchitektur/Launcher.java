@@ -25,8 +25,8 @@ public class Launcher extends Application {
         var controller = loader.<MainController>getController();
 
         stage.setTitle(ProgramInfo.PROGRAM_NAME);
-        stage.setScene(scene);
         controller.setStage(stage);
+        stage.setScene(scene);
         ThemeManager.applyCurrentStylesheet(scene);
 
         stage.setOnCloseRequest(e -> {

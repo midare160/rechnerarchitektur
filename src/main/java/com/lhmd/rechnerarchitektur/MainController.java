@@ -7,6 +7,10 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.input.Mnemonic;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -31,16 +35,16 @@ public class MainController {
     private Menu openRecentMenu;
 
     @FXML
-    private Menu runMenu;
+    private Button runButton;
 
     @FXML
-    private Menu stopMenu;
+    private Button stopButton;
 
     @FXML
-    private Menu stepMenu;
+    private Button stepButton;
 
     @FXML
-    private Menu resetMenu;
+    private Button pauseButton;
 
     @FXML
     private TableView<Instruction> instructionsTableView;
@@ -50,14 +54,29 @@ public class MainController {
 
     public void setStage(Stage stage) {
         this.stage = stage;
+        stage.sceneProperty().addListener((o,oldvalue, newvalue) -> initializeRunButtons());
     }
 
     public void initialize() {
         initializeOpenRecentMenu();
         initializeThemeMenu();
+        //initializeRunButtons();
         initializeInstructionsTableView();
 
         aboutMenuItem.setText("About " + ProgramInfo.PROGRAM_NAME);
+
+    }
+
+    public void initializeRunButtons() {
+        var startCombination = KeyCodeCombination.valueOf("F5");
+        var stopCombination = KeyCodeCombination.valueOf("SHIFT+F5");
+        var stepCombination = KeyCodeCombination.valueOf("F10");
+        var pauseCombination = KeyCodeCombination.valueOf("CTRL+ALT+B");
+        var scene = stage.getScene();
+        scene.addMnemonic(new Mnemonic(runButton, startCombination));
+        scene.addMnemonic(new Mnemonic(stopButton, stopCombination));
+        scene.addMnemonic(new Mnemonic(stepButton, stepCombination));
+        scene.addMnemonic(new Mnemonic(pauseButton, pauseCombination));
     }
 
     private void initializeOpenRecentMenu() {

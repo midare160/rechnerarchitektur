@@ -21,7 +21,8 @@
 
 <VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.lhmd.rechnerarchitektur.MainController">
   <children>
-    <MenuBar VBox.vgrow="NEVER">
+      <HBox> <!-- if I put space here between the buttons the color is wrong-->
+    <MenuBar HBox.hgrow="ALWAYS" VBox.vgrow="NEVER">
       <menus>
         <Menu mnemonicParsing="false" text="File">
           <items>
@@ -58,13 +59,15 @@
             <MenuItem fx:id="aboutMenuItem" mnemonicParsing="false" onAction="#onAboutMenuItemAction" text="About" />
           </items>
         </Menu>
-            <Menu fx:id="themeMenu" mnemonicParsing="false" text="Theme" />
-              <Menu mnemonicParsing="false" text="Start" onAction="#onRunButtonAction"/>
-              <Menu mnemonicParsing="false" text="Stop" onAction="#onStopButtonAction"/>
-              <Menu mnemonicParsing="false" text="Pause" onAction="#onStepButtonAction"/>
-              <Menu mnemonicParsing="false" text="Step" onAction="#onResetButtonAction"/>
+        <Menu fx:id="themeMenu" mnemonicParsing="false" text="Theme" />
       </menus>
     </MenuBar>
+          <!-- <Pane/> all numbers after here are to the right-->
+          <Button fx:id="runButton" text="Start" onAction="#onRunButtonAction"/>
+          <Button fx:id="stopButton" text="Stop" onAction="#onStopButtonAction"/>
+          <Button fx:id="stepButton" text="Pause" onAction="#onStepButtonAction"/>
+          <Button fx:id="pauseButton" text="Step" onAction="#onResetButtonAction"/>
+      </HBox>
     <SplitPane dividerPositions="0.7506" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
       <items>
         <AnchorPane>
