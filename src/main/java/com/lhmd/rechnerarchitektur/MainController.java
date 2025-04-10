@@ -54,29 +54,37 @@ public class MainController {
 
     public void setStage(Stage stage) {
         this.stage = stage;
-        stage.sceneProperty().addListener((o,oldvalue, newvalue) -> initializeRunButtons());
+        onStageInitialized();
     }
 
     public void initialize() {
         initializeOpenRecentMenu();
         initializeThemeMenu();
-        //initializeRunButtons();
         initializeInstructionsTableView();
 
         aboutMenuItem.setText("About " + ProgramInfo.PROGRAM_NAME);
-
     }
 
-    public void initializeRunButtons() {
-        var startCombination = KeyCodeCombination.valueOf("F5");
-        var stopCombination = KeyCodeCombination.valueOf("SHIFT+F5");
-        var stepCombination = KeyCodeCombination.valueOf("F10");
-        var pauseCombination = KeyCodeCombination.valueOf("CTRL+ALT+B");
-        var scene = stage.getScene();
-        scene.addMnemonic(new Mnemonic(runButton, startCombination));
-        scene.addMnemonic(new Mnemonic(stopButton, stopCombination));
-        scene.addMnemonic(new Mnemonic(stepButton, stepCombination));
-        scene.addMnemonic(new Mnemonic(pauseButton, pauseCombination));
+    private void onStageInitialized() {
+        initializeRunButtons();
+    }
+
+    private void initializeRunButtons() {
+        stage.getScene().setOnKeyPressed(e -> {
+            var startCombination = KeyCodeCombination.valueOf("F5");
+            var stopCombination = KeyCodeCombination.valueOf("SHIFT+F5");
+            var stepCombination = KeyCodeCombination.valueOf("F10");
+            var pauseCombination = KeyCodeCombination.valueOf("CTRL+ALT+B");
+            if (startCombination.match(e)) {
+                onRunButtonAction();
+            } else if (stopCombination.match(e)) {
+                onStopButtonAction();
+            } else if (stepCombination.match(e)) {
+                onStepButtonAction();
+            } else if (pauseCombination.match(e)) {
+                onResetButtonAction();
+            }
+        });
     }
 
     private void initializeOpenRecentMenu() {
@@ -136,7 +144,7 @@ public class MainController {
     }
 
     @FXML
-    public void onAboutMenuItemAction(ActionEvent e) {
+    public void onAboutMenuItemAction() {
         var alert = new Alert(Alert.AlertType.INFORMATION);
         alert.initOwner(stage);
         alert.setTitle("About " + ProgramInfo.PROGRAM_NAME);
@@ -180,21 +188,22 @@ public class MainController {
         }
     }
 
-    @FXML
-    public void onRunButtonAction(ActionEvent actionEvent) { System.out.println("Run Button pressed"); }
 
     @FXML
-    public void onStopButtonAction(ActionEvent actionEvent) {
+    public void onRunButtonAction() { System.out.println("Run Button pressed"); }
+
+    @FXML
+    public void onStopButtonAction() {
         System.out.println("Stop Button pressed");
     }
 
     @FXML
-    public void onStepButtonAction(ActionEvent actionEvent) {
+    public void onStepButtonAction() {
         System.out.println("Step Button pressed");
     }
 
     @FXML
-    public void onResetButtonAction(ActionEvent actionEvent) {
+    public void onResetButtonAction() {
         System.out.println("Reset Button pressed");
     }
 }
