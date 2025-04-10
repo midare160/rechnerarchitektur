@@ -14,7 +14,7 @@ public class DataMemory {
     private static DataMemory instance;
 
     static {
-        var sfrMirrors = IntStream.of(0x02, 0x03, 0x04, 0x07, 0x0A, 0x0B);
+        var sfrMirrors = IntStream.of(0x02, 0x03, 0x04, 0x0A, 0x0B);
         var gprMirrors = IntStream.range(0x0C, 0x50);
 
         MIRRORED_ADDRESSES = IntStream.concat(sfrMirrors, gprMirrors)

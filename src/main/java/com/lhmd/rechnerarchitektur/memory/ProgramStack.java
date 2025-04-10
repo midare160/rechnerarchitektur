@@ -1,7 +1,5 @@
 package com.lhmd.rechnerarchitektur.memory;
 
-import java.util.Stack;
-
 public class ProgramStack {
     private static final int MAX_SIZE = 8;
 
@@ -15,19 +13,26 @@ public class ProgramStack {
         instance = new ProgramStack();
     }
 
-    private final Stack<Integer> stack;
+    private final int[] stack;
+
+    private int pointer;
 
     private ProgramStack() {
-        stack = new Stack<>();
+        stack = new int[MAX_SIZE];
+    }
+
+    public int getPointer() {
+        return pointer;
     }
 
     public void push(int value) {
-        // TODO MAX_SIZE
-        stack.push(value);
+        stack[pointer] = value;
+        pointer = (pointer + 1) % MAX_SIZE;
     }
 
     public int pop() {
-        // TODO MAX_SIZE
-        return stack.pop();
+        pointer = (pointer - 1) % MAX_SIZE;
+
+        return stack[pointer];
     }
 }
