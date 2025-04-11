@@ -31,7 +31,7 @@ public class ProgramStack {
     }
 
     public int pop() {
-        pointer = (pointer - 1) % MAX_SIZE;
+        pointer = Math.floorMod(pointer - 1, MAX_SIZE);
 
         return stack[pointer];
     }

@@ -1,21 +1,21 @@
 package com.lhmd.rechnerarchitektur.registers;
 
+import com.lhmd.rechnerarchitektur.common.ChangeListener;
+import com.lhmd.rechnerarchitektur.common.IntBox;
 import com.lhmd.rechnerarchitektur.common.IntUtils;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.value.ChangeListener;
 
 public abstract class Register {
-    protected final IntegerProperty register;
+    protected final IntBox register;
 
-    public Register(IntegerProperty register) {
+    public Register(IntBox register) {
         this.register = register;
     }
 
-    public void addListener(ChangeListener<? super Number> listener) {
+    public void addListener(ChangeListener<Integer> listener) {
         register.addListener(listener);
     }
 
-    public void removeListener(ChangeListener<? super Number> listener) {
+    public void removeListener(ChangeListener<Integer> listener) {
         register.removeListener(listener);
     }
 

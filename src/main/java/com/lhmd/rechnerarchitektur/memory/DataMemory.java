@@ -1,8 +1,8 @@
 package com.lhmd.rechnerarchitektur.memory;
 
+import com.lhmd.rechnerarchitektur.common.IntBox;
 import com.lhmd.rechnerarchitektur.common.IntUtils;
 import com.lhmd.rechnerarchitektur.registers.StatusRegister;
-import javafx.beans.property.*;
 
 import java.util.Set;
 import java.util.stream.*;
@@ -32,7 +32,7 @@ public class DataMemory {
         instance = new DataMemory();
     }
 
-    private final IntegerProperty[] registers;
+    private final IntBox[] registers;
     private final StatusRegister statusRegister;
 
     private DataMemory() {
@@ -44,14 +44,14 @@ public class DataMemory {
         return statusRegister;
     }
 
-    public IntegerProperty getRegister(int address) {
+    public IntBox getRegister(int address) {
         var absoluteAddress = IntUtils.changeBit(address, 7, statusRegister.getRP0());
 
         return registers[absoluteAddress];
     }
 
-    private IntegerProperty[] getRegisters() {
-        var registerArray = new SimpleIntegerProperty[2 * BANK_SIZE];
+    private IntBox[] getRegisters() {
+        var registerArray = new IntBox[2 * BANK_SIZE];
 
         for (var i = 0x00; i < registerArray.length; i++) {
             // Address was already mirrored
@@ -59,7 +59,7 @@ public class DataMemory {
                 continue;
             }
 
-            var property = new SimpleIntegerProperty();
+            var property = new IntBox();
 
             registerArray[i] = property;
 

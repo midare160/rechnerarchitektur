@@ -1,11 +1,11 @@
 package com.lhmd.rechnerarchitektur.registers;
 
-import javafx.beans.property.*;
+import com.lhmd.rechnerarchitektur.common.IntBox;
 
 public class WRegister {
-    private static final IntegerProperty instance = new SimpleIntegerProperty();
+    private static final IntBox instance = new IntBox();
 
-    public static IntegerProperty instance() {
+    public static IntBox instance() {
         return instance;
     }
 

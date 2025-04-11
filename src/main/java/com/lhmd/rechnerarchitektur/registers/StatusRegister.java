@@ -1,6 +1,6 @@
 package com.lhmd.rechnerarchitektur.registers;
 
-import javafx.beans.property.IntegerProperty;
+import com.lhmd.rechnerarchitektur.common.IntBox;
 
 public class StatusRegister extends Register {
     private static final int C_INDEX = 0;
@@ -8,7 +8,7 @@ public class StatusRegister extends Register {
     private static final int Z_INDEX = 2;
     private static final int RP0_INDEX = 5;
 
-    public StatusRegister(IntegerProperty register) {
+    public StatusRegister(IntBox register) {
         super(register);
     }
 
