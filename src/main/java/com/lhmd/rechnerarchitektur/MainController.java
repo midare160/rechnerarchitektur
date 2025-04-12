@@ -9,11 +9,10 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.KeyCombination;
-import javafx.scene.input.Mnemonic;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import org.girod.javafx.svgimage.SVGLoader;
 
 import java.io.*;
 import java.net.URL;
@@ -61,17 +60,23 @@ public class MainController {
         initializeOpenRecentMenu();
         initializeThemeMenu();
         initializeInstructionsTableView();
+        loadSvgIcon();
 
         aboutMenuItem.setText("About " + ProgramInfo.PROGRAM_NAME);
     }
 
     private void onStageInitialized() {
         initializeRunButtons();
+        runButton.setVisible(true);
+        runButton.setManaged(true);
+        stopButton.setVisible(false);
+        stopButton.setManaged(false);
     }
 
     private void initializeRunButtons() {
         stage.getScene().setOnKeyPressed(e -> {
             var startCombination = KeyCodeCombination.valueOf("F5");
+            //var stopCombination = new KeyCodeCombination(KeyCode.F5, KeyCodeCombination.SHIFT_ANY);
             var stopCombination = KeyCodeCombination.valueOf("SHIFT+F5");
             var stepCombination = KeyCodeCombination.valueOf("F10");
             var pauseCombination = KeyCodeCombination.valueOf("CTRL+ALT+B");
@@ -188,13 +193,32 @@ public class MainController {
         }
     }
 
+    private void loadSvgIcon() {
+        var runButtonSvgUrl = Launcher.class.getResource("svgs/run.svg");
+        var stopButtonSvgUrl = Launcher.class.getResource("svgs/stop.svg");
+        var pauseButtonSvgUrl = Launcher.class.getResource("svgs/pause.svg");
+        runButton.setGraphic(SVGLoader.load(runButtonSvgUrl));
+        stopButton.setGraphic(SVGLoader.load(stopButtonSvgUrl));
+        pauseButton.setGraphic(SVGLoader.load(pauseButtonSvgUrl));
+        stepButton.setGraphic(SVGLoader.load(runButtonSvgUrl));
+        }
 
     @FXML
-    public void onRunButtonAction() { System.out.println("Run Button pressed"); }
+    public void onRunButtonAction() {
+        System.out.println("Run Button pressed");
+        runButton.setVisible(false);
+        runButton.setManaged(false);
+        stopButton.setVisible(true);
+        stopButton.setManaged(true);
+    }
 
     @FXML
     public void onStopButtonAction() {
         System.out.println("Stop Button pressed");
+        runButton.setVisible(true);
+        runButton.setManaged(true);
+        stopButton.setVisible(false);
+        stopButton.setManaged(false);
     }
 
     @FXML
