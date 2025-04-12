@@ -10,8 +10,7 @@ import java.util.stream.*;
 public class DataMemory {
     private static final int BANK_SIZE = 128;
     private static final Set<Integer> MIRRORED_ADDRESSES;
-
-    private static DataMemory instance;
+    private static final DataMemory INSTANCE;
 
     static {
         var sfrMirrors = IntStream.of(0x02, 0x03, 0x04, 0x0A, 0x0B);
@@ -21,22 +20,18 @@ public class DataMemory {
                 .boxed()
                 .collect(Collectors.toUnmodifiableSet());
 
-        instance = new DataMemory();
+        INSTANCE = new DataMemory();
     }
 
     public static DataMemory instance() {
-        return instance;
-    }
-
-    public static void reset() {
-        instance = new DataMemory();
+        return INSTANCE;
     }
 
     private final IntBox[] registers;
     private final StatusRegister statusRegister;
 
     private DataMemory() {
-        registers = getRegisters();
+        registers = getInitialRegisters();
         statusRegister = new StatusRegister(registers[0x03]);
     }
 
@@ -50,7 +45,14 @@ public class DataMemory {
         return registers[absoluteAddress];
     }
 
-    private IntBox[] getRegisters() {
+    public void reset() {
+        for (var register : INSTANCE.registers) {
+            register.set(0);
+        }
+    }
+
+    private IntBox[] getInitialRegisters() {
+        // PIC16X is partitioned into 2 banks
         var registerArray = new IntBox[2 * BANK_SIZE];
 
         for (var i = 0x00; i < registerArray.length; i++) {

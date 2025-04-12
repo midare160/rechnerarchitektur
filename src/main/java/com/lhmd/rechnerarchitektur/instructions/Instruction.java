@@ -1,7 +1,7 @@
 package com.lhmd.rechnerarchitektur.instructions;
 
 import com.lhmd.rechnerarchitektur.memory.DataMemory;
-import com.lhmd.rechnerarchitektur.registers.WRegister;
+import com.lhmd.rechnerarchitektur.memory.WRegister;
 
 public abstract class Instruction {
     private final int instruction;

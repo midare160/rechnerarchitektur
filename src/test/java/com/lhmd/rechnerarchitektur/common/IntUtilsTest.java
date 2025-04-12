@@ -41,7 +41,7 @@ public class IntUtilsTest {
     }
 
     @Test
-    public void bitRange_TwentySecond() {
+    public void bitRange_TwentySecondBit() {
         var expected = 0b0;
         var actual = IntUtils.bitRange(BITS, 22, 22);
 

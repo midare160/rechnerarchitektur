@@ -1,13 +1,19 @@
 package com.lhmd.rechnerarchitektur.memory;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ProgramStackTest {
 
+    @BeforeEach
+    public void setUp() {
+        ProgramStack.reset();
+    }
+
     @Test
-    public void push() {
+    public void push_threeValues() {
         var stack = ProgramStack.instance();
 
         assertEquals(0, stack.getPointer());
@@ -17,6 +23,15 @@ public class ProgramStackTest {
         stack.push(3);
 
         assertEquals(3, stack.getPointer());
+    }
+
+    @Test
+    public void pop_threeValues() {
+        var stack = ProgramStack.instance();
+
+        stack.push(1);
+        stack.push(2);
+        stack.push(3);
 
         assertEquals(3, stack.pop());
         assertEquals(2, stack.getPointer());
@@ -40,24 +55,26 @@ public class ProgramStackTest {
         }
 
         assertEquals(2, stack.getPointer());
+
         assertEquals(10, stack.pop());
-
         assertEquals(1, stack.getPointer());
-        assertEquals(9, stack.pop());
 
+        assertEquals(9, stack.pop());
         assertEquals(0, stack.getPointer());
-        assertEquals(8, stack.pop());
     }
 
     @Test
     public void pop_underflow(){
         var stack = ProgramStack.instance();
 
-        for (int i = 1; i <= 8; i++) {
+        for (int i = 1; i <= 7; i++) {
             stack.push(i);
         }
 
+        assertEquals(7, stack.getPointer());
+
         var firstPop = stack.pop();
+        assertEquals(6, stack.getPointer());
 
         // If the stack is effectively popped nine times, the stackpointer
         // value is the same as the value from the first pop.
@@ -65,6 +82,9 @@ public class ProgramStackTest {
             stack.pop();
         }
 
+        assertEquals(7, stack.getPointer());
+
         assertEquals(firstPop, stack.pop());
+        assertEquals(6, stack.getPointer());
     }
 }

@@ -1,16 +1,18 @@
 package com.lhmd.rechnerarchitektur.memory;
 
+import java.util.Arrays;
+
 public class ProgramStack {
     private static final int MAX_SIZE = 8;
-
-    private static ProgramStack instance = new ProgramStack();
+    private static final ProgramStack INSTANCE = new ProgramStack();
 
     public static ProgramStack instance() {
-        return instance;
+        return INSTANCE;
     }
 
     public static void reset() {
-        instance = new ProgramStack();
+        INSTANCE.pointer = 0;
+        Arrays.fill(INSTANCE.stack, 0);
     }
 
     private final int[] stack;
@@ -31,6 +33,7 @@ public class ProgramStack {
     }
 
     public int pop() {
+        // Negative numbers behave incorrectly with %
         pointer = Math.floorMod(pointer - 1, MAX_SIZE);
 
         return stack[pointer];

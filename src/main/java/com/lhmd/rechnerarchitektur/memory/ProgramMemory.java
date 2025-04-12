@@ -6,15 +6,14 @@ import java.util.*;
 
 public class ProgramMemory {
     private static final int MAX_SIZE = 1024;
-
-    private static ProgramMemory instance = new ProgramMemory();
+    private static final ProgramMemory INSTANCE = new ProgramMemory();
 
     public static ProgramMemory instance() {
-        return instance;
+        return INSTANCE;
     }
 
     public static void reset() {
-        instance = new ProgramMemory();
+        Arrays.fill(INSTANCE.instructions, null);
     }
 
     private final Instruction[] instructions;

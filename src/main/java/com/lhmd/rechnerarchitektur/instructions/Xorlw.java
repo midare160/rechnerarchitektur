@@ -2,7 +2,7 @@ package com.lhmd.rechnerarchitektur.instructions;
 
 import com.lhmd.rechnerarchitektur.common.IntUtils;
 import com.lhmd.rechnerarchitektur.memory.DataMemory;
-import com.lhmd.rechnerarchitektur.registers.WRegister;
+import com.lhmd.rechnerarchitektur.memory.WRegister;
 
 public class Xorlw extends Instruction {
     private final int literal;

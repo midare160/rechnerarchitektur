@@ -21,10 +21,12 @@ public class Box<T> {
     }
 
     public void setValue(T value) {
-        if (this.value != value) {
-            for (var listener : listeners) {
-                listener.changed(this.value, value);
-            }
+        if (Objects.equals(this.value, value)) {
+            return;
+        }
+
+        for (var listener : listeners) {
+            listener.changed(this.value, value);
         }
 
         this.value = value;

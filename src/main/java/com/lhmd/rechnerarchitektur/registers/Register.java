@@ -1,8 +1,6 @@
 package com.lhmd.rechnerarchitektur.registers;
 
-import com.lhmd.rechnerarchitektur.common.ChangeListener;
-import com.lhmd.rechnerarchitektur.common.IntBox;
-import com.lhmd.rechnerarchitektur.common.IntUtils;
+import com.lhmd.rechnerarchitektur.common.*;
 
 public abstract class Register {
     protected final IntBox register;
@@ -19,7 +17,7 @@ public abstract class Register {
         register.removeListener(listener);
     }
 
-    protected boolean isBitSet(int index){
+    protected boolean isBitSet(int index) {
         return IntUtils.isBitSet(register.get(), index);
     }
 

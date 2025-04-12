@@ -1,4 +1,4 @@
-package com.lhmd.rechnerarchitektur.registers;
+package com.lhmd.rechnerarchitektur.memory;
 
 import com.lhmd.rechnerarchitektur.common.IntBox;
 

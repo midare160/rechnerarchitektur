@@ -1,7 +1,7 @@
 package com.lhmd.rechnerarchitektur.instructions;
 
 import com.lhmd.rechnerarchitektur.memory.DataMemory;
-import com.lhmd.rechnerarchitektur.registers.WRegister;
+import com.lhmd.rechnerarchitektur.memory.WRegister;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

@@ -1,6 +1,6 @@
 package com.lhmd.rechnerarchitektur.instructions;
 
-import com.lhmd.rechnerarchitektur.registers.WRegister;
+import com.lhmd.rechnerarchitektur.memory.WRegister;
 import com.lhmd.rechnerarchitektur.common.IntUtils;
 
 public class Movlw extends Instruction {
