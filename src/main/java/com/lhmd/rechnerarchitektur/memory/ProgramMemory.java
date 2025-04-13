@@ -5,34 +5,27 @@ import com.lhmd.rechnerarchitektur.instructions.Instruction;
 import java.util.*;
 
 public class ProgramMemory {
-    private static final int MAX_SIZE = 1024;
-    private static final ProgramMemory INSTANCE = new ProgramMemory();
-
-    public static ProgramMemory instance() {
-        return INSTANCE;
-    }
-
-    public static void reset() {
-        Arrays.fill(INSTANCE.instructions, null);
-    }
+    public static final int MAX_SIZE = 1024;
 
     private final Instruction[] instructions;
 
-    private ProgramMemory() {
-        instructions = new Instruction[MAX_SIZE];
+    public ProgramMemory(Instruction[] instructions) {
+        if (instructions.length > MAX_SIZE) {
+            throw new IllegalArgumentException("Instruction array may only be " + MAX_SIZE + " elements large");
+        }
+
+        this.instructions = instructions;
     }
 
     public List<Instruction> getInstructions() {
-        return Arrays.stream(instructions)
-                .filter(Objects::nonNull)
-                .toList();
+        return List.of(instructions);
     }
 
     public Instruction get(int index) {
         return instructions[index % MAX_SIZE];
     }
 
-    public void set(int index, Instruction instruction) {
-        instructions[index % MAX_SIZE] = instruction;
+    public void reset() {
+        Arrays.fill(instructions, null);
     }
 }

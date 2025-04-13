@@ -30,7 +30,7 @@ public class IntUtils {
             return setBit(value, index);
         }
 
-        return cleartBit(value, index);
+        return clearBit(value, index);
     }
 
     public static int setBit(int value, int index) {
@@ -39,7 +39,7 @@ public class IntUtils {
         return value | (1 << index);
     }
 
-    public static int cleartBit(int value, int index) {
+    public static int clearBit(int value, int index) {
         ensureValidBitIndex(index);
 
         return value & ~(1 << index);
@@ -66,6 +66,33 @@ public class IntUtils {
         int mask = (1 << numBits) - 1;
 
         return (value >>> from) & mask;
+    }
+
+    /**
+     * Concatenates the binary representations of two integers.
+     *
+     * <p>The bits of {@code a} are placed in the higher-order positions, followed by
+     * the bits of {@code b} in the lower-order positions.
+     * <p>
+     * Note: This method assumes non-negative integers. Negative values may produce
+     * unexpected results due to two's complement representation.
+     *
+     * @param a the first integer (bits will be placed in higher-order positions)
+     * @param b the second integer (bits will be placed in lower-order positions)
+     * @return an integer representing the bitwise concatenation of {@code a} and {@code b}
+     */
+    public static int concatBits(int a, int b) {
+        // Count how many bits are needed to represent [b]
+        var bBits = 0;
+        var temp = b;
+
+        while (temp > 0) {
+            bBits++;
+            temp >>= 1;
+        }
+
+        // Shift [a] left by bBits and OR with [b]
+        return (a << bBits) | b;
     }
 
     private static void ensureValidBitIndex(int index) {

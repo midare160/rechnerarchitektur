@@ -24,7 +24,7 @@ public class InstructionDecoder {
         OPCODES.put(0b00_0000_0000_0000, Nop::new);
     }
 
-    public static Instruction decode(String instruction) throws ReflectiveOperationException {
+    public static Instruction decode(String instruction) {
         var hexInstruction = IntUtils.tryParse(instruction, 16);
 
         if (hexInstruction == null) {
@@ -39,6 +39,6 @@ public class InstructionDecoder {
             return kvp.getValue().apply(hexInstruction);
         }
 
-        throw new NoSuchMethodException("No instruction found for " + instruction);
+        throw new IllegalArgumentException("No instruction found for " + instruction);
     }
 }

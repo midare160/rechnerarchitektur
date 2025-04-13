@@ -1,6 +1,5 @@
 package com.lhmd.rechnerarchitektur.instructions;
 
-import com.lhmd.rechnerarchitektur.memory.WRegister;
 import com.lhmd.rechnerarchitektur.common.IntUtils;
 
 public class Movlw extends Instruction {
@@ -13,7 +12,7 @@ public class Movlw extends Instruction {
     }
 
     @Override
-    public void execute() {
-        WRegister.instance().set(literal);
+    public void execute(ExecutionParams params) {
+        setW(params, literal);
     }
 }

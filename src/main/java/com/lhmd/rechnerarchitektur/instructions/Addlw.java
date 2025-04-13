@@ -15,14 +15,14 @@ public class Addlw extends Instruction {
     }
 
     @Override
-    public void execute() {
-        var currentW = getW();
+    public void execute(ExecutionParams params) {
+        var currentW = getW(params);
         var result = (currentW + literal) % 256;
 
-        setW(result);
+        setW(params, result);
 
-        setC_Add(currentW, literal);
-        setDC_Add(currentW, literal);
-        setZ(result);
+        updateC_Add(params, currentW, literal);
+        updateDC_Add(params, currentW, literal);
+        updateZ(params, result);
     }
 }

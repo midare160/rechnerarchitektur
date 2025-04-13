@@ -8,8 +8,8 @@ public class Call extends Instruction {
     }
 
     @Override
-    public void execute() {
+    public void execute(ExecutionParams params) {
         var programCounter = 0x00; // TODO
-        ProgramStack.instance().push(programCounter);
+        params.programStack().push(programCounter);
     }
 }

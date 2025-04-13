@@ -15,10 +15,10 @@ public class Andlw extends Instruction {
     }
 
     @Override
-    public void execute() {
-        var result = getW() & literal;
+    public void execute(ExecutionParams params) {
+        var result = getW(params) & literal;
 
-        setW(result);
-        setZ(result);
+        setW(params, result);
+        updateZ(params, result);
     }
 }

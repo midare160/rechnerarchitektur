@@ -2,7 +2,7 @@ package com.lhmd.rechnerarchitektur.memory;
 
 import com.lhmd.rechnerarchitektur.common.IntBox;
 import com.lhmd.rechnerarchitektur.common.IntUtils;
-import com.lhmd.rechnerarchitektur.registers.StatusRegister;
+import com.lhmd.rechnerarchitektur.registers.*;
 
 import java.util.Set;
 import java.util.stream.*;
@@ -10,7 +10,6 @@ import java.util.stream.*;
 public class DataMemory {
     private static final int BANK_SIZE = 128;
     private static final Set<Integer> MIRRORED_ADDRESSES;
-    private static final DataMemory INSTANCE;
 
     static {
         var sfrMirrors = IntStream.of(0x02, 0x03, 0x04, 0x0A, 0x0B);
@@ -19,20 +18,20 @@ public class DataMemory {
         MIRRORED_ADDRESSES = IntStream.concat(sfrMirrors, gprMirrors)
                 .boxed()
                 .collect(Collectors.toUnmodifiableSet());
-
-        INSTANCE = new DataMemory();
-    }
-
-    public static DataMemory instance() {
-        return INSTANCE;
     }
 
     private final IntBox[] registers;
+    private final IntBox wRegister;
     private final StatusRegister statusRegister;
 
-    private DataMemory() {
+    public DataMemory() {
         registers = getInitialRegisters();
+        wRegister = new IntBox();
         statusRegister = new StatusRegister(registers[0x03]);
+    }
+
+    public IntBox W() {
+        return wRegister;
     }
 
     public StatusRegister status() {
@@ -46,13 +45,15 @@ public class DataMemory {
     }
 
     public void reset() {
-        for (var register : INSTANCE.registers) {
+        wRegister.set(0);
+
+        for (var register : registers) {
             register.set(0);
         }
     }
 
     private IntBox[] getInitialRegisters() {
-        // PIC16X is partitioned into 2 banks
+        // PIC16FX is partitioned into 2 banks
         var registerArray = new IntBox[2 * BANK_SIZE];
 
         for (var i = 0x00; i < registerArray.length; i++) {
@@ -61,12 +62,12 @@ public class DataMemory {
                 continue;
             }
 
-            var property = new IntBox();
+            var register = new IntBox();
 
-            registerArray[i] = property;
+            registerArray[i] = register;
 
             if (MIRRORED_ADDRESSES.contains(i)) {
-                registerArray[i + BANK_SIZE] = property;
+                registerArray[i + BANK_SIZE] = register;
             }
         }
 

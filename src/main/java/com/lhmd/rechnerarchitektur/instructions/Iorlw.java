@@ -1,8 +1,6 @@
 package com.lhmd.rechnerarchitektur.instructions;
 
 import com.lhmd.rechnerarchitektur.common.IntUtils;
-import com.lhmd.rechnerarchitektur.memory.DataMemory;
-import com.lhmd.rechnerarchitektur.memory.WRegister;
 
 public class Iorlw extends Instruction {
     private final int literal;
@@ -14,11 +12,10 @@ public class Iorlw extends Instruction {
     }
 
     @Override
-    public void execute() {
-        var wRegister = WRegister.instance();
-        var result = wRegister.get() | literal;
+    public void execute(ExecutionParams params) {
+        var result = getW(params) | literal;
 
-        wRegister.set(result);
-        DataMemory.instance().status().setZ(result == 0);
+        setW(params, result);
+        updateZ(params, result);
     }
 }

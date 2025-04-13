@@ -1,46 +1,52 @@
 package com.lhmd.rechnerarchitektur.instructions;
 
 import com.lhmd.rechnerarchitektur.memory.DataMemory;
-import com.lhmd.rechnerarchitektur.memory.WRegister;
+import com.lhmd.rechnerarchitektur.memory.ProgramStack;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class AddlwTest extends InstructionTestBase {
+public class AddlwTest extends InstructionTest {
 
     @Test
     public void execute_noOverflow() {
-        WRegister.instance().set(0x10);
-        new Addlw(0x15).execute();
+        var params = getExecutionParams();
 
-        assertEquals(0x25, WRegister.instance().get());
+        params.dataMemory().W().set(0x10);
+        new Addlw(0x15).execute(params);
 
-        assertFalse(DataMemory.instance().status().getC());
-        assertFalse(DataMemory.instance().status().getDC());
-        assertFalse(DataMemory.instance().status().getZ());
+        assertEquals(0x25, params.dataMemory().W().get());
+
+        assertFalse(params.dataMemory().status().getC());
+        assertFalse(params.dataMemory().status().getDC());
+        assertFalse(params.dataMemory().status().getZ());
     }
 
     @Test
     public void execute_overflows() {
-        WRegister.instance().set(0xF0);
-        new Addlw(0x12).execute();
+        var params = getExecutionParams();
 
-        assertEquals(0x02, WRegister.instance().get());
+        params.dataMemory().W().set(0xF0);
+        new Addlw(0x12).execute(params);
 
-        assertTrue(DataMemory.instance().status().getC());
-        assertFalse(DataMemory.instance().status().getDC());
-        assertFalse(DataMemory.instance().status().getZ());
+        assertEquals(0x02, params.dataMemory().W().get());
+
+        assertTrue(params.dataMemory().status().getC());
+        assertFalse(params.dataMemory().status().getDC());
+        assertFalse(params.dataMemory().status().getZ());
     }
 
     @Test
     public void execute_overflowsToZero() {
-        WRegister.instance().set(0xFF);
-        new Addlw(0x01).execute();
+        var params = getExecutionParams();
 
-        assertEquals(0x00, WRegister.instance().get());
+        params.dataMemory().W().set(0xFF);
+        new Addlw(0x01).execute(params);
 
-        assertTrue(DataMemory.instance().status().getC());
-        assertTrue(DataMemory.instance().status().getDC());
-        assertTrue(DataMemory.instance().status().getZ());
+        assertEquals(0x00, params.dataMemory().W().get());
+
+        assertTrue(params.dataMemory().status().getC());
+        assertTrue(params.dataMemory().status().getDC());
+        assertTrue(params.dataMemory().status().getZ());
     }
 }

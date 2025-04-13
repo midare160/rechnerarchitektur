@@ -6,7 +6,7 @@ public class Nop extends Instruction {
     }
 
     @Override
-    public void execute() {
+    public void execute(ExecutionParams params) {
         // Does nothing
     }
 }

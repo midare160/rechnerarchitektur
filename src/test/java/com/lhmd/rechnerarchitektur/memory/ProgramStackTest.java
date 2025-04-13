@@ -1,20 +1,13 @@
 package com.lhmd.rechnerarchitektur.memory;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ProgramStackTest {
-
-    @BeforeEach
-    public void setUp() {
-        ProgramStack.reset();
-    }
-
     @Test
     public void push_threeValues() {
-        var stack = ProgramStack.instance();
+        var stack = new ProgramStack();
 
         assertEquals(0, stack.getPointer());
 
@@ -27,7 +20,7 @@ public class ProgramStackTest {
 
     @Test
     public void pop_threeValues() {
-        var stack = ProgramStack.instance();
+        var stack = new ProgramStack();
 
         stack.push(1);
         stack.push(2);
@@ -45,7 +38,7 @@ public class ProgramStackTest {
 
     @Test
     public void push_overflow() {
-        var stack = ProgramStack.instance();
+        var stack = new ProgramStack();
 
         // After the stack has been pushed eight times, the ninth push over-
         // writes the value that was stored from the first push. The
@@ -65,7 +58,7 @@ public class ProgramStackTest {
 
     @Test
     public void pop_underflow(){
-        var stack = ProgramStack.instance();
+        var stack = new ProgramStack();
 
         for (int i = 1; i <= 7; i++) {
             stack.push(i);

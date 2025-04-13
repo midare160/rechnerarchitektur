@@ -1,8 +1,6 @@
 package com.lhmd.rechnerarchitektur.instructions;
 
 import com.lhmd.rechnerarchitektur.common.IntUtils;
-import com.lhmd.rechnerarchitektur.memory.DataMemory;
-import com.lhmd.rechnerarchitektur.memory.WRegister;
 
 public class Sublw extends Instruction {
     private final int literal;
@@ -14,15 +12,14 @@ public class Sublw extends Instruction {
     }
 
     @Override
-    public void execute() {
-        var wRegister = WRegister.instance();
-        var statusRegister = DataMemory.instance().status();
-        var result = (literal - wRegister.get()) % 256;
+    public void execute(ExecutionParams params) {
+        var currentW = getW(params);
+        var result = Math.floorMod(literal - currentW, 256);
 
-        statusRegister.setC(literal >= wRegister.get());
-        wRegister.set(result);
-        statusRegister.setZ(result == 0);
+        setW(params, result);
 
-        // TODO set DC flag
+        updateC_Sub(params, currentW, literal);
+        updateDC_Sub(params, currentW, literal);
+        updateZ(params, result);
     }
 }
