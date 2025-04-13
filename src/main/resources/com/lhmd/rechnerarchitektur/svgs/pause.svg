@@ -1,16 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
-  <defs>
-    <style>.canvas{fill: none; opacity: 0;}.light-defaultgrey{fill: #212121; opacity: 1;}.cls-1{opacity:0.75;}</style>
-  </defs>
-  <title>IconLightPause</title>
-  <g id="canvas" class="canvas">
-    <path class="canvas" d="M16,16H0V0H16Z" />
-  </g>
-  <g id="level-1">
-    <g class="cls-1">
-      <path class="light-defaultgrey" d="M6.5,3.5v9h-3v-9Z" />
-      <path class="light-defaultgrey" d="M12.5,3.5v9h-3v-9Z" />
-    </g>
-    <path class="light-defaultgrey" d="M12.5,3h-3L9,3.5v9l.5.5h3l.5-.5v-9ZM12,12H10V4h2ZM6.5,3h-3L3,3.5v9l.5.5h3l.5-.5v-9ZM6,12H4V4H6Z" />
-  </g>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><defs><style>.icon-canvas-transparent,.icon-vs-out{fill:#f6f6f6;}.icon-canvas-transparent{opacity:0;}.icon-vs-action-blue{fill:#00539c;}</style></defs><title>Pause_16x</title><g id="canvas"><path class="icon-canvas-transparent" d="M16,0V16H0V0Z"/></g><g id="outline"><path class="icon-vs-out" d="M13,2V13H3V2Z"/></g><g id="iconBg"><path class="icon-vs-action-blue" d="M4,3H7v9H4ZM9,3v9h3V3Z"/></g></svg>

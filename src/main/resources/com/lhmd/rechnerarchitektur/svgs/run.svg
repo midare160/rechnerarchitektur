@@ -1,12 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
-  <defs>
-    <style>.canvas{fill: none; opacity: 0;}.light-green{fill: #1f801f; opacity: 1;}</style>
-  </defs>
-  <title>IconLightRun</title>
-  <g id="canvas" class="canvas">
-    <path class="canvas" d="M16,16H0V0H16Z" />
-  </g>
-  <g id="level-1">
-    <path class="light-green" d="M3.777,1.084,3,1.5v12l.777.416,9-6V7.084Z" />
-  </g>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><defs><style>.icon-canvas-transparent,.icon-vs-out{fill:#f6f6f6;}.icon-canvas-transparent{opacity:0;}.icon-vs-action-green{fill:#388a34;}</style></defs><title>Run_16x</title><g id="canvas"><path class="icon-canvas-transparent" d="M16,16H0V0H16Z"/></g><g id="outline"><path class="icon-vs-out" d="M3,0,13.667,8,3,16Z"/></g><g id="iconBg"><path class="icon-vs-action-green" d="M4,2V14l8-6L4,2Z"/></g></svg>
