@@ -79,20 +79,11 @@ public class IntUtils {
      *
      * @param a the first integer (bits will be placed in higher-order positions)
      * @param b the second integer (bits will be placed in lower-order positions)
+     * @param bLength the number of bits from {@code b} that should be concatenated with {@code a}
      * @return an integer representing the bitwise concatenation of {@code a} and {@code b}
      */
-    public static int concatBits(int a, int b) {
-        // Count how many bits are needed to represent [b]
-        var bBits = 0;
-        var temp = b;
-
-        while (temp > 0) {
-            bBits++;
-            temp >>= 1;
-        }
-
-        // Shift [a] left by bBits and OR with [b]
-        return (a << bBits) | b;
+    public static int concatBits(int a, int b, int bLength) {
+        return (a << bLength) | b;
     }
 
     private static void ensureValidBitIndex(int index) {

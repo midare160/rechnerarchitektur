@@ -1,7 +1,7 @@
 package com.lhmd.rechnerarchitektur.registers;
 
 import com.lhmd.rechnerarchitektur.changes.ChangeManager;
-import com.lhmd.rechnerarchitektur.common.*;
+import com.lhmd.rechnerarchitektur.common.IntUtils;
 import com.lhmd.rechnerarchitektur.memory.ProgramMemory;
 import com.lhmd.rechnerarchitektur.values.IntBox;
 
@@ -21,7 +21,7 @@ public class ProgramCounter {
     }
 
     public int get() {
-        return IntUtils.concatBits(highOrderBits, pclRegister.get());
+        return IntUtils.concatBits(highOrderBits, pclRegister.get(), 8);
     }
 
     public void increment() {
@@ -36,7 +36,7 @@ public class ProgramCounter {
         var pclathPart = IntUtils.bitRange(pclathRegister.get(), 3, 4);
         var jumpPart = IntUtils.bitRange(value, 8, 10);
 
-        highOrderBits = IntUtils.concatBits(pclathPart, jumpPart);
+        highOrderBits = IntUtils.concatBits(pclathPart, jumpPart, 3);
 
         try (var ignored = changeManager.beginChange()) {
             pclRegister.set(IntUtils.bitRange(value, 0, 7));
