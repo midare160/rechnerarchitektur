@@ -1,6 +1,6 @@
 package com.lhmd.rechnerarchitektur.registers;
 
-import com.lhmd.rechnerarchitektur.common.IntBox;
+import com.lhmd.rechnerarchitektur.values.IntBox;
 
 public class StatusRegister extends Register {
     private static final int C_INDEX = 0;

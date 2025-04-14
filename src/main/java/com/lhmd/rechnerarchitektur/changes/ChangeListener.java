@@ -1,4 +1,4 @@
-package com.lhmd.rechnerarchitektur.common;
+package com.lhmd.rechnerarchitektur.changes;
 
 @FunctionalInterface
 public interface ChangeListener<T> {

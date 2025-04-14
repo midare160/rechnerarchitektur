@@ -1,18 +1,21 @@
 package com.lhmd.rechnerarchitektur.registers;
 
+import com.lhmd.rechnerarchitektur.changes.ChangeManager;
 import com.lhmd.rechnerarchitektur.common.*;
 import com.lhmd.rechnerarchitektur.memory.ProgramMemory;
+import com.lhmd.rechnerarchitektur.values.IntBox;
 
 public class ProgramCounter {
     private final IntBox pclRegister;
     private final IntBox pclathRegister;
+    private final ChangeManager changeManager;
 
     private int highOrderBits;
-    private boolean pclChanging;
 
     public ProgramCounter(IntBox pclRegister, IntBox pclathRegister) {
         this.pclRegister = pclRegister;
         this.pclathRegister = pclathRegister;
+        this.changeManager = new ChangeManager();
 
         pclRegister.addListener(this::onPclChanged);
     }
@@ -24,7 +27,7 @@ public class ProgramCounter {
     public void increment() {
         var result = (pclRegister.get() + 1) % ProgramMemory.MAX_SIZE;
 
-        try (var ignored = getPclChangingTempValue()) {
+        try (var ignored = changeManager.beginChange()) {
             pclRegister.set(result);
         }
     }
@@ -35,7 +38,7 @@ public class ProgramCounter {
 
         highOrderBits = IntUtils.concatBits(pclathPart, jumpPart);
 
-        try (var ignored = getPclChangingTempValue()) {
+        try (var ignored = changeManager.beginChange()) {
             pclRegister.set(IntUtils.bitRange(value, 0, 7));
         }
     }
@@ -43,20 +46,16 @@ public class ProgramCounter {
     public void override(int value) {
         highOrderBits = IntUtils.bitRange(value, 8, 12);
 
-        try (var ignored = getPclChangingTempValue()) {
+        try (var ignored = changeManager.beginChange()) {
             pclRegister.set(IntUtils.bitRange(value, 0, 7));
         }
     }
 
     private void onPclChanged(int oldValue, int newValue) {
-        if (pclChanging) {
+        if (changeManager.isChanging()) {
             return;
         }
 
         highOrderBits = pclathRegister.get();
-    }
-
-    private BooleanTempValue getPclChangingTempValue() {
-        return new BooleanTempValue(pclChanging, c -> pclChanging = c);
     }
 }

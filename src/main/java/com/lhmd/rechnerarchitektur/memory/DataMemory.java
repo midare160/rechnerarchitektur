@@ -1,6 +1,6 @@
 package com.lhmd.rechnerarchitektur.memory;
 
-import com.lhmd.rechnerarchitektur.common.IntBox;
+import com.lhmd.rechnerarchitektur.values.IntBox;
 import com.lhmd.rechnerarchitektur.common.IntUtils;
 import com.lhmd.rechnerarchitektur.registers.*;
 

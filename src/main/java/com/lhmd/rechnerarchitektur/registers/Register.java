@@ -1,6 +1,8 @@
 package com.lhmd.rechnerarchitektur.registers;
 
+import com.lhmd.rechnerarchitektur.changes.ChangeListener;
 import com.lhmd.rechnerarchitektur.common.*;
+import com.lhmd.rechnerarchitektur.values.IntBox;
 
 public abstract class Register {
     protected final IntBox register;

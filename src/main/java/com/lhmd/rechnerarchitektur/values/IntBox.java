@@ -1,4 +1,4 @@
-package com.lhmd.rechnerarchitektur.common;
+package com.lhmd.rechnerarchitektur.values;
 
 public class IntBox extends Box<Integer> {
     public IntBox() {

@@ -1,4 +1,6 @@
-package com.lhmd.rechnerarchitektur.common;
+package com.lhmd.rechnerarchitektur.values;
+
+import com.lhmd.rechnerarchitektur.changes.ChangeListener;
 
 import java.util.*;
 
