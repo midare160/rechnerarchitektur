@@ -2,26 +2,21 @@ package com.lhmd.rechnerarchitektur;
 
 import com.lhmd.rechnerarchitektur.instructions.InstructionViewModel;
 import com.lhmd.rechnerarchitektur.parsing.LstParser;
-import com.lhmd.rechnerarchitektur.tableview.BreakpointCell;
-import com.lhmd.rechnerarchitektur.tableview.BreakpointRow;
+import com.lhmd.rechnerarchitektur.tableview.*;
 import com.lhmd.rechnerarchitektur.themes.ThemeManager;
-import javafx.collections.FXCollections;
+import javafx.collections.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
+import javafx.stage.*;
 
 import java.io.*;
 import java.net.URL;
-import java.util.List;
 
 public class MainController {
 
-    private List<InstructionViewModel> instructions;
+    private ObservableList<InstructionViewModel> instructions;
     private Stage stage;
-    private boolean changeIntern;
 
     @FXML
     private Menu themeMenu;
@@ -131,12 +126,13 @@ public class MainController {
         }
 
         try {
-            instructions = LstParser.parseFile(file.getPath());
+            var parsedInstructions = LstParser.parseFile(file.getPath());
+            instructions = FXCollections.observableList(parsedInstructions);
         } catch (IOException e) {
             ExceptionHandler.handle(e);
         }
 
-        instructionsTableView.setItems(FXCollections.observableList(instructions));
+        instructionsTableView.setItems(instructions);
 
         Configuration.addRecentFile(file.getPath());
         initializeOpenRecentMenu();
