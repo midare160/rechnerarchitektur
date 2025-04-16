@@ -1,7 +1,6 @@
 package com.lhmd.rechnerarchitektur.memory;
 
-import com.lhmd.rechnerarchitektur.instructions.Instruction;
-import com.lhmd.rechnerarchitektur.instructions.Nop;
+import com.lhmd.rechnerarchitektur.instructions.*;
 
 import java.util.*;
 

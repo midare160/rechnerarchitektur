@@ -5,7 +5,7 @@ import javafx.beans.property.*;
 import java.net.URL;
 
 @SuppressWarnings({"unused"})
-public class InstructionViewModel {
+public class InstructionViewModel implements RawInstruction {
     private final String address;
     private final String instruction;
     private final String lineNumber;
@@ -22,28 +22,30 @@ public class InstructionViewModel {
         this.comment = comment;
         this.rawText = rawText;
 
-        isBreakpointActive = new SimpleBooleanProperty(false);
-        breakpointSvgUrl = new SimpleObjectProperty<>();
+        this.isBreakpointActive = new SimpleBooleanProperty(false);
+        this.breakpointSvgUrl = new SimpleObjectProperty<>();
+    }
+
+    // Do NOT rename the following methods, they're expected by the FXML
+
+    public BooleanProperty isBreakpointActiveProperty() {
+        return isBreakpointActive;
+    }
+
+    public ObjectProperty<URL> breakpointSvgUrlProperty() {
+        return breakpointSvgUrl;
     }
 
     public String getRawText() {
         return rawText;
     }
 
-    public BooleanProperty isBreakpointActiveProperty() {
-        return isBreakpointActive;
-    }
-
-    // Do NOT rename the following methods, they're expected by the FXML
-
-    public ObjectProperty<URL> breakpointSvgUrlProperty() {
-        return breakpointSvgUrl;
-    }
-
+    @Override
     public String getAddress() {
         return address;
     }
 
+    @Override
     public String getInstruction() {
         return instruction;
     }

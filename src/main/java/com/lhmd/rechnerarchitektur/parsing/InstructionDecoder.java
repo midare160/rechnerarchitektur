@@ -6,7 +6,6 @@ import java.util.*;
 import java.util.function.Function;
 
 public class InstructionDecoder {
-
     private static final Map<Integer, Function<Integer, ? extends Instruction>> OPCODES;
 
     static {

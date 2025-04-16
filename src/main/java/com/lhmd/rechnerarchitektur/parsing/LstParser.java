@@ -1,6 +1,6 @@
 package com.lhmd.rechnerarchitektur.parsing;
 
-import com.lhmd.rechnerarchitektur.instructions.InstructionViewModel;
+import com.lhmd.rechnerarchitektur.instructions.*;
 
 import java.io.*;
 import java.util.*;
