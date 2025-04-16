@@ -21,4 +21,6 @@ module com.lhmd.rechnerarchitektur {
     exports com.lhmd.rechnerarchitektur.values;
     exports com.lhmd.rechnerarchitektur.parsing;
     opens com.lhmd.rechnerarchitektur.parsing to javafx.fxml;
+    exports com.lhmd.rechnerarchitektur.tableview;
+    opens com.lhmd.rechnerarchitektur.tableview to javafx.fxml;
 }

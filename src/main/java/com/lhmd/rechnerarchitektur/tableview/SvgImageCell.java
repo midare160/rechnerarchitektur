@@ -1,4 +1,4 @@
-package com.lhmd.rechnerarchitektur;
+package com.lhmd.rechnerarchitektur.tableview;
 
 import javafx.scene.control.TableCell;
 import org.girod.javafx.svgimage.SVGLoader;

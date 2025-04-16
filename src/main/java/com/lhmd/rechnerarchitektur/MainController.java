@@ -2,6 +2,8 @@ package com.lhmd.rechnerarchitektur;
 
 import com.lhmd.rechnerarchitektur.instructions.InstructionViewModel;
 import com.lhmd.rechnerarchitektur.parsing.LstParser;
+import com.lhmd.rechnerarchitektur.tableview.BreakpointCell;
+import com.lhmd.rechnerarchitektur.tableview.BreakpointRow;
 import com.lhmd.rechnerarchitektur.themes.ThemeManager;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;

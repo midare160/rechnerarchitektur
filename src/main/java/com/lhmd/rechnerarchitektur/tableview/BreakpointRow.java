@@ -1,4 +1,4 @@
-package com.lhmd.rechnerarchitektur;
+package com.lhmd.rechnerarchitektur.tableview;
 
 import com.lhmd.rechnerarchitektur.instructions.InstructionViewModel;
 import javafx.css.PseudoClass;
