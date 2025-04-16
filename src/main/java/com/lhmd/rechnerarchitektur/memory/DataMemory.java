@@ -4,7 +4,7 @@ import com.lhmd.rechnerarchitektur.values.IntBox;
 import com.lhmd.rechnerarchitektur.common.IntUtils;
 import com.lhmd.rechnerarchitektur.registers.*;
 
-import java.util.Set;
+import java.util.*;
 import java.util.stream.*;
 
 public class DataMemory {
@@ -22,11 +22,13 @@ public class DataMemory {
 
     private final IntBox[] registers;
     private final IntBox wRegister;
+    private final ProgramCounter programCounter;
     private final StatusRegister statusRegister;
 
     public DataMemory() {
         registers = getInitialRegisters();
         wRegister = new IntBox();
+        programCounter = new ProgramCounter(registers[0x02], registers[0x0A]);
         statusRegister = new StatusRegister(registers[0x03]);
     }
 
@@ -38,10 +40,18 @@ public class DataMemory {
         return statusRegister;
     }
 
+    public ProgramCounter programCounter() {
+        return programCounter;
+    }
+
     public IntBox getRegister(int address) {
         var absoluteAddress = IntUtils.changeBit(address, 7, statusRegister.getRP0());
 
         return registers[absoluteAddress];
+    }
+
+    public List<IntBox> getAllRegisters() {
+        return List.of(registers);
     }
 
     public void reset() {

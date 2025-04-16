@@ -5,6 +5,8 @@ import com.lhmd.rechnerarchitektur.common.IntUtils;
 import com.lhmd.rechnerarchitektur.memory.ProgramMemory;
 import com.lhmd.rechnerarchitektur.values.IntBox;
 
+import java.util.*;
+
 public class ProgramCounter {
     private final IntBox pclRegister;
     private final IntBox pclathRegister;
@@ -13,8 +15,8 @@ public class ProgramCounter {
     private int highOrderBits;
 
     public ProgramCounter(IntBox pclRegister, IntBox pclathRegister) {
-        this.pclRegister = pclRegister;
-        this.pclathRegister = pclathRegister;
+        this.pclRegister = Objects.requireNonNull(pclRegister);
+        this.pclathRegister = Objects.requireNonNull(pclathRegister);
         this.changeManager = new ChangeManager();
 
         pclRegister.addListener(this::onPclChanged);
@@ -25,11 +27,8 @@ public class ProgramCounter {
     }
 
     public void increment() {
-        var result = (pclRegister.get() + 1) % ProgramMemory.MAX_SIZE;
-
-        try (var ignored = changeManager.beginChange()) {
-            pclRegister.set(result);
-        }
+        var result = (get() + 1) % ProgramMemory.MAX_SIZE;
+        override(result);
     }
 
     public void fromJump(int value) {
@@ -37,25 +36,25 @@ public class ProgramCounter {
         var jumpPart = IntUtils.bitRange(value, 8, 10);
 
         highOrderBits = IntUtils.concatBits(pclathPart, jumpPart, 3);
-
-        try (var ignored = changeManager.beginChange()) {
-            pclRegister.set(IntUtils.bitRange(value, 0, 7));
-        }
+        setPclInternal(IntUtils.bitRange(value, 0, 7));
     }
 
     public void override(int value) {
         highOrderBits = IntUtils.bitRange(value, 8, 12);
-
-        try (var ignored = changeManager.beginChange()) {
-            pclRegister.set(IntUtils.bitRange(value, 0, 7));
-        }
+        setPclInternal(IntUtils.bitRange(value, 0, 7));
     }
 
-    private void onPclChanged(int oldValue, int newValue) {
+    private void onPclChanged(Integer oldValue, Integer newValue) {
         if (changeManager.isChanging()) {
             return;
         }
 
-        highOrderBits = pclathRegister.get();
+        highOrderBits = IntUtils.bitRange(pclathRegister.get(), 0, 4);
+    }
+
+    private void setPclInternal(int value) {
+        try (var ignored = changeManager.beginChange()) {
+            pclRegister.set(value);
+        }
     }
 }
