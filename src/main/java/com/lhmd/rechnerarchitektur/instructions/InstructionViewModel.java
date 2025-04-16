@@ -34,26 +34,10 @@ public class InstructionViewModel {
         return isBreakpointActive;
     }
 
-    public boolean isBreakpointActive() {
-        return isBreakpointActive.get();
-    }
-
-    public void setIsBreakpointActive(boolean active) {
-        isBreakpointActive.set(active);
-    }
-
     // Do NOT rename the following methods, they're expected by the FXML
 
     public ObjectProperty<URL> breakpointSvgUrlProperty() {
         return breakpointSvgUrl;
-    }
-
-    public URL getBreakpointSvgUrl() {
-        return breakpointSvgUrl.get();
-    }
-
-    public void setBreakpointSvgUrl(URL url) {
-        breakpointSvgUrl.set(url);
     }
 
     public String getAddress() {

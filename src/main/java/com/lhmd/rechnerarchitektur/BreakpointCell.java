@@ -7,9 +7,9 @@ import javafx.scene.input.MouseEvent;
 import java.net.URL;
 
 public class BreakpointCell extends SvgImageCell<InstructionViewModel> {
-    private static final URL breakpointEnabledSvgUrl = Launcher.class.getResource("svgs/breakpoint-enabled.svg");
-    private static final URL breakpointDisabledSvgUrl = Launcher.class.getResource("svgs/breakpoint-disabled.svg");
-    private static final URL disableBreakpointSvgUrl = Launcher.class.getResource("svgs/disable-breakpoint.svg");
+    private static final URL BREAKPOINT_ENABLED_SVG_URL = Launcher.class.getResource("svgs/breakpoint-enabled.svg");
+    private static final URL BREAKPOINT_DISABLED_SVG_URL = Launcher.class.getResource("svgs/breakpoint-disabled.svg");
+    private static final URL DISABLE_BREAKPOINT_SVG_URL = Launcher.class.getResource("svgs/disable-breakpoint.svg");
 
     public BreakpointCell() {
         setOnMouseClicked(this::onMouseClicked);
@@ -17,24 +17,37 @@ public class BreakpointCell extends SvgImageCell<InstructionViewModel> {
         setOnMouseExited(this::onMouseExited);
     }
 
-    private void onMouseClicked(MouseEvent mouseEvent) {
-        var isBreakpointActive = false;
-        var newSvgUrl = breakpointDisabledSvgUrl;
+    @Override
+    protected void updateItem(URL item, boolean empty) {
+        super.updateItem(item, empty);
 
-        if (getItem() == null || getItem() == breakpointDisabledSvgUrl) {
-            isBreakpointActive = true;
-            newSvgUrl = disableBreakpointSvgUrl;
+        if (item != null && !empty) {
+            return;
         }
 
-        getTableRow().getItem().setIsBreakpointActive(isBreakpointActive);
+        // Display the current line number if no breakpoint svg is active
+        var lineNumber = getTableRow().getIndex() + 1;
+        setText(Integer.toString(lineNumber));
+    }
+
+    private void onMouseClicked(MouseEvent mouseEvent) {
+        var isBreakpointActive = false;
+        var newSvgUrl = BREAKPOINT_DISABLED_SVG_URL;
+
+        if (getItem() == null || getItem() == BREAKPOINT_DISABLED_SVG_URL) {
+            isBreakpointActive = true;
+            newSvgUrl = DISABLE_BREAKPOINT_SVG_URL;
+        }
+
+        getTableRow().getItem().isBreakpointActiveProperty().set(isBreakpointActive);
         setBreakpointSvgUrl(newSvgUrl);
     }
 
     private void onMouseEntered(MouseEvent mouseEvent) {
-        var newSvgUrl = disableBreakpointSvgUrl;
+        var newSvgUrl = DISABLE_BREAKPOINT_SVG_URL;
 
         if (getItem() == null) {
-            newSvgUrl = breakpointDisabledSvgUrl;
+            newSvgUrl = BREAKPOINT_DISABLED_SVG_URL;
         }
 
         setBreakpointSvgUrl(newSvgUrl);
@@ -44,8 +57,8 @@ public class BreakpointCell extends SvgImageCell<InstructionViewModel> {
     private void onMouseExited(MouseEvent mouseEvent) {
         URL newSvgUrl = null;
 
-        if (getItem() == disableBreakpointSvgUrl) {
-            newSvgUrl = breakpointEnabledSvgUrl;
+        if (getItem() == DISABLE_BREAKPOINT_SVG_URL) {
+            newSvgUrl = BREAKPOINT_ENABLED_SVG_URL;
         }
 
         setBreakpointSvgUrl(newSvgUrl);
@@ -53,6 +66,6 @@ public class BreakpointCell extends SvgImageCell<InstructionViewModel> {
     }
 
     private void setBreakpointSvgUrl(URL url) {
-        getTableRow().getItem().setBreakpointSvgUrl(url);
+        getTableRow().getItem().breakpointSvgUrlProperty().set(url);
     }
 }

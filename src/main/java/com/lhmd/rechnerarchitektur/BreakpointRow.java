@@ -12,7 +12,7 @@ public class BreakpointRow extends TableRow<InstructionViewModel> {
     protected void updateItem(InstructionViewModel instruction, boolean empty) {
         super.updateItem(instruction, empty);
 
-        var isActive = !empty && instruction != null && instruction.isBreakpointActive();
+        var isActive = !empty && instruction != null && instruction.isBreakpointActiveProperty().get();
 
         pseudoClassStateChanged(BREAKPOINT_ACTIVE, isActive);
     }
@@ -21,7 +21,7 @@ public class BreakpointRow extends TableRow<InstructionViewModel> {
     public void updateIndex(int i) {
         super.updateIndex(i);
 
-        var isActive = i >= 0 && getItem() != null && getItem().isBreakpointActive();
+        var isActive = i >= 0 && getItem() != null && getItem().isBreakpointActiveProperty().get();
 
         pseudoClassStateChanged(BREAKPOINT_ACTIVE, isActive);
     }

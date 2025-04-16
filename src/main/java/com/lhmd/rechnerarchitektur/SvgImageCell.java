@@ -10,14 +10,13 @@ public class SvgImageCell<S> extends TableCell<S, URL> {
     protected void updateItem(URL item, boolean empty) {
         super.updateItem(item, empty);
 
-        if (item == null || empty) {
-            setText(null);
-            setGraphic(null);
+        setText(null);
 
+        if (item == null || empty) {
+            setGraphic(null);
             return;
         }
 
-        var svgImage = SVGLoader.load(item);
-        setGraphic(svgImage);
+        setGraphic(SVGLoader.load(item));
     }
 }

@@ -1,6 +1,6 @@
-package com.lhmd.rechnerarchitektur.instructions;
+package com.lhmd.rechnerarchitektur.parsing;
 
-import com.lhmd.rechnerarchitektur.common.IntUtils;
+import com.lhmd.rechnerarchitektur.instructions.*;
 
 import java.util.*;
 import java.util.function.Function;
@@ -10,7 +10,7 @@ public class InstructionDecoder {
     private static final Map<Integer, Function<Integer, ? extends Instruction>> OPCODES;
 
     static {
-        OPCODES = new LinkedHashMap<>();
+        OPCODES = LinkedHashMap.newLinkedHashMap(32);
         OPCODES.put(0b11_1110_0000_0000, Addlw::new);
         OPCODES.put(0b11_1001_0000_0000, Andlw::new);
         OPCODES.put(0b11_1100_0000_0000, Sublw::new);
@@ -24,19 +24,13 @@ public class InstructionDecoder {
         OPCODES.put(0b00_0000_0000_0000, Nop::new);
     }
 
-    public static Instruction decode(String instruction) {
-        var hexInstruction = IntUtils.tryParse(instruction, 16);
-
-        if (hexInstruction == null) {
-            return null;
-        }
-
-        for (var kvp : OPCODES.entrySet()) {
-            if ((hexInstruction & kvp.getKey()) != kvp.getKey()) {
+    public static Instruction decode(int instruction) {
+        for (var entry : OPCODES.entrySet()) {
+            if ((instruction & entry.getKey()) != entry.getKey()) {
                 continue;
             }
 
-            return kvp.getValue().apply(hexInstruction);
+            return entry.getValue().apply(instruction);
         }
 
         throw new IllegalArgumentException("No instruction found for " + instruction);

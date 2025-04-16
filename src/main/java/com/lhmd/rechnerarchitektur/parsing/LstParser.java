@@ -1,4 +1,6 @@
-package com.lhmd.rechnerarchitektur.instructions;
+package com.lhmd.rechnerarchitektur.parsing;
+
+import com.lhmd.rechnerarchitektur.instructions.InstructionViewModel;
 
 import java.io.*;
 import java.util.*;
@@ -16,7 +18,7 @@ public class LstParser {
         var address = line.substring(0, 4);
         var instruction = line.substring(5, 9);
         var lineNumber = line.substring(20, 25);
-        var comment = line.substring(25).trim();
+        var comment = line.substring(25);
 
         return new InstructionViewModel(
                 address,

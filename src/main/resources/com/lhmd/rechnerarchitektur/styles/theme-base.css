@@ -2,11 +2,14 @@
     src: url('../fonts/consolas.ttf');
 }
 
-.small-rows .table-row-cell {
-    -fx-cell-size: 25;
+.instructionsTable .column-header-background {
+    -fx-max-height: 0;
+    -fx-pref-height: 0;
+    -fx-min-height: 0;
 }
 
-.monospaced .table-row-cell {
+.instructionsTable .table-row-cell {
+    -fx-cell-size: 25;
     -fx-font-family: "Consolas";
 }
 
@@ -17,7 +20,3 @@
 /*.table-row-cell:breakpoint-active:selected {*/
 /*    -fx-background-color: -blue-highlight-color;*/
 /*}*/
-
-.align-center {
-    -fx-alignment: CENTER;
-}
