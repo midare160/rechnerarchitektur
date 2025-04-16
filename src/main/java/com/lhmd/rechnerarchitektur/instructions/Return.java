@@ -9,4 +9,9 @@ public class Return extends Instruction {
     public void execute(ExecutionParams params) {
 
     }
+
+    @Override
+    public boolean isTwoCycle() {
+        return true;
+    }
 }

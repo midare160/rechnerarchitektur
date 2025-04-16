@@ -17,6 +17,10 @@ public abstract class Instruction {
 
     public abstract void execute(ExecutionParams params);
 
+    public boolean isTwoCycle() {
+        return false;
+    }
+
     protected int getW(ExecutionParams params) {
         return params.dataMemory().W().get();
     }

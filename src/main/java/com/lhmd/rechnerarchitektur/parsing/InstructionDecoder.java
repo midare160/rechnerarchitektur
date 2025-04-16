@@ -9,7 +9,7 @@ public class InstructionDecoder {
     private static final Map<Integer, Function<Integer, ? extends Instruction>> OPCODES;
 
     static {
-        OPCODES = LinkedHashMap.newLinkedHashMap(32);
+        OPCODES = LinkedHashMap.newLinkedHashMap(35);
         OPCODES.put(0b11_1110_0000_0000, Addlw::new);
         OPCODES.put(0b11_1001_0000_0000, Andlw::new);
         OPCODES.put(0b11_1100_0000_0000, Sublw::new);
