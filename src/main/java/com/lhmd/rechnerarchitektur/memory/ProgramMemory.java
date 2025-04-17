@@ -6,7 +6,6 @@ import java.util.*;
 
 public class ProgramMemory {
     public static final int MAX_SIZE = 1024;
-    private static final Instruction DEFAULT_NOP = new Nop(0x00);
 
     private final Instruction[] instructions;
 
@@ -23,7 +22,7 @@ public class ProgramMemory {
         instructions = new Instruction[MAX_SIZE];
 
         for (var i = 0; i < instructions.length; i++) {
-            instructions[i] = instructionMap.getOrDefault(i, DEFAULT_NOP);
+            instructions[i] = instructionMap.getOrDefault(i, Nop.DEFAULT);
         }
     }
 
@@ -35,6 +34,6 @@ public class ProgramMemory {
     }
 
     public void reset() {
-        Arrays.fill(instructions, DEFAULT_NOP);
+        Arrays.fill(instructions, Nop.DEFAULT);
     }
 }
