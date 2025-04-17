@@ -1,10 +1,13 @@
 package com.lhmd.rechnerarchitektur.changes;
 
+/**
+ * Manages (temporary) values to perform (internal) changes.
+ */
 public class ChangeManager {
     private boolean isChanging;
 
-    public BooleanTempValue beginChange() {
-        return new BooleanTempValue(isChanging, true, c -> isChanging = c);
+    public TempValue<Boolean> beginChange() {
+        return new TempValue<>(isChanging, true, c -> isChanging = c);
     }
 
     public boolean isChanging() {

@@ -22,15 +22,28 @@ public class ProgramCounter {
         pclRegister.addListener(this::onPclChanged);
     }
 
+    /**
+     * Concats the 5 upper bits with PCL bits <7:0>.
+     */
     public int get() {
         return IntUtils.concatBits(highOrderBits, pclRegister.get(), 8);
     }
 
+    /**
+     * Increments PC by one.
+     * If the result exceeds {@code ProgramMemory.MAX_SIZE}, PC is wrapped around.
+     */
     public void increment() {
         var result = (get() + 1) % ProgramMemory.MAX_SIZE;
         override(result);
     }
 
+    /**
+     * The eleven bit immediate value is loaded into PC bits <10:0>.
+     * The upper bits of PC are loaded from PCLATH<4:3>.
+     *
+     * @param value the eleven bit address
+     */
     public void fromJump(int value) {
         var pclathPart = IntUtils.bitRange(pclathRegister.get(), 3, 4);
         var jumpPart = IntUtils.bitRange(value, 8, 10);
@@ -39,6 +52,11 @@ public class ProgramCounter {
         setPclInternal(IntUtils.bitRange(value, 0, 7));
     }
 
+    /**
+     * The thirteen bit immediate value is loaded into PC.
+     *
+     * @param value the thirteen bit address
+     */
     public void override(int value) {
         highOrderBits = IntUtils.bitRange(value, 8, 12);
         setPclInternal(IntUtils.bitRange(value, 0, 7));

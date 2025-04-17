@@ -1,10 +1,19 @@
 package com.lhmd.rechnerarchitektur.common;
 
 public class IntUtils {
+    private IntUtils() {
+    }
+
+    /**
+     * Like {@link Integer#parseInt(String)}, but will return {@code null} instead of throwing an exception.
+     */
     public static Integer tryParse(String value) {
         return tryParse(value, 10);
     }
 
+    /**
+     * Like {@link Integer#parseInt(String, int)}, but will return {@code null} instead of throwing an exception.
+     */
     public static Integer tryParse(String value, int radix) {
         if (StringUtils.isNullOrWhitespace(value)) {
             return null;
@@ -77,8 +86,8 @@ public class IntUtils {
      * Note: This method assumes non-negative integers. Negative values may produce
      * unexpected results due to two's complement representation.
      *
-     * @param a the first integer (bits will be placed in higher-order positions)
-     * @param b the second integer (bits will be placed in lower-order positions)
+     * @param a       the first integer (bits will be placed in higher-order positions)
+     * @param b       the second integer (bits will be placed in lower-order positions)
      * @param bLength the number of bits from {@code b} that should be concatenated with {@code a}
      * @return an integer representing the bitwise concatenation of {@code a} and {@code b}
      */
