@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<HBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.lhmd.rechnerarchitektur.MainController" prefHeight="400.0" prefWidth="600.0" spacing="20">
+    <MenuBar HBox.hgrow="ALWAYS" VBox.vgrow="NEVER">
+        <menus>
+            <Menu mnemonicParsing="false" text="File">
+                <items>
+                    <MenuItem mnemonicParsing="false" text="New" />
+                    <MenuItem fx:id="openMenuItem" mnemonicParsing="false" onAction="#onOpenMenuItemAction" text="Open…" />
+                    <Menu fx:id="openRecentMenu" mnemonicParsing="false" text="Open Recent" />
+                    <SeparatorMenuItem mnemonicParsing="false" />
+                    <MenuItem mnemonicParsing="false" text="Close" />
+                    <MenuItem mnemonicParsing="false" text="Save" />
+                    <MenuItem mnemonicParsing="false" text="Save As…" />
+                    <MenuItem mnemonicParsing="false" text="Revert" />
+                    <SeparatorMenuItem mnemonicParsing="false" />
+                    <MenuItem mnemonicParsing="false" text="Preferences…" />
+                    <SeparatorMenuItem mnemonicParsing="false" />
+                    <MenuItem fx:id="quitMenuItem" onAction="#onQuitMenuItemAction" mnemonicParsing="false" text="Quit" />
+                </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Edit">
+                <items>
+                    <MenuItem mnemonicParsing="false" text="Undo" />
+                    <MenuItem mnemonicParsing="false" text="Redo" />
+                    <SeparatorMenuItem mnemonicParsing="false" />
+                    <MenuItem mnemonicParsing="false" text="Cut" />
+                    <MenuItem mnemonicParsing="false" text="Copy" />
+                    <MenuItem mnemonicParsing="false" text="Paste" />
+                    <MenuItem mnemonicParsing="false" text="Delete" />
+                    <SeparatorMenuItem mnemonicParsing="false" />
+                    <MenuItem mnemonicParsing="false" text="Select All" />
+                    <MenuItem mnemonicParsing="false" text="Unselect All" />
+                </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Help">
+                <items>
+                    <MenuItem fx:id="aboutMenuItem" mnemonicParsing="false" onAction="#onAboutMenuItemAction" text="About" />
+                </items>
+            </Menu>
+            <Menu fx:id="themeMenu" mnemonicParsing="false" text="Theme" />
+        </menus>
+    </MenuBar>
+    <!-- StackPane puts Elements over another, this way I can implement a toggle -->
+    <Button fx:id="stopButton" text="Stop" onAction="#onStopButtonAction"/>
+    <Button fx:id="runButton" text="Start" onAction="#onRunButtonAction"/>
+    <Button fx:id="pauseButton" text="Pause" onAction="#onResetButtonAction"/>
+    <Button fx:id="stepButton" text="Step" onAction="#onStepButtonAction"/>
+</HBox>
