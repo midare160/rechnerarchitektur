@@ -1,25 +1,23 @@
 package com.lhmd.rechnerarchitektur;
 
-import com.lhmd.rechnerarchitektur.instructions.Instruction;
-import com.lhmd.rechnerarchitektur.instructions.LstParser;
+import com.lhmd.rechnerarchitektur.instructions.InstructionViewModel;
+import com.lhmd.rechnerarchitektur.parsing.LstParser;
+import com.lhmd.rechnerarchitektur.tableview.*;
 import com.lhmd.rechnerarchitektur.themes.ThemeManager;
-import javafx.collections.FXCollections;
+import javafx.collections.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCodeCombination;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import org.girod.javafx.svgimage.SVGLoader;
+import javafx.stage.*;
+
 import java.io.*;
 import java.net.URL;
-import java.util.List;
 
 public class MainController {
 
-    private List<Instruction> instructions;
-
+    private ObservableList<InstructionViewModel> instructions;
     private Stage stage;
 
     @FXML
@@ -44,10 +42,10 @@ public class MainController {
     private Button pauseButton;
 
     @FXML
-    private TableView<Instruction> instructionsTableView;
+    private TableView<InstructionViewModel> instructionsTableView;
 
     @FXML
-    private TableColumn<Instruction, URL> breakpointColumn;
+    private TableColumn<InstructionViewModel, URL> breakpointColumn;
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -116,6 +114,8 @@ public class MainController {
     }
 
     private void initializeInstructionsTableView() {
+        instructionsTableView.setSelectionModel(null);
+
         instructionsTableView.setRowFactory(p -> new BreakpointRow());
         breakpointColumn.setCellFactory(p -> new BreakpointCell());
     }
@@ -169,12 +169,13 @@ public class MainController {
         }
 
         try {
-            instructions = LstParser.parseFile(file.getPath());
+            var parsedInstructions = LstParser.parseFile(file.getPath());
+            instructions = FXCollections.observableList(parsedInstructions);
         } catch (IOException e) {
             ExceptionHandler.handle(e);
         }
 
-        instructionsTableView.setItems(FXCollections.observableList(instructions));
+        instructionsTableView.setItems(instructions);
 
         Configuration.addRecentFile(file.getPath());
         initializeOpenRecentMenu();
@@ -183,12 +184,7 @@ public class MainController {
     @FXML
     public void onQuitMenuItemAction(ActionEvent e) {
         var eventArgs = new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST);
-
         stage.fireEvent(eventArgs);
-
-        if (eventArgs.isConsumed()) {
-            stage.close();
-        }
     }
 
     private void loadSvgIcon() {
