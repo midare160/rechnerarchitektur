@@ -29,6 +29,11 @@ public abstract class Instruction {
         params.dataMemory().W().set(w);
     }
 
+    protected void popStack(ExecutionParams params) {
+        var stackAddress = params.programStack().pop();
+        params.dataMemory().programCounter().override(stackAddress);
+    }
+
     protected void updateC_Add(ExecutionParams params, int a, int b) {
         params.dataMemory().status().setC(a + b > 255);
     }

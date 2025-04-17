@@ -80,4 +80,24 @@ public class ProgramStackTest {
         assertEquals(firstPop, stack.pop());
         assertEquals(6, stack.getPointer());
     }
+
+    @Test
+    public void peek_returnsCorrectValue() {
+        var stack = new ProgramStack();
+        stack.push(1);
+        stack.push(2);
+
+        assertEquals(2, stack.peek());
+    }
+
+    @Test
+    public void peek_underflow() {
+        var stack = new ProgramStack();
+
+        for (var i = 1; i <= ProgramStack.MAX_SIZE; i++) {
+            stack.push(i);
+        }
+
+        assertEquals(8, stack.peek());
+    }
 }

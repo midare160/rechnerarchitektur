@@ -45,6 +45,7 @@ public class DataMemory {
     }
 
     public IntBox getRegister(int address) {
+        // Used for selecting bank 0/1
         var absoluteAddress = IntUtils.changeBit(address, 7, statusRegister.getRP0());
 
         return registers[absoluteAddress];

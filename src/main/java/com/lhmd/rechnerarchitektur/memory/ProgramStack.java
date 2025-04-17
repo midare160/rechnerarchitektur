@@ -3,7 +3,7 @@ package com.lhmd.rechnerarchitektur.memory;
 import java.util.Arrays;
 
 public class ProgramStack {
-    private static final int MAX_SIZE = 8;
+    public static final int MAX_SIZE = 8;
 
     private final int[] stack;
 
@@ -27,6 +27,10 @@ public class ProgramStack {
         pointer = Math.floorMod(pointer - 1, MAX_SIZE);
 
         return stack[pointer];
+    }
+
+    public int peek() {
+        return stack[Math.floorMod(pointer - 1, MAX_SIZE)];
     }
 
     public void reset() {

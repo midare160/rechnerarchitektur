@@ -2,6 +2,10 @@ package com.lhmd.rechnerarchitektur.instructions;
 
 import com.lhmd.rechnerarchitektur.common.IntUtils;
 
+/**
+ * The contents of the W register is OR’ed with the eight bit literal 'k'.
+ * The result is placed in the W register.
+ */
 public class Iorlw extends Instruction {
     private final int literal;
 

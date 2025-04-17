@@ -2,6 +2,9 @@ package com.lhmd.rechnerarchitektur.instructions;
 
 import com.lhmd.rechnerarchitektur.common.IntUtils;
 
+/**
+ * The eight bit literal ’k’ is loaded into W register.
+ */
 public class Movlw extends Instruction {
     private final int literal;
 
