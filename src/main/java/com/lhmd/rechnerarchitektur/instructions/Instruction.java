@@ -1,81 +1,65 @@
 package com.lhmd.rechnerarchitektur.instructions;
 
-import javafx.beans.property.*;
+public abstract class Instruction {
+    private final int instruction;
 
-import java.net.URL;
-import java.util.UUID;
+    public Instruction(int instruction) {
+        if (instruction > 0b11_1111_1111_1111) {
+            throw new IllegalArgumentException("Instruction may only be 14 bits wide. Parameter was " + instruction);
+        }
 
-@SuppressWarnings({"unused"})
-public class Instruction {
-    private final UUID id;
-    private final String programCounter;
-    private final String instruction;
-    private final String lineNumber;
-    private final String comment;
-    private final String rawText;
-
-    private final BooleanProperty isBreakpointActive;
-    private final ObjectProperty<URL> breakpointSvgUrl;
-
-    public Instruction(UUID id, String programCounter, String instruction, String lineNumber, String comment, String rawText) {
-        this.id = id;
-        this.programCounter = programCounter;
         this.instruction = instruction;
-        this.lineNumber = lineNumber;
-        this.comment = comment;
-        this.rawText = rawText;
-
-        isBreakpointActive = new SimpleBooleanProperty(false);
-        breakpointSvgUrl = new SimpleObjectProperty<>();
     }
 
-    public UUID getId() {
-        return id;
-    }
-
-    public String getRawText() {
-        return rawText;
-    }
-
-    public BooleanProperty isBreakpointActiveProperty() {
-        return isBreakpointActive;
-    }
-
-    public boolean isBreakpointActive() {
-        return isBreakpointActive.get();
-    }
-
-    public void setIsBreakpointActive(boolean active) {
-        isBreakpointActive.set(active);
-    }
-
-    // Do NOT rename the following methods, they're expected by the FXML
-
-    public ObjectProperty<URL> breakpointSvgUrlProperty() {
-        return breakpointSvgUrl;
-    }
-
-    public URL getBreakpointSvgUrl() {
-        return breakpointSvgUrl.get();
-    }
-
-    public void setBreakpointSvgUrl(URL url) {
-        breakpointSvgUrl.set(url);
-    }
-
-    public String getProgramCounter() {
-        return programCounter;
-    }
-
-    public String getInstruction() {
+    public int getInstruction() {
         return instruction;
     }
 
-    public String getLineNumber() {
-        return lineNumber;
+    public abstract void execute(ExecutionParams params);
+
+    public boolean isTwoCycle() {
+        return false;
     }
 
-    public String getComment() {
-        return comment;
+    protected int getW(ExecutionParams params) {
+        return params.dataMemory().W().get();
+    }
+
+    protected void setW(ExecutionParams params, int w) {
+        params.dataMemory().W().set(w);
+    }
+
+    protected void popStack(ExecutionParams params) {
+        var stackAddress = params.programStack().pop();
+        params.dataMemory().programCounter().override(stackAddress);
+    }
+
+    protected void updateC_Add(ExecutionParams params, int a, int b) {
+        params.dataMemory().status().setC(a + b > 255);
+    }
+
+    protected void updateC_Sub(ExecutionParams params, int a, int b) {
+        params.dataMemory().status().setC(b >= a);
+    }
+
+    protected void updateDC_Add(ExecutionParams params, int a, int b) {
+        // Mask to get lower 4 bits (nibble)
+        var lowerNibbleSum = (a & 0x0F) + (b & 0x0F);
+        var carryOccured = lowerNibbleSum > 0x0F;
+
+        // DC = true if carry from bit 3
+        params.dataMemory().status().setDC(carryOccured);
+    }
+
+    protected void updateDC_Sub(ExecutionParams params, int a, int b) {
+        // For subtraction, polarity is reversed
+        var noBorrowOccured = (a & 0x0F) >= (b & 0x0F);
+
+        // DC = true if no borrow from bit 3
+        params.dataMemory().status().setDC(noBorrowOccured);
+    }
+
+    protected void updateZ(ExecutionParams params, int result) {
+        params.dataMemory().status().setZ(result == 0);
     }
 }

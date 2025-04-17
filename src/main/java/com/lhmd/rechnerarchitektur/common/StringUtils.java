@@ -1,12 +1,15 @@
 package com.lhmd.rechnerarchitektur.common;
 
 public class StringUtils {
+    private StringUtils() {
+    }
+
     public static boolean isNullOrEmpty(String str) {
         return str == null || str.isEmpty();
     }
 
     public static boolean isNullOrWhitespace(String str) {
-        if (isNullOrEmpty(str)) {
+        if (str == null) {
             return true;
         }
 

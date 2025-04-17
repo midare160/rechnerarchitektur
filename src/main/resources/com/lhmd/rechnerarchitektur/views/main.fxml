@@ -63,29 +63,29 @@
       <items>
         <AnchorPane>
                <children>
-                  <TableView fx:id="instructionsTableView" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <TableView fx:id="instructionsTableView" styleClass="instructionsTable, striped" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <columns>
-                        <TableColumn fx:id="breakpointColumn" prefWidth="25.0" resizable="false" sortable="false" styleClass="align-center">
+                        <TableColumn fx:id="breakpointColumn" resizable="false" prefWidth="40" styleClass="align-right">
                             <cellValueFactory>
                                 <PropertyValueFactory property="breakpointSvgUrl" />
                             </cellValueFactory>
                         </TableColumn>
-                        <TableColumn prefWidth="100.0" sortable="false" text="Program counter">
+                        <TableColumn resizable="false" prefWidth="50" styleClass="align-right">
                             <cellValueFactory>
-                                <PropertyValueFactory property="programCounter" />
+                                <PropertyValueFactory property="address" />
                             </cellValueFactory>
                         </TableColumn>
-                        <TableColumn prefWidth="100.0" sortable="false" text="Instruction">
+                        <TableColumn resizable="false" prefWidth="50" styleClass="align-right">
                             <cellValueFactory>
                                 <PropertyValueFactory property="instruction" />
                             </cellValueFactory>
                         </TableColumn>
-                        <TableColumn prefWidth="100.0" sortable="false" text="Line number">
+                        <TableColumn resizable="false" prefWidth="60" styleClass="align-right">
                             <cellValueFactory>
                                 <PropertyValueFactory property="lineNumber" />
                             </cellValueFactory>
                         </TableColumn>
-                        <TableColumn prefWidth="100.0" sortable="false" text="Comment">
+                        <TableColumn styleClass="align-left">
                             <cellValueFactory>
                                 <PropertyValueFactory property="comment" />
                             </cellValueFactory>
