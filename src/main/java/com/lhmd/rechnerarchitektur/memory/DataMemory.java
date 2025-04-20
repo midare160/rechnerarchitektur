@@ -51,7 +51,7 @@ public class DataMemory {
         return registers[absoluteAddress];
     }
 
-    public List<IntBox> getAllRegisters() {
+    public List<IntBox> registers() {
         return List.of(registers);
     }
 

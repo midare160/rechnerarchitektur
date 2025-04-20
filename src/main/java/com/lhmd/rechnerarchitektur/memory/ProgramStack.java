@@ -13,7 +13,7 @@ public class ProgramStack {
         stack = new int[MAX_SIZE];
     }
 
-    public int getPointer() {
+    public int pointer() {
         return pointer;
     }
 

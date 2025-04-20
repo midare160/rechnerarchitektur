@@ -1,16 +1,16 @@
 package com.lhmd.rechnerarchitektur.values;
 
-import com.lhmd.rechnerarchitektur.changes.ChangeListener;
+import com.lhmd.rechnerarchitektur.changes.ChangedEvent;
 
 import java.util.*;
 
 public class Box<T extends Comparable<T>> implements Comparable<Box<T>> {
-    private final List<ChangeListener<T>> listeners;
+    private final ChangedEvent<T> changedEvent;
 
     private T value;
 
     public Box(T value) {
-        listeners = new ArrayList<>();
+        changedEvent = new ChangedEvent<>();
         setValue(value);
     }
 
@@ -23,23 +23,11 @@ public class Box<T extends Comparable<T>> implements Comparable<Box<T>> {
     }
 
     public void setValue(T value) {
-        if (Objects.equals(this.value, value)) {
-            return;
-        }
-
-        for (var listener : listeners) {
-            listener.changed(this.value, value);
-        }
-
-        this.value = value;
+        changedEvent.fire(() -> this.value, () -> this.value = value);
     }
 
-    public void addListener(ChangeListener<T> listener) {
-        listeners.add(listener);
-    }
-
-    public void removeListener(ChangeListener<T> listener) {
-        listeners.remove(listener);
+    public ChangedEvent<T> changedEvent() {
+        return changedEvent;
     }
 
     @Override
