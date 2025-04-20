@@ -5,14 +5,14 @@ import org.girod.javafx.svgimage.SVGLoader;
 
 import java.net.URL;
 
-public class SvgImageCell<S> extends TableCell<S, URL> {
+public class SvgTableCell<S> extends TableCell<S, URL> {
     @Override
     protected void updateItem(URL item, boolean empty) {
         super.updateItem(item, empty);
 
         setText(null);
 
-        if (item == null || empty) {
+        if (empty || item == null) {
             setGraphic(null);
             return;
         }

@@ -7,12 +7,12 @@ import javafx.scene.input.MouseEvent;
 
 import java.net.URL;
 
-public class BreakpointCell extends SvgImageCell<InstructionRowModel> {
+public class BreakpointTableCell extends SvgTableCell<InstructionRowModel> {
     private static final URL BREAKPOINT_ENABLED_SVG_URL = Launcher.class.getResource("svgs/breakpoint-enabled.svg");
     private static final URL BREAKPOINT_DISABLED_SVG_URL = Launcher.class.getResource("svgs/breakpoint-disabled.svg");
     private static final URL DISABLE_BREAKPOINT_SVG_URL = Launcher.class.getResource("svgs/disable-breakpoint.svg");
 
-    public BreakpointCell() {
+    public BreakpointTableCell() {
         setOnMouseClicked(this::onMouseClicked);
         setOnMouseEntered(this::onMouseEntered);
         setOnMouseExited(this::onMouseExited);
@@ -22,12 +22,12 @@ public class BreakpointCell extends SvgImageCell<InstructionRowModel> {
     protected void updateItem(URL item, boolean empty) {
         super.updateItem(item, empty);
 
-        if (item != null && !empty) {
+        if (empty || item != null) {
             return;
         }
 
         // Display the current line number if no breakpoint svg is active
-        var lineNumber = getTableRow().getIndex() + 1;
+        var lineNumber = getTableRow().getItem().getLineNumber();
         setText(Integer.toString(lineNumber));
     }
 

@@ -15,7 +15,6 @@ import java.io.*;
 import java.net.URL;
 
 public class MainController {
-
     private ObservableList<InstructionRowModel> instructions;
     private Stage stage;
 
@@ -34,10 +33,20 @@ public class MainController {
     @FXML
     private TableColumn<InstructionRowModel, URL> breakpointColumn;
 
+    @FXML
+    private TableColumn<InstructionRowModel, Integer> addressColumn;
+
+    @FXML
+    private TableColumn<InstructionRowModel, Integer> instructionColumn;
+
+    @FXML
+    private TableColumn<InstructionRowModel, Integer> lineNumberColumn;
+
     public void setStage(Stage stage) {
         this.stage = stage;
     }
 
+    @FXML
     public void initialize() {
         initializeOpenRecentMenu();
         initializeThemeMenu();
@@ -74,8 +83,12 @@ public class MainController {
     private void initializeInstructionsTableView() {
         instructionsTableView.setSelectionModel(null);
 
-        instructionsTableView.setRowFactory(p -> new BreakpointRow());
-        breakpointColumn.setCellFactory(p -> new BreakpointCell());
+        instructionsTableView.setRowFactory(p -> new BreakpointTableRow());
+
+        breakpointColumn.setCellFactory(p -> new BreakpointTableCell());
+        addressColumn.setCellFactory(p -> new FormattedTableCell<>("%04X"::formatted));
+        instructionColumn.setCellFactory(p -> new FormattedTableCell<>("%04X"::formatted));
+        lineNumberColumn.setCellFactory(p -> new FormattedTableCell<>("%05d"::formatted));
     }
 
     private void onThemeMenuItemAction(ActionEvent e) {

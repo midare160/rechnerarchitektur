@@ -4,7 +4,7 @@ import com.lhmd.rechnerarchitektur.instructions.InstructionRowModel;
 import javafx.css.PseudoClass;
 import javafx.scene.control.TableRow;
 
-public class BreakpointRow extends TableRow<InstructionRowModel> {
+public class BreakpointTableRow extends TableRow<InstructionRowModel> {
 
     private static final PseudoClass BREAKPOINT_ACTIVE = PseudoClass.getPseudoClass("breakpoint-active");
 
