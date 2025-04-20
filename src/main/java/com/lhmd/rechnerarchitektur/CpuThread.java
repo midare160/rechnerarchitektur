@@ -25,10 +25,10 @@ public class CpuThread extends Thread {
                 nextInstruction();
 
                 // TODO remove
-                Runner.unchecked(() -> Thread.sleep(500));
+                Runner.runUnchecked(() -> Thread.sleep(500));
             }
 
-            Runner.unchecked(() -> Thread.sleep(100));
+            Runner.runUnchecked(() -> Thread.sleep(100));
         }
     }
 

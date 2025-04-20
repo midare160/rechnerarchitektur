@@ -1,7 +1,8 @@
 package com.lhmd.rechnerarchitektur;
 
-import com.lhmd.rechnerarchitektur.instructions.InstructionViewModel;
-import com.lhmd.rechnerarchitektur.parsing.LstParser;
+import com.lhmd.rechnerarchitektur.common.Runner;
+import com.lhmd.rechnerarchitektur.instructions.InstructionRowModel;
+import com.lhmd.rechnerarchitektur.parsing.InstructionParser;
 import com.lhmd.rechnerarchitektur.tableview.*;
 import com.lhmd.rechnerarchitektur.themes.ThemeManager;
 import javafx.collections.*;
@@ -15,7 +16,7 @@ import java.net.URL;
 
 public class MainController {
 
-    private ObservableList<InstructionViewModel> instructions;
+    private ObservableList<InstructionRowModel> instructions;
     private Stage stage;
 
     @FXML
@@ -28,10 +29,10 @@ public class MainController {
     private Menu openRecentMenu;
 
     @FXML
-    private TableView<InstructionViewModel> instructionsTableView;
+    private TableView<InstructionRowModel> instructionsTableView;
 
     @FXML
-    private TableColumn<InstructionViewModel, URL> breakpointColumn;
+    private TableColumn<InstructionRowModel, URL> breakpointColumn;
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -125,13 +126,8 @@ public class MainController {
             return;
         }
 
-        try {
-            var parsedInstructions = LstParser.parseFile(file.getPath());
-            instructions = FXCollections.observableList(parsedInstructions);
-        } catch (IOException e) {
-            ExceptionHandler.handle(e);
-        }
-
+        var parsedInstructions = Runner.getUnchecked(() -> InstructionParser.parseFile(InstructionRowModel.class, file.getPath()));
+        instructions = FXCollections.observableList(parsedInstructions);
         instructionsTableView.setItems(instructions);
 
         Configuration.addRecentFile(file.getPath());

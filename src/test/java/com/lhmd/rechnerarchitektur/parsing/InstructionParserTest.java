@@ -1,6 +1,6 @@
 package com.lhmd.rechnerarchitektur.parsing;
 
-import com.lhmd.rechnerarchitektur.instructions.RawInstruction;
+import com.lhmd.rechnerarchitektur.instructions.Instruction;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -39,7 +39,7 @@ public class InstructionParserTest {
         assertEquals(2, parsedInstructions.size());
     }
 
-    private record TestInstruction(String address, String instruction) implements RawInstruction {
+    private record TestInstruction(String address, String instruction) implements Instruction {
         @Override
         public String getAddress() {
             return address;

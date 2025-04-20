@@ -8,7 +8,7 @@ import com.lhmd.rechnerarchitektur.common.IntUtils;
  * The upper bits of PC are loaded from PCLATH<4:3>.
  * GOTO is a two cycle instruction.
  */
-public class Goto extends Instruction {
+public class Goto extends InstructionBase {
     private final int address;
 
     public Goto(int instruction) {
