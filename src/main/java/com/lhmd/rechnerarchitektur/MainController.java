@@ -18,6 +18,7 @@ public class MainController {
 
     @FXML
     private HBox toolbar;
+    private HBox register;
 
     @FXML
     private ToolbarController toolbarController;
