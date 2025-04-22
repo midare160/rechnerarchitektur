@@ -1,5 +1,6 @@
 package com.lhmd.rechnerarchitektur;
 
+import com.lhmd.rechnerarchitektur.common.Runner;
 import com.lhmd.rechnerarchitektur.themes.ThemeManager;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -29,14 +30,7 @@ public class Launcher extends Application {
         controller.setStage(stage);
         ThemeManager.applyCurrentStylesheet(scene);
 
-        stage.setOnCloseRequest(e -> {
-            try {
-                Configuration.save();
-            } catch (IOException ex) {
-                ExceptionHandler.handle(ex);
-            }
-        });
-
+        stage.setOnCloseRequest(e -> Runner.runUnchecked(Configuration::save));
         stage.show();
         stage.centerOnScreen();
     }
