@@ -17,6 +17,7 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
+<?import com.lhmd.rechnerarchitektur.components.Register?>
 <VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.lhmd.rechnerarchitektur.MainController">
   <children>
     <MenuBar VBox.vgrow="NEVER">
@@ -106,6 +107,7 @@
                      <textFill>
                 <Color red="0.624" green="0.624" blue="0.624" fx:id="x2" />
                      </textFill></Label>
+              <Register/>
           </children>
         </AnchorPane>
       </items>
