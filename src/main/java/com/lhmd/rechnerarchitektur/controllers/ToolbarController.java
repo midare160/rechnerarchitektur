@@ -22,6 +22,12 @@ import java.io.File;
 import java.io.IOException;
 
 public class ToolbarController {
+    @FXML
+    public Menu startMenu;
+
+    @FXML
+    public Menu stopMenu;
+
     private ObservableList<InstructionViewModel> instructions;
 
     @FXML
@@ -48,14 +54,17 @@ public class ToolbarController {
 
     public void setStage(Stage stage) {
         this.stage = stage;
-        onStageInitialized();
+        //onStageInitialized();
     }
 
     public void initialize() {
-        initializeOpenRecentMenu();
-        initializeThemeMenu();
-        //initializeInstructionsTableView();
-        loadSvgIcon();
+//        initializeOpenRecentMenu();
+//        initializeThemeMenu();
+//        //initializeInstructionsTableView();
+//        loadSvgIcon();
+
+        startMenu.setGraphic(SVGLoader.load(Launcher.class.getResource("svgs/run.svg")));
+        stopMenu.setGraphic(SVGLoader.load(Launcher.class.getResource("svgs/stop.svg")));
 
         aboutMenuItem.setText("About " + ProgramInfo.PROGRAM_NAME);
     }
