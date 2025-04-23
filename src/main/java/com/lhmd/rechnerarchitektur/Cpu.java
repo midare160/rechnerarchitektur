@@ -17,12 +17,14 @@ public class Cpu {
 
     public void run() {
         if (!cpuThread.isAlive()) {
+            cpuThread.setRunning(true);
             cpuThread.start();
         }
 
         cpuThread.setBreaking(false);
     }
 
+    // TODO make it possible to start in break mode
     public void pause() {
         cpuThread.setBreaking(true);
     }

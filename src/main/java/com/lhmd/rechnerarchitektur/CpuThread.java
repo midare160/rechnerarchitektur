@@ -20,8 +20,8 @@ public class CpuThread extends Thread {
 
     @Override
     public void run() {
-        while (isRunning && !isInterrupted()) {
-            while (!isBreaking && !isInterrupted()) {
+        while (isRunning) {
+            while (!isBreaking) {
                 nextInstruction();
 
                 // TODO remove
@@ -40,7 +40,7 @@ public class CpuThread extends Thread {
         currentInstruction.execute(executionParams);
 
         if (currentInstruction.isTwoCycle()) {
-            dataMemory.programCounter().increment();
+            // TODO add additional 4 cycles
         }
     }
 

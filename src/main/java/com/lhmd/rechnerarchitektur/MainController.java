@@ -1,9 +1,10 @@
 package com.lhmd.rechnerarchitektur;
 
 import com.lhmd.rechnerarchitektur.common.Runner;
+import com.lhmd.rechnerarchitektur.components.InstructionsTableView;
 import com.lhmd.rechnerarchitektur.instructions.InstructionRowModel;
-import com.lhmd.rechnerarchitektur.parsing.InstructionParser;
-import com.lhmd.rechnerarchitektur.tableview.*;
+import com.lhmd.rechnerarchitektur.memory.*;
+import com.lhmd.rechnerarchitektur.parsing.*;
 import com.lhmd.rechnerarchitektur.themes.ThemeManager;
 import javafx.collections.*;
 import javafx.event.ActionEvent;
@@ -12,7 +13,7 @@ import javafx.scene.control.*;
 import javafx.stage.*;
 
 import java.io.*;
-import java.net.URL;
+import java.util.stream.Collectors;
 
 public class MainController {
     private ObservableList<InstructionRowModel> instructions;
@@ -28,19 +29,7 @@ public class MainController {
     private Menu openRecentMenu;
 
     @FXML
-    private TableView<InstructionRowModel> instructionsTableView;
-
-    @FXML
-    private TableColumn<InstructionRowModel, URL> breakpointColumn;
-
-    @FXML
-    private TableColumn<InstructionRowModel, Integer> addressColumn;
-
-    @FXML
-    private TableColumn<InstructionRowModel, Integer> instructionColumn;
-
-    @FXML
-    private TableColumn<InstructionRowModel, Integer> lineNumberColumn;
+    private InstructionsTableView instructionsTableView;
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -50,7 +39,6 @@ public class MainController {
     public void initialize() {
         initializeOpenRecentMenu();
         initializeThemeMenu();
-        initializeInstructionsTableView();
 
         aboutMenuItem.setText("About " + ProgramInfo.PROGRAM_NAME);
     }
@@ -78,17 +66,6 @@ public class MainController {
 
             themeMenu.getItems().add(menuItem);
         }
-    }
-
-    private void initializeInstructionsTableView() {
-        instructionsTableView.setSelectionModel(null);
-
-        instructionsTableView.setRowFactory(p -> new BreakpointTableRow());
-
-        breakpointColumn.setCellFactory(p -> new BreakpointTableCell());
-        addressColumn.setCellFactory(p -> new FormattedTableCell<>("%04X"::formatted));
-        instructionColumn.setCellFactory(p -> new FormattedTableCell<>("%04X"::formatted));
-        lineNumberColumn.setCellFactory(p -> new FormattedTableCell<>("%05d"::formatted));
     }
 
     private void onThemeMenuItemAction(ActionEvent e) {
@@ -151,5 +128,32 @@ public class MainController {
     public void onQuitMenuItemAction(ActionEvent e) {
         var eventArgs = new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST);
         stage.fireEvent(eventArgs);
+    }
+
+    // TODO make it cleaner, extra methods for programmemory and datamemory? + hashmap for instructions
+    @FXML
+    public void onRunButtonAction(ActionEvent e) {
+        var decodedInstructions = instructions.stream()
+                .filter(i -> i.getInstruction() != null)
+                .collect(Collectors.toMap(InstructionRowModel::getAddress, i -> InstructionDecoder.decode(i.getInstruction())));
+
+        var memory = new DataMemory();
+
+        // TODO create map<address, InstructionRowModel> for all instructions that have getAddress != null
+        memory.programCounter().changedEvent().addListener((o, n) -> {
+            var currentRow = instructions.stream().filter(i -> o.equals(i.getAddress())).findFirst().orElse(null);
+            if (currentRow != null) {
+                // TODO set css pseudo class instead of selecting for highlighting next row
+                instructionsTableView.getSelectionModel().select(currentRow);
+            }
+        });
+
+        var cpu = new Cpu(
+                new ProgramMemory(decodedInstructions),
+                memory,
+                new ProgramStack()
+        );
+
+        cpu.run();
     }
 }

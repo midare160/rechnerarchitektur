@@ -3,9 +3,6 @@ module com.lhmd.rechnerarchitektur {
     requires atlantafx.base;
     requires org.girod.javafx.svgimage;
 
-//	requires org.controlsfx.controls;
-//	requires com.dlsc.formsfx;
-
     opens com.lhmd.rechnerarchitektur to javafx.fxml;
     exports com.lhmd.rechnerarchitektur;
     exports com.lhmd.rechnerarchitektur.instructions;
@@ -23,4 +20,6 @@ module com.lhmd.rechnerarchitektur {
     opens com.lhmd.rechnerarchitektur.parsing to javafx.fxml;
     exports com.lhmd.rechnerarchitektur.tableview;
     opens com.lhmd.rechnerarchitektur.tableview to javafx.fxml;
+    exports com.lhmd.rechnerarchitektur.components;
+    opens com.lhmd.rechnerarchitektur.components to javafx.fxml;
 }
