@@ -14,7 +14,7 @@ public class ExceptionHandler {
 
     private static void handleInternal(Throwable e) {
         if (e.getCause() != null) {
-            handle(e.getCause());
+            handleInternal(e.getCause());
             return;
         }
 

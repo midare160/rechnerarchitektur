@@ -91,7 +91,7 @@ public class MainMenuBar extends HBox {
     private void initializeThemeMenu() {
         themeMenu.getItems().clear();
 
-        for (var themeName : ThemeManager.getAllThemes().keySet()) {
+        for (var themeName : ThemeManager.allThemes().keySet()) {
             var menuItem = new CheckMenuItem(themeName);
             menuItem.setOnAction(this::onThemeMenuItemAction);
 
