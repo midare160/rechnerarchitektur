@@ -2,8 +2,8 @@ package com.lhmd.rechnerarchitektur;
 
 import com.lhmd.rechnerarchitektur.common.Runner;
 import com.lhmd.rechnerarchitektur.themes.ThemeManager;
+import com.lhmd.rechnerarchitektur.views.MainView;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
@@ -20,18 +20,15 @@ public class Launcher extends Application {
     }
 
     @Override
-    public void start(Stage stage) throws IOException {
-        var loader = new FXMLLoader(Launcher.class.getResource("views/main.fxml"));
-        var scene = new Scene(loader.load());
-        var controller = loader.<MainController>getController();
-
-        stage.setTitle(ProgramInfo.PROGRAM_NAME);
-        stage.setScene(scene);
-        controller.setStage(stage);
+    public void start(Stage stage) {
+        var scene = new Scene(new MainView());
         ThemeManager.applyCurrentStylesheet(scene);
 
+        stage.setScene(scene);
+        stage.setTitle(ProgramInfo.PROGRAM_NAME);
         stage.setOnCloseRequest(e -> Runner.runUnchecked(Configuration::save));
-        stage.show();
         stage.centerOnScreen();
+
+        stage.show();
     }
 }
