@@ -22,11 +22,9 @@ public class Launcher extends Application {
     public void start(Stage stage) throws IOException {
         var loader = new FXMLLoader(Launcher.class.getResource("views/main.fxml"));
         var scene = new Scene(loader.load());
-        var controller = loader.<MainController>getController();
 
         stage.setTitle(ProgramInfo.PROGRAM_NAME);
         stage.setScene(scene);
-        controller.setStage(stage);
         ThemeManager.applyCurrentStylesheet(scene);
 
         stage.setOnCloseRequest(e -> {

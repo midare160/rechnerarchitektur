@@ -5,16 +5,15 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
 
 <?import javafx.scene.layout.Region?>
-<HBox prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.lhmd.rechnerarchitektur.controllers.ToolbarController">
+<fx:root type="HBox" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" >
     <MenuBar>
         <menus>
             <Menu mnemonicParsing="false" text="File">
                 <items>
                     <MenuItem mnemonicParsing="false" text="New" />
-                    <MenuItem fx:id="openMenuItem" mnemonicParsing="false" onAction="#onOpenMenuItemAction" text="Open…" />
+                    <MenuItem fx:id="openMenuItem" mnemonicParsing="false" text="Open…" />
                     <Menu fx:id="openRecentMenu" mnemonicParsing="false" text="Open Recent" />
                     <SeparatorMenuItem mnemonicParsing="false" />
                     <MenuItem mnemonicParsing="false" text="Close" />
@@ -24,7 +23,7 @@
                     <SeparatorMenuItem mnemonicParsing="false" />
                     <MenuItem mnemonicParsing="false" text="Preferences…" />
                     <SeparatorMenuItem mnemonicParsing="false" />
-                    <MenuItem fx:id="quitMenuItem" mnemonicParsing="false" onAction="#onQuitMenuItemAction" text="Quit" />
+                    <MenuItem fx:id="quitMenuItem" mnemonicParsing="false" text="Quit" />
                 </items>
             </Menu>
             <Menu mnemonicParsing="false" text="Edit">
@@ -43,17 +42,19 @@
             </Menu>
             <Menu mnemonicParsing="false" text="Help">
                 <items>
-                    <MenuItem fx:id="aboutMenuItem" mnemonicParsing="false" onAction="#onAboutMenuItemAction" text="About" />
+                    <MenuItem fx:id="aboutMenuItem" mnemonicParsing="false" text="About" />
                 </items>
             </Menu>
             <Menu fx:id="themeMenu" mnemonicParsing="false" text="Theme" />
         </menus>
     </MenuBar>
     <Region styleClass="menu-bar" HBox.hgrow="ALWAYS" />
-    <MenuBar>
+    <MenuBar fx:id="actionsMenuBar">
         <menus>
-            <Menu fx:id="startMenu" text="Start" />
-            <Menu fx:id="stopMenu" text="Step" />
+            <Menu fx:id="runMenu" text="Run" accelerator="CTRL+F5" />
+            <Menu fx:id="nextMenu" text="Next" accelerator="F10" />
+            <Menu fx:id="pauseMenu" text="Pause" accelerator="CTRL+ALT+B" />
+            <Menu fx:id="stopMenu" text="Stop" accelerator="SHIFT+F5" />
         </menus>
     </MenuBar>
-</HBox>
+</fx:root>
