@@ -57,6 +57,7 @@ public class DataMemory {
 
     public void reset() {
         wRegister.set(0);
+        programCounter.override(0);
 
         for (var register : registers) {
             register.set(0);

@@ -27,6 +27,9 @@ public class FxUtils {
         menu.setAccelerator(null);
         menu.setOnAction(null);
 
+        // Bind the disabled property, otherwise the shortcuts would still activate
+        dummyItem.disableProperty().bind(menu.disableProperty());
+
         // There was unfortunately no better way to do this
         menu.getItems().add(dummyItem);
         menu.setOnShowing(e -> dummyItem.fire());

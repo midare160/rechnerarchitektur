@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
 import java.net.URL;
+import java.util.Objects;
 
 public class InstructionsTableView extends TableView<InstructionRowModel> {
     @FXML
@@ -27,11 +28,22 @@ public class InstructionsTableView extends TableView<InstructionRowModel> {
 
     @FXML
     public void initialize() {
-        setRowFactory(p -> new BreakpointTableRow());
+        setRowFactory(p -> new InstructionTableRow());
 
         breakpointColumn.setCellFactory(p -> new BreakpointTableCell());
         addressColumn.setCellFactory(p -> new FormattedTableCell<>("%04X"::formatted));
         instructionColumn.setCellFactory(p -> new FormattedTableCell<>("%04X"::formatted));
         lineNumberColumn.setCellFactory(p -> new FormattedTableCell<>("%05d"::formatted));
+    }
+
+    public void setNextRow(Integer address) {
+        for (var rowModel : getItems()) {
+            var isNext = Objects.equals(address, rowModel.getAddress());
+            rowModel.isNextProperty().set(isNext);
+
+            if (isNext) {
+                scrollTo(rowModel);
+            }
+        }
     }
 }

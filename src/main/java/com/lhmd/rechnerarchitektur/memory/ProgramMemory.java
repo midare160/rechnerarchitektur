@@ -33,7 +33,7 @@ public class ProgramMemory {
         return instructions[address % MAX_SIZE];
     }
 
-    public void reset() {
-        Arrays.fill(instructions, Nop.DEFAULT);
+    public List<InstructionBase> instructions() {
+        return List.of(instructions);
     }
 }

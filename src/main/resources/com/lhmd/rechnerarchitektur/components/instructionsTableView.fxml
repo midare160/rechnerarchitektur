@@ -6,7 +6,12 @@
 <fx:root type="TableView" styleClass="instructionsTable, striped" xmlns:fx="http://javafx.com/fxml/1"
          xmlns="http://javafx.com/javafx/19">
     <columns>
-        <TableColumn fx:id="breakpointColumn" prefWidth="40" resizable="false" styleClass="align-right">
+        <TableColumn prefWidth="-Infinity" resizable="false">
+            <cellValueFactory>
+                <PropertyValueFactory property="isNext"/>
+            </cellValueFactory>
+        </TableColumn>
+        <TableColumn fx:id="breakpointColumn" prefWidth="30" resizable="false" styleClass="align-right">
             <cellValueFactory>
                 <PropertyValueFactory property="breakpointSvgUrl"/>
             </cellValueFactory>

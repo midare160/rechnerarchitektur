@@ -9,8 +9,7 @@ public class CpuThread extends Thread {
     private final DataMemory dataMemory;
     private final ExecutionParams executionParams;
 
-    private boolean isRunning;
-    private boolean isBreaking;
+    private boolean isPaused;
 
     public CpuThread(ProgramMemory programMemory, DataMemory dataMemory, ProgramStack programStack) {
         this.programMemory = programMemory;
@@ -20,12 +19,12 @@ public class CpuThread extends Thread {
 
     @Override
     public void run() {
-        while (isRunning) {
-            while (!isBreaking) {
-                nextInstruction();
-
+        while (!isInterrupted()) {
+            while (!isPaused) {
                 // TODO remove
                 Runner.runUnchecked(() -> Thread.sleep(500));
+
+                nextInstruction();
             }
 
             Runner.runUnchecked(() -> Thread.sleep(100));
@@ -44,19 +43,11 @@ public class CpuThread extends Thread {
         }
     }
 
-    public boolean isRunning() {
-        return isRunning;
+    public boolean isPaused() {
+        return isPaused;
     }
 
-    public void setRunning(boolean value) {
-        isRunning = value;
-    }
-
-    public boolean isBreaking() {
-        return isBreaking;
-    }
-
-    public void setBreaking(boolean value) {
-        isBreaking = value;
+    public void setPaused(boolean value) {
+        isPaused = value;
     }
 }

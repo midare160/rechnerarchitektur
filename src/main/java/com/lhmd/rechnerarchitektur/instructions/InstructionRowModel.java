@@ -8,6 +8,7 @@ import java.net.URL;
 public class InstructionRowModel implements Instruction {
     private final BooleanProperty isBreakpointActive;
     private final ObjectProperty<URL> breakpointSvgUrl;
+    private final BooleanProperty isNext;
 
     private final ObjectProperty<Integer> address;
     private final ObjectProperty<Integer> instruction;
@@ -17,6 +18,7 @@ public class InstructionRowModel implements Instruction {
     public InstructionRowModel() {
         this.isBreakpointActive = new SimpleBooleanProperty();
         this.breakpointSvgUrl = new SimpleObjectProperty<>();
+        this.isNext = new SimpleBooleanProperty();
 
         this.address = new SimpleObjectProperty<>();
         this.instruction = new SimpleObjectProperty<>();
@@ -72,6 +74,10 @@ public class InstructionRowModel implements Instruction {
 
     public ObjectProperty<URL> breakpointSvgUrlProperty() {
         return breakpointSvgUrl;
+    }
+
+    public BooleanProperty isNextProperty() {
+        return isNext;
     }
 
     public ObjectProperty<Integer> addressProperty() {
