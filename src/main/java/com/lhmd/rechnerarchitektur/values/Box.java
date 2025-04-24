@@ -1,6 +1,6 @@
 package com.lhmd.rechnerarchitektur.values;
 
-import com.lhmd.rechnerarchitektur.changes.ChangedEvent;
+import com.lhmd.rechnerarchitektur.events.ChangedEvent;
 
 import java.util.*;
 

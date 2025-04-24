@@ -2,6 +2,7 @@ package com.lhmd.rechnerarchitektur.registers;
 
 import com.lhmd.rechnerarchitektur.changes.*;
 import com.lhmd.rechnerarchitektur.common.IntUtils;
+import com.lhmd.rechnerarchitektur.events.ChangedEvent;
 import com.lhmd.rechnerarchitektur.memory.ProgramMemory;
 import com.lhmd.rechnerarchitektur.values.IntBox;
 

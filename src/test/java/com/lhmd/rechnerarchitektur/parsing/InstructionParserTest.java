@@ -3,51 +3,98 @@ package com.lhmd.rechnerarchitektur.parsing;
 import com.lhmd.rechnerarchitektur.instructions.Instruction;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
+import java.io.IOException;
+import java.nio.file.Files;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class InstructionParserTest {
     @Test
-    public void parseRawInstructions_validInstructions_returnsParsedValues() {
-        var rawInstructions = List.of(
-                new TestInstruction("0002", "380D"),
-                new TestInstruction("0003", "3C3D")
-        );
+    public void parseLine_MixedLines_parsesCorrectly() throws IOException {
+        final var rawLines = """
+                                    00016           org 0
+                                    00017  start
+                0000 3011           00018           movlw 11h           ;in W steht nun 11h, Statusreg. unverändert
+                0001 3930           00019           andlw 30h           ;W = 10h, C=x, DC=x, Z=0
+                """;
 
-        var parsedInstructions = InstructionParser.parseRawInstructions(rawInstructions);
-        assertEquals(2, parsedInstructions.size());
+        var tempFilePath = Files.createTempFile(null, ".lst");
+        tempFilePath.toFile().deleteOnExit();
+        Files.writeString(tempFilePath, rawLines);
 
-        var firstInstruction = parsedInstructions.get(0x0002);
-        assertEquals(0x380D, firstInstruction.getInstruction());
+        var instructions = InstructionParser.parseFile(TestInstruction.class, tempFilePath.toString());
 
-        var secondInstruction = parsedInstructions.get(0x0003);
-        assertEquals(0x3C3D, secondInstruction.getInstruction());
+        assertEquals(4, instructions.size());
+
+        var first = instructions.getFirst();
+        assertNull(first.getAddress());
+        assertNull(first.getInstruction());
+        assertEquals(16, first.getLineNumber());
+        assertEquals("org 0", first.getComment().trim());
+
+        var second = instructions.get(1);
+        assertNull(second.getAddress());
+        assertNull(second.getInstruction());
+        assertEquals(17, second.getLineNumber());
+        assertEquals("start", second.getComment().trim());
+
+        var third = instructions.get(2);
+        assertEquals(0x0000, third.getAddress());
+        assertEquals(0x3011, third.getInstruction());
+        assertEquals(18, third.getLineNumber());
+        assertEquals("movlw 11h           ;in W steht nun 11h, Statusreg. unverändert", third.getComment().trim());
+
+        var fourth = instructions.get(3);
+        assertEquals(0x0001, fourth.getAddress());
+        assertEquals(0x3930, fourth.getInstruction());
+        assertEquals(19, fourth.getLineNumber());
+        assertEquals("andlw 30h           ;W = 10h, C=x, DC=x, Z=0", fourth.getComment().trim());
     }
 
-    @Test
-    public void parseRawInstructions_partlyInvalidInstructions_returnsOnlyValidParsedValues() {
-        var rawInstructions = List.of(
-                new TestInstruction(null, "380D"),
-                new TestInstruction("0002", "380D"),
-                new TestInstruction(null, null),
-                new TestInstruction("0003", "3C3D"),
-                new TestInstruction("0004", null)
-        );
+    public static class TestInstruction implements Instruction {
+        private Integer address;
+        private Integer instruction;
+        private int lineNumber;
+        private String comment;
 
-        var parsedInstructions = InstructionParser.parseRawInstructions(rawInstructions);
-        assertEquals(2, parsedInstructions.size());
-    }
-
-    private record TestInstruction(String address, String instruction) implements Instruction {
         @Override
-        public String getAddress() {
+        public Integer getAddress() {
             return address;
         }
 
         @Override
-        public String getInstruction() {
+        public void setAddress(Integer address) {
+            this.address = address;
+        }
+
+        @Override
+        public Integer getInstruction() {
             return instruction;
+        }
+
+        @Override
+        public void setInstruction(Integer instruction) {
+            this.instruction = instruction;
+        }
+
+        @Override
+        public int getLineNumber() {
+            return lineNumber;
+        }
+
+        @Override
+        public void setLineNumber(int lineNumber) {
+            this.lineNumber = lineNumber;
+        }
+
+        @Override
+        public String getComment() {
+            return comment;
+        }
+
+        @Override
+        public void setComment(String comment) {
+            this.comment = comment;
         }
     }
 }

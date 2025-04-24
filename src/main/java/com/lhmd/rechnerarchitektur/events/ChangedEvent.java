@@ -1,4 +1,4 @@
-package com.lhmd.rechnerarchitektur.changes;
+package com.lhmd.rechnerarchitektur.events;
 
 import java.util.*;
 import java.util.function.Supplier;

@@ -61,12 +61,18 @@ public class MainMenuBar extends HBox {
         aboutMenuItem.setText("About " + ProgramInfo.PROGRAM_NAME);
     }
 
-    public void setRunAllowed(boolean runAllowed) {
-        runMenu.setDisable(!runAllowed);
+    public void setRunnable(boolean runnable) {
+        runMenu.setDisable(!runnable);
     }
 
-    public boolean isRunAllowed() {
+    public boolean isRunnable() {
         return !runMenu.isDisable();
+    }
+
+    public void pause() {
+        runMenu.setDisable(false);
+        pauseMenu.setDisable(true);
+        nextMenu.setDisable(false);
     }
 
     private void initializeEvents() {
@@ -189,10 +195,7 @@ public class MainMenuBar extends HBox {
     }
 
     private void onPauseMenuAction(ActionEvent e) {
-        runMenu.setDisable(false);
-        pauseMenu.setDisable(true);
-        nextMenu.setDisable(false);
-
+        pause();
         fireEvent(new MainMenuBarEvent<>(MainMenuBarEvent.ON_PAUSE, null));
     }
 

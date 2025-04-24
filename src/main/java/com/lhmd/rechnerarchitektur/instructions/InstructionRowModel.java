@@ -66,6 +66,10 @@ public class InstructionRowModel implements Instruction {
         this.comment.set(comment);
     }
 
+    public boolean isExecutable() {
+        return getAddress() != null;
+    }
+
     // Do NOT rename the following methods, they're expected by the FXML
 
     public BooleanProperty isBreakpointActiveProperty() {

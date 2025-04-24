@@ -1,7 +1,6 @@
 package com.lhmd.rechnerarchitektur.registers;
 
-import com.lhmd.rechnerarchitektur.changes.ChangeListener;
-import com.lhmd.rechnerarchitektur.changes.ChangedEvent;
+import com.lhmd.rechnerarchitektur.events.ChangedEvent;
 import com.lhmd.rechnerarchitektur.common.*;
 import com.lhmd.rechnerarchitektur.values.IntBox;
 

@@ -25,4 +25,5 @@ module com.lhmd.rechnerarchitektur {
     opens com.lhmd.rechnerarchitektur.components to javafx.fxml;
     exports com.lhmd.rechnerarchitektur.views;
     opens com.lhmd.rechnerarchitektur.views to javafx.fxml;
+    exports com.lhmd.rechnerarchitektur.events;
 }
