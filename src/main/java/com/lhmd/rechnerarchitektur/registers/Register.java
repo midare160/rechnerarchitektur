@@ -1,22 +1,20 @@
 package com.lhmd.rechnerarchitektur.registers;
 
-import com.lhmd.rechnerarchitektur.changes.ChangeListener;
+import com.lhmd.rechnerarchitektur.events.ChangedEvent;
 import com.lhmd.rechnerarchitektur.common.*;
 import com.lhmd.rechnerarchitektur.values.IntBox;
+
+import java.util.Objects;
 
 public abstract class Register {
     protected final IntBox register;
 
     public Register(IntBox register) {
-        this.register = register;
+        this.register = Objects.requireNonNull(register);
     }
 
-    public void addListener(ChangeListener<Integer> listener) {
-        register.addListener(listener);
-    }
-
-    public void removeListener(ChangeListener<Integer> listener) {
-        register.removeListener(listener);
+    public ChangedEvent<Integer> changedEvent() {
+        return register.changedEvent();
     }
 
     protected boolean isBitSet(int index) {

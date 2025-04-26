@@ -54,7 +54,7 @@
             <Menu fx:id="runMenu" text="Run" accelerator="CTRL+F5" />
             <Menu fx:id="nextMenu" text="Next" accelerator="F10" />
             <Menu fx:id="pauseMenu" text="Pause" accelerator="CTRL+ALT+B" />
-            <Menu fx:id="stopMenu" text="Stop" accelerator="SHIFT+F5" />
+            <Menu fx:id="resetMenu" text="Reset" accelerator="CTRL+R" />
         </menus>
     </MenuBar>
 </fx:root>

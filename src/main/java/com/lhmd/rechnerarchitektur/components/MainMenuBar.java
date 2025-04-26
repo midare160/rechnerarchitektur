@@ -7,8 +7,6 @@ import com.lhmd.rechnerarchitektur.common.FxUtils;
 import com.lhmd.rechnerarchitektur.events.MainMenuBarEvent;
 import com.lhmd.rechnerarchitektur.themes.ThemeManager;
 import javafx.scene.control.*;
-import javafx.scene.control.skin.MenuBarSkin;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.stage.*;
 import javafx.fxml.FXML;
@@ -19,9 +17,6 @@ import org.girod.javafx.svgimage.SVGLoader;
 import java.io.File;
 
 public class MainMenuBar extends HBox {
-    private static final String RUN_TEXT = "Run";
-    private static final String CONTINUE_TEXT = "Continue";
-
     @FXML
     private MenuItem openMenuItem;
 
@@ -50,7 +45,7 @@ public class MainMenuBar extends HBox {
     private Menu nextMenu;
 
     @FXML
-    private Menu stopMenu;
+    private Menu resetMenu;
 
     public MainMenuBar() {
         FxUtils.loadHierarchy(this, "components/mainMenuBar.fxml");
@@ -66,6 +61,20 @@ public class MainMenuBar extends HBox {
         aboutMenuItem.setText("About " + ProgramInfo.PROGRAM_NAME);
     }
 
+    public void setRunnable(boolean runnable) {
+        runMenu.setDisable(!runnable);
+    }
+
+    public boolean isRunnable() {
+        return !runMenu.isDisable();
+    }
+
+    public void pause() {
+        runMenu.setDisable(false);
+        pauseMenu.setDisable(true);
+        nextMenu.setDisable(false);
+    }
+
     private void initializeEvents() {
         openMenuItem.setOnAction(this::onOpenMenuItemAction);
         quitMenuItem.setOnAction(this::onQuitMenuItemAction);
@@ -74,7 +83,7 @@ public class MainMenuBar extends HBox {
         runMenu.setOnAction(this::onRunMenuAction);
         nextMenu.setOnAction(this::onNextMenuAction);
         pauseMenu.setOnAction(this::onPauseMenuAction);
-        stopMenu.setOnAction(this::onStopMenuAction);
+        resetMenu.setOnAction(this::onResetMenuAction);
     }
 
     private void initializeOpenRecentMenu() {
@@ -91,7 +100,7 @@ public class MainMenuBar extends HBox {
     private void initializeThemeMenu() {
         themeMenu.getItems().clear();
 
-        for (var themeName : ThemeManager.getAllThemes().keySet()) {
+        for (var themeName : ThemeManager.allThemes().keySet()) {
             var menuItem = new CheckMenuItem(themeName);
             menuItem.setOnAction(this::onThemeMenuItemAction);
 
@@ -106,15 +115,15 @@ public class MainMenuBar extends HBox {
         runMenu.setGraphic(SVGLoader.load(Launcher.class.getResource("svgs/run.svg")));
         pauseMenu.setGraphic(SVGLoader.load(Launcher.class.getResource("svgs/pause.svg")));
         nextMenu.setGraphic(SVGLoader.load(Launcher.class.getResource("svgs/run.svg")));
-        stopMenu.setGraphic(SVGLoader.load(Launcher.class.getResource("svgs/stop.svg")));
+        resetMenu.setGraphic(SVGLoader.load(Launcher.class.getResource("svgs/reset.svg")));
 
         for (var menu : actionsMenuBar.getMenus()) {
             FxUtils.asMenuItem(menu);
-            menu.setDisable(menu != runMenu);
+            menu.setDisable(true);
         }
     }
 
-    public void onOpenMenuItemAction(ActionEvent e) {
+    private void onOpenMenuItemAction(ActionEvent e) {
         var fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("List Files", "*.lst", "*.LST"));
 
@@ -127,12 +136,12 @@ public class MainMenuBar extends HBox {
         openFile(selectedFile);
     }
 
-    public void onQuitMenuItemAction(ActionEvent e) {
+    private void onQuitMenuItemAction(ActionEvent e) {
         var eventArgs = new WindowEvent(getScene().getWindow(), WindowEvent.WINDOW_CLOSE_REQUEST);
         getScene().getWindow().fireEvent(eventArgs);
     }
 
-    public void onAboutMenuItemAction(ActionEvent e) {
+    private void onAboutMenuItemAction(ActionEvent e) {
         var alert = new Alert(Alert.AlertType.INFORMATION);
         alert.initOwner(getScene().getWindow());
         alert.setTitle("About " + ProgramInfo.PROGRAM_NAME);
@@ -171,35 +180,26 @@ public class MainMenuBar extends HBox {
         initializeOpenRecentMenu();
     }
 
-    public void onRunMenuAction(ActionEvent e) {
-        runMenu.setText(CONTINUE_TEXT);
+    private void onRunMenuAction(ActionEvent e) {
+        runMenu.setText("Continue");
         runMenu.setDisable(true);
         nextMenu.setDisable(true);
         pauseMenu.setDisable(false);
-        stopMenu.setDisable(false);
+        resetMenu.setDisable(false);
 
         fireEvent(new MainMenuBarEvent<>(MainMenuBarEvent.ON_RUN, null));
     }
 
-    public void onStopMenuAction(ActionEvent e) {
-        for (var menu : actionsMenuBar.getMenus()) {
-            menu.setDisable(menu != runMenu);
-        }
-
-        runMenu.setText(RUN_TEXT);
-
-        fireEvent(new MainMenuBarEvent<>(MainMenuBarEvent.ON_STOP, null));
+    private void onResetMenuAction(ActionEvent e) {
+        fireEvent(new MainMenuBarEvent<>(MainMenuBarEvent.ON_RESET, null));
     }
 
-    public void onPauseMenuAction(ActionEvent e) {
-        runMenu.setDisable(false);
-        pauseMenu.setDisable(true);
-        nextMenu.setDisable(false);
-
+    private void onPauseMenuAction(ActionEvent e) {
+        pause();
         fireEvent(new MainMenuBarEvent<>(MainMenuBarEvent.ON_PAUSE, null));
     }
 
-    public void onNextMenuAction(ActionEvent e) {
+    private void onNextMenuAction(ActionEvent e) {
         fireEvent(new MainMenuBarEvent<>(MainMenuBarEvent.ON_NEXT, null));
     }
 }

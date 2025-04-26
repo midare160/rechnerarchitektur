@@ -21,12 +21,16 @@ public class Launcher extends Application {
 
     @Override
     public void start(Stage stage) {
-        var scene = new Scene(new MainView());
+        var mainView = new MainView();
+        var scene = new Scene(mainView);
         ThemeManager.applyCurrentStylesheet(scene);
 
         stage.setScene(scene);
         stage.setTitle(ProgramInfo.PROGRAM_NAME);
-        stage.setOnCloseRequest(e -> Runner.runUnchecked(Configuration::save));
+        stage.setOnCloseRequest(e -> {
+            Runner.runUnchecked(Configuration::save);
+            mainView.shutdownCpu();
+        });
         stage.centerOnScreen();
 
         stage.show();

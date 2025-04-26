@@ -5,7 +5,7 @@ import com.lhmd.rechnerarchitektur.common.IntUtils;
 /**
  * The eight bit literal ’k’ is loaded into W register.
  */
-public class Movlw extends Instruction {
+public class Movlw extends InstructionBase {
     private final int literal;
 
     public Movlw(int instruction) {

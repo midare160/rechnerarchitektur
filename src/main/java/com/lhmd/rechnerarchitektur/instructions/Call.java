@@ -8,7 +8,7 @@ import com.lhmd.rechnerarchitektur.common.IntUtils;
  * The upper bits of the PC are loaded from PCLATH.
  * CALL is a two cycle instruction.
  */
-public class Call extends Instruction {
+public class Call extends InstructionBase {
     private final int address;
 
     public Call(int instruction) {

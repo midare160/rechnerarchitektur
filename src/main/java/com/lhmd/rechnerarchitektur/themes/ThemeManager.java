@@ -13,7 +13,7 @@ public class ThemeManager {
 
     private static Map<String, Theme> themeMap;
 
-    public static Map<String, Theme> getAllThemes() {
+    public static Map<String, Theme> allThemes() {
         return themeMap;
     }
 

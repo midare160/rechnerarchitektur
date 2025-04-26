@@ -4,9 +4,17 @@ import javafx.application.Platform;
 import javafx.scene.control.Alert;
 
 public class ExceptionHandler {
+    private ExceptionHandler() {
+    }
+
     public static void handle(Throwable e) {
+        e.printStackTrace();
+        handleInternal(e);
+    }
+
+    private static void handleInternal(Throwable e) {
         if (e.getCause() != null) {
-            handle(e.getCause());
+            handleInternal(e.getCause());
             return;
         }
 

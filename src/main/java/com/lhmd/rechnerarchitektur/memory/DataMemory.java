@@ -51,12 +51,13 @@ public class DataMemory {
         return registers[absoluteAddress];
     }
 
-    public List<IntBox> getAllRegisters() {
+    public List<IntBox> registers() {
         return List.of(registers);
     }
 
     public void reset() {
         wRegister.set(0);
+        programCounter.override(0);
 
         for (var register : registers) {
             register.set(0);

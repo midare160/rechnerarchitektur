@@ -1,25 +1,28 @@
 package com.lhmd.rechnerarchitektur.parsing;
 
-import com.lhmd.rechnerarchitektur.common.IntUtils;
+import com.lhmd.rechnerarchitektur.common.*;
 import com.lhmd.rechnerarchitektur.instructions.*;
 
+import java.io.*;
 import java.util.*;
 
 public class InstructionParser {
-    public static Map<Integer, Instruction> parseRawInstructions(Collection<? extends RawInstruction> instructions) {
-        var instructionMap = new HashMap<Integer, Instruction>();
-
-        for (var instruction : instructions) {
-            var parsedAddress = IntUtils.tryParse(instruction.getAddress(), 16);
-            var parsedInstruction = IntUtils.tryParse(instruction.getInstruction(), 16);
-
-            if (parsedAddress == null || parsedInstruction == null) {
-                continue;
-            }
-
-            instructionMap.put(parsedAddress, InstructionDecoder.decode(parsedInstruction));
+    public static <T extends Instruction> List<T> parseFile(Class<T> instructionClass, String path) throws IOException {
+        try (var reader = new BufferedReader(new FileReader(path))) {
+            return reader.lines()
+                    .map(l -> parseLine(instructionClass, l))
+                    .toList();
         }
+    }
 
-        return instructionMap;
+    public static <T extends Instruction> T parseLine(Class<T> instructionClass, String line) {
+        var instruction = Runner.getUnchecked(() -> instructionClass.getDeclaredConstructor().newInstance());
+
+        instruction.setAddress(IntUtils.tryParse(line.substring(0, 4), 16));
+        instruction.setInstruction(IntUtils.tryParse(line.substring(5, 9), 16));
+        instruction.setLineNumber(Integer.parseInt(line.substring(20, 25)));
+        instruction.setComment(line.substring(25));
+
+        return instruction;
     }
 }

@@ -1,7 +1,8 @@
 package com.lhmd.rechnerarchitektur.registers;
 
-import com.lhmd.rechnerarchitektur.changes.ChangeManager;
+import com.lhmd.rechnerarchitektur.changes.*;
 import com.lhmd.rechnerarchitektur.common.IntUtils;
+import com.lhmd.rechnerarchitektur.events.ChangedEvent;
 import com.lhmd.rechnerarchitektur.memory.ProgramMemory;
 import com.lhmd.rechnerarchitektur.values.IntBox;
 
@@ -11,6 +12,7 @@ public class ProgramCounter {
     private final IntBox pclRegister;
     private final IntBox pclathRegister;
     private final ChangeManager changeManager;
+    private final ChangedEvent<Integer> changedEvent;
 
     private int highOrderBits;
 
@@ -18,8 +20,13 @@ public class ProgramCounter {
         this.pclRegister = Objects.requireNonNull(pclRegister);
         this.pclathRegister = Objects.requireNonNull(pclathRegister);
         this.changeManager = new ChangeManager();
+        this.changedEvent = new ChangedEvent<>();
 
-        pclRegister.addListener(this::onPclChanged);
+        pclRegister.changedEvent().addListener(this::onPclChanged);
+    }
+
+    public ChangedEvent<Integer> changedEvent() {
+        return changedEvent;
     }
 
     /**
@@ -48,8 +55,10 @@ public class ProgramCounter {
         var pclathPart = IntUtils.bitRange(pclathRegister.get(), 3, 4);
         var jumpPart = IntUtils.bitRange(value, 8, 10);
 
-        highOrderBits = IntUtils.concatBits(pclathPart, jumpPart, 3);
-        setPclInternal(IntUtils.bitRange(value, 0, 7));
+        changedEvent.fire(this::get, () -> {
+            highOrderBits = IntUtils.concatBits(pclathPart, jumpPart, 3);
+            setPclInternal(IntUtils.bitRange(value, 0, 7));
+        });
     }
 
     /**
@@ -58,8 +67,10 @@ public class ProgramCounter {
      * @param value the thirteen bit address
      */
     public void override(int value) {
-        highOrderBits = IntUtils.bitRange(value, 8, 12);
-        setPclInternal(IntUtils.bitRange(value, 0, 7));
+        changedEvent.fire(this::get, () -> {
+            highOrderBits = IntUtils.bitRange(value, 8, 12);
+            setPclInternal(IntUtils.bitRange(value, 0, 7));
+        });
     }
 
     private void onPclChanged(Integer oldValue, Integer newValue) {
@@ -67,7 +78,9 @@ public class ProgramCounter {
             return;
         }
 
-        highOrderBits = IntUtils.bitRange(pclathRegister.get(), 0, 4);
+        changedEvent.fire(this::get, () -> {
+            highOrderBits = IntUtils.bitRange(pclathRegister.get(), 0, 4);
+        });
     }
 
     private void setPclInternal(int value) {

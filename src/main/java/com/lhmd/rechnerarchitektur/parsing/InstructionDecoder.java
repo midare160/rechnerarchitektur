@@ -6,7 +6,7 @@ import java.util.*;
 import java.util.function.Function;
 
 public class InstructionDecoder {
-    private static final Map<Integer, Function<Integer, ? extends Instruction>> OPCODES;
+    private static final Map<Integer, Function<Integer, ? extends InstructionBase>> OPCODES;
 
     static {
         OPCODES = LinkedHashMap.newLinkedHashMap(35);
@@ -23,7 +23,7 @@ public class InstructionDecoder {
         OPCODES.put(0b00_0000_0000_0000, Nop::new);
     }
 
-    public static Instruction decode(int instruction) {
+    public static InstructionBase decode(int instruction) {
         for (var entry : OPCODES.entrySet()) {
             if ((instruction & entry.getKey()) != entry.getKey()) {
                 continue;

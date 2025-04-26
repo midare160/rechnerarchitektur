@@ -1,18 +1,18 @@
 package com.lhmd.rechnerarchitektur.tableview;
 
 import com.lhmd.rechnerarchitektur.Launcher;
-import com.lhmd.rechnerarchitektur.instructions.InstructionViewModel;
+import com.lhmd.rechnerarchitektur.instructions.InstructionRowModel;
 import javafx.scene.Cursor;
 import javafx.scene.input.MouseEvent;
 
 import java.net.URL;
 
-public class BreakpointCell extends SvgImageCell<InstructionViewModel> {
+public class BreakpointTableCell extends SvgTableCell<InstructionRowModel> {
     private static final URL BREAKPOINT_ENABLED_SVG_URL = Launcher.class.getResource("svgs/breakpoint-enabled.svg");
     private static final URL BREAKPOINT_DISABLED_SVG_URL = Launcher.class.getResource("svgs/breakpoint-disabled.svg");
     private static final URL DISABLE_BREAKPOINT_SVG_URL = Launcher.class.getResource("svgs/disable-breakpoint.svg");
 
-    public BreakpointCell() {
+    public BreakpointTableCell() {
         setOnMouseClicked(this::onMouseClicked);
         setOnMouseEntered(this::onMouseEntered);
         setOnMouseExited(this::onMouseExited);
@@ -22,16 +22,20 @@ public class BreakpointCell extends SvgImageCell<InstructionViewModel> {
     protected void updateItem(URL item, boolean empty) {
         super.updateItem(item, empty);
 
-        if (item != null && !empty) {
+        if (empty || item != null) {
             return;
         }
 
         // Display the current line number if no breakpoint svg is active
-        var lineNumber = getTableRow().getIndex() + 1;
+        var lineNumber = getTableRow().getItem().getLineNumber();
         setText(Integer.toString(lineNumber));
     }
 
     private void onMouseClicked(MouseEvent mouseEvent) {
+        if (isCommentRow()) {
+            return;
+        }
+
         var isBreakpointActive = false;
         var newSvgUrl = BREAKPOINT_DISABLED_SVG_URL;
 
@@ -45,6 +49,10 @@ public class BreakpointCell extends SvgImageCell<InstructionViewModel> {
     }
 
     private void onMouseEntered(MouseEvent mouseEvent) {
+        if (isCommentRow()) {
+            return;
+        }
+
         var newSvgUrl = DISABLE_BREAKPOINT_SVG_URL;
 
         if (getItem() == null) {
@@ -56,6 +64,10 @@ public class BreakpointCell extends SvgImageCell<InstructionViewModel> {
     }
 
     private void onMouseExited(MouseEvent mouseEvent) {
+        if (isCommentRow()) {
+            return;
+        }
+
         URL newSvgUrl = null;
 
         if (getItem() == DISABLE_BREAKPOINT_SVG_URL) {
@@ -64,6 +76,10 @@ public class BreakpointCell extends SvgImageCell<InstructionViewModel> {
 
         setBreakpointSvgUrl(newSvgUrl);
         getScene().setCursor(Cursor.DEFAULT);
+    }
+
+    private boolean isCommentRow() {
+        return !getTableRow().getItem().isExecutable();
     }
 
     private void setBreakpointSvgUrl(URL url) {

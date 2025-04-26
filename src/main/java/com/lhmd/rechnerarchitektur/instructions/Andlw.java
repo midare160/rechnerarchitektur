@@ -5,7 +5,7 @@ import com.lhmd.rechnerarchitektur.common.IntUtils;
 /**
  * The contents of W register are AND’ed with the eight bit literal 'k'. The result is placed in the W register.
  */
-public class Andlw extends Instruction {
+public class Andlw extends InstructionBase {
     private final int literal;
 
     public Andlw(int instruction) {

@@ -5,7 +5,7 @@ import com.lhmd.rechnerarchitektur.common.IntUtils;
 /**
  * The contents of the W register are added to the eight bit literal ’k’ and the result is placed in the W register.
  */
-public class Addlw extends Instruction {
+public class Addlw extends InstructionBase {
     private final int literal;
 
     public Addlw(int instruction) {

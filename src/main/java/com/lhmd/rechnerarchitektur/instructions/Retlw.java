@@ -7,7 +7,7 @@ import com.lhmd.rechnerarchitektur.common.IntUtils;
  * The program counter is loaded from the top of the stack (the return address).
  * This is a two cycle instruction.
  */
-public class Retlw extends Instruction {
+public class Retlw extends InstructionBase {
     private final int literal;
 
     public Retlw(int instruction) {

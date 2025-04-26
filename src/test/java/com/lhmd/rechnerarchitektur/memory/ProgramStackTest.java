@@ -9,13 +9,13 @@ public class ProgramStackTest {
     public void push_threeValues() {
         var stack = new ProgramStack();
 
-        assertEquals(0, stack.getPointer());
+        assertEquals(0, stack.pointer());
 
         stack.push(1);
         stack.push(2);
         stack.push(3);
 
-        assertEquals(3, stack.getPointer());
+        assertEquals(3, stack.pointer());
     }
 
     @Test
@@ -27,13 +27,13 @@ public class ProgramStackTest {
         stack.push(3);
 
         assertEquals(3, stack.pop());
-        assertEquals(2, stack.getPointer());
+        assertEquals(2, stack.pointer());
 
         assertEquals(2, stack.pop());
-        assertEquals(1, stack.getPointer());
+        assertEquals(1, stack.pointer());
 
         assertEquals(1, stack.pop());
-        assertEquals(0, stack.getPointer());
+        assertEquals(0, stack.pointer());
     }
 
     @Test
@@ -47,13 +47,13 @@ public class ProgramStackTest {
             stack.push(i);
         }
 
-        assertEquals(2, stack.getPointer());
+        assertEquals(2, stack.pointer());
 
         assertEquals(10, stack.pop());
-        assertEquals(1, stack.getPointer());
+        assertEquals(1, stack.pointer());
 
         assertEquals(9, stack.pop());
-        assertEquals(0, stack.getPointer());
+        assertEquals(0, stack.pointer());
     }
 
     @Test
@@ -64,10 +64,10 @@ public class ProgramStackTest {
             stack.push(i);
         }
 
-        assertEquals(7, stack.getPointer());
+        assertEquals(7, stack.pointer());
 
         var firstPop = stack.pop();
-        assertEquals(6, stack.getPointer());
+        assertEquals(6, stack.pointer());
 
         // If the stack is effectively popped nine times, the stackpointer
         // value is the same as the value from the first pop.
@@ -75,10 +75,10 @@ public class ProgramStackTest {
             stack.pop();
         }
 
-        assertEquals(7, stack.getPointer());
+        assertEquals(7, stack.pointer());
 
         assertEquals(firstPop, stack.pop());
-        assertEquals(6, stack.getPointer());
+        assertEquals(6, stack.pointer());
     }
 
     @Test
