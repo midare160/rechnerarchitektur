@@ -1,7 +1,7 @@
 package com.lhmd.rechnerarchitektur.tableview;
 
 import com.lhmd.rechnerarchitektur.PseudoClasses;
-import com.lhmd.rechnerarchitektur.instructions.InstructionRowModel;
+import com.lhmd.rechnerarchitektur.models.InstructionRowModel;
 import javafx.scene.control.TableRow;
 
 public class InstructionTableRow extends TableRow<InstructionRowModel> {

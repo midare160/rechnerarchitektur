@@ -1,6 +1,8 @@
-package com.lhmd.rechnerarchitektur.instructions;
+package com.lhmd.rechnerarchitektur.models;
 
+import com.lhmd.rechnerarchitektur.instructions.Instruction;
 import javafx.beans.property.*;
+import javafx.fxml.FXML;
 
 import java.net.URL;
 
@@ -70,32 +72,37 @@ public class InstructionRowModel implements Instruction {
         return getAddress() != null;
     }
 
-    // Do NOT rename the following methods, they're expected by the FXML
-
+    @FXML
     public BooleanProperty isBreakpointActiveProperty() {
         return isBreakpointActive;
     }
 
+    @FXML
     public ObjectProperty<URL> breakpointSvgUrlProperty() {
         return breakpointSvgUrl;
     }
 
+    @FXML
     public BooleanProperty isNextProperty() {
         return isNext;
     }
 
+    @FXML
     public ObjectProperty<Integer> addressProperty() {
         return address;
     }
 
+    @FXML
     public ObjectProperty<Integer> instructionProperty() {
         return instruction;
     }
 
+    @FXML
     public IntegerProperty lineNumberProperty() {
         return lineNumber;
     }
 
+    @FXML
     public StringProperty commentProperty() {
         return comment;
     }

@@ -1,7 +1,7 @@
 package com.lhmd.rechnerarchitektur.components;
 
 import com.lhmd.rechnerarchitektur.common.FxUtils;
-import com.lhmd.rechnerarchitektur.instructions.InstructionRowModel;
+import com.lhmd.rechnerarchitektur.models.InstructionRowModel;
 import com.lhmd.rechnerarchitektur.tableview.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;

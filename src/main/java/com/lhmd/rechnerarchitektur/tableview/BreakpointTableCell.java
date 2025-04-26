@@ -1,7 +1,7 @@
 package com.lhmd.rechnerarchitektur.tableview;
 
 import com.lhmd.rechnerarchitektur.Launcher;
-import com.lhmd.rechnerarchitektur.instructions.InstructionRowModel;
+import com.lhmd.rechnerarchitektur.models.InstructionRowModel;
 import javafx.scene.Cursor;
 import javafx.scene.input.MouseEvent;
 

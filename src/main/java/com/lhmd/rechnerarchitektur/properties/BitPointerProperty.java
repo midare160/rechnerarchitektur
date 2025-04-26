@@ -12,8 +12,6 @@ public class BitPointerProperty extends BooleanPropertyBase {
     private final int bitIndex;
     private final ChangeManager changeManager;
 
-    private boolean isChanged;
-
     public BitPointerProperty(IntBox intBox, int bitIndex) {
         this.intBox = Objects.requireNonNull(intBox);
         this.bitIndex = IntUtils.requireValidBitIndex(bitIndex);
@@ -23,11 +21,11 @@ public class BitPointerProperty extends BooleanPropertyBase {
     }
 
     public boolean isChanged() {
-        return isChanged;
+        return changeManager.isChanged();
     }
 
     public void resetChanged() {
-        isChanged = false;
+        changeManager.setChanged(false);
     }
 
     @Override
@@ -46,8 +44,9 @@ public class BitPointerProperty extends BooleanPropertyBase {
             return;
         }
 
+        changeManager.setChanged(true);
+
         try (var ignored = changeManager.beginChange()) {
-            isChanged = true;
             intBox.set(IntUtils.changeBit(intBox.get(), bitIndex, get()));
         }
     }
@@ -57,8 +56,9 @@ public class BitPointerProperty extends BooleanPropertyBase {
             return;
         }
 
+        changeManager.setChanged(true);
+
         try (var ignored = changeManager.beginChange()) {
-            isChanged = true;
             set(IntUtils.isBitSet(newValue, bitIndex));
         }
     }
