@@ -27,13 +27,13 @@ public class IntUtils {
     }
 
     public static boolean isBitSet(int value, int index) {
-        ensureValidBitIndex(index);
+        requireValidBitIndex(index);
 
         return ((value >> index) & 1) != 0;
     }
 
     public static int changeBit(int value, int index, boolean isSet) {
-        ensureValidBitIndex(index);
+        requireValidBitIndex(index);
 
         if (isSet) {
             return setBit(value, index);
@@ -43,13 +43,13 @@ public class IntUtils {
     }
 
     public static int setBit(int value, int index) {
-        ensureValidBitIndex(index);
+        requireValidBitIndex(index);
 
         return value | (1 << index);
     }
 
     public static int clearBit(int value, int index) {
-        ensureValidBitIndex(index);
+        requireValidBitIndex(index);
 
         return value & ~(1 << index);
     }
@@ -95,9 +95,19 @@ public class IntUtils {
         return (a << bLength) | b;
     }
 
-    private static void ensureValidBitIndex(int index) {
+    public static int requireValidBitIndex(int index) {
         if (index < 0 || index > 31) {
-            throw new IndexOutOfBoundsException(index);
+            throw new IndexOutOfBoundsException("Index must be between 0 and 31. Index = " + index);
         }
+
+        return index;
+    }
+
+    public static int requireLargerZero(int value) {
+        if (value <= 0) {
+            throw new IndexOutOfBoundsException("Value must be greater than zero. Value = " + value);
+        }
+
+        return value;
     }
 }

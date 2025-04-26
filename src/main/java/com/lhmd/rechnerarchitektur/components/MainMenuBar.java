@@ -51,16 +51,6 @@ public class MainMenuBar extends HBox {
         FxUtils.loadHierarchy(this, "components/mainMenuBar.fxml");
     }
 
-    @FXML
-    public void initialize() {
-        initializeEvents();
-        initializeOpenRecentMenu();
-        initializeThemeMenu();
-        initializeActionMenuBar();
-
-        aboutMenuItem.setText("About " + ProgramInfo.PROGRAM_NAME);
-    }
-
     public void setRunnable(boolean runnable) {
         runMenu.setDisable(!runnable);
     }
@@ -73,6 +63,16 @@ public class MainMenuBar extends HBox {
         runMenu.setDisable(false);
         pauseMenu.setDisable(true);
         nextMenu.setDisable(false);
+    }
+
+    @FXML
+    private void initialize() {
+        initializeEvents();
+        initializeOpenRecentMenu();
+        initializeThemeMenu();
+        initializeActionMenuBar();
+
+        aboutMenuItem.setText("About " + ProgramInfo.PROGRAM_NAME);
     }
 
     private void initializeEvents() {

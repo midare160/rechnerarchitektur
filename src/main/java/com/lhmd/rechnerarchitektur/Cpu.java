@@ -16,6 +16,7 @@ public class Cpu extends Thread {
     private final Set<Integer> breakpointAddresses;
 
     private final ActionEvent onBreakpointReached;
+    private final ActionEvent onNextInstruction;
 
     private int lastBreakpointAddress;
 
@@ -28,7 +29,9 @@ public class Cpu extends Thread {
         this.programStack = programStack;
         this.executionParams = new ExecutionParams(dataMemory, programStack);
         this.breakpointAddresses = new HashSet<>();
+
         this.onBreakpointReached = new ActionEvent();
+        this.onNextInstruction = new ActionEvent();
 
         this.lastBreakpointAddress = -1;
     }
@@ -66,6 +69,8 @@ public class Cpu extends Thread {
     }
 
     public void nextInstruction() {
+        onNextInstruction.fire();
+
         var address = dataMemory.programCounter().get();
         dataMemory.programCounter().increment();
 
@@ -87,6 +92,10 @@ public class Cpu extends Thread {
 
     public ActionEvent onBreakpointReached() {
         return onBreakpointReached;
+    }
+
+    public ActionEvent onNextInstruction() {
+        return onNextInstruction;
     }
 
     public void shutdown() {
