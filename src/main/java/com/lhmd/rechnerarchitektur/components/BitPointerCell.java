@@ -17,7 +17,7 @@ public class BitPointerCell extends Label {
         this.bitIndex = IntUtils.requireValidBitIndex(bitIndex);
 
         setOnMouseClicked(this::onMouseClicked);
-        intBox.changedEvent().addListener(this::onIntBoxChanged);
+        intBox.onChanged().addListener(this::onIntBoxChanged);
 
         setAlignment(Pos.CENTER);
         updateText();

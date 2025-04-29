@@ -22,7 +22,7 @@ public class ProgramCounter {
         this.changeManager = new ChangeManager();
         this.changedEvent = new ChangedEvent<>();
 
-        pclRegister.changedEvent().addListener(this::onPclChanged);
+        pclRegister.onChanged().addListener(this::onPclChanged);
     }
 
     public ChangedEvent<Integer> changedEvent() {

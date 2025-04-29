@@ -5,12 +5,12 @@ import com.lhmd.rechnerarchitektur.events.ChangedEvent;
 import java.util.*;
 
 public class Box<T extends Comparable<T>> implements Comparable<Box<T>> {
-    private final ChangedEvent<T> changedEvent;
+    private final ChangedEvent<T> onChanged;
 
     private T value;
 
     public Box(T value) {
-        changedEvent = new ChangedEvent<>();
+        onChanged = new ChangedEvent<>();
         setValue(value);
     }
 
@@ -23,11 +23,11 @@ public class Box<T extends Comparable<T>> implements Comparable<Box<T>> {
     }
 
     public void setValue(T value) {
-        changedEvent.fire(() -> this.value, () -> this.value = value);
+        onChanged.fire(() -> this.value, () -> this.value = value);
     }
 
-    public ChangedEvent<T> changedEvent() {
-        return changedEvent;
+    public ChangedEvent<T> onChanged() {
+        return onChanged;
     }
 
     @Override

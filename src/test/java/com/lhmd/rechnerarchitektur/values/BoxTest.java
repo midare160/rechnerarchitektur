@@ -36,7 +36,7 @@ public class BoxTest {
 
         var box = new Box<>(expectedOld);
 
-        box.changedEvent().addListener((o, n) -> {
+        box.onChanged().addListener((o, n) -> {
             assertEquals(expectedOld, o);
             assertEquals(expectedNew, n);
         });
@@ -49,7 +49,7 @@ public class BoxTest {
         var box = new Box<>(4.2);
 
         var called = new AtomicBoolean();
-        box.changedEvent().addListener((o, n) -> called.set(true));
+        box.onChanged().addListener((o, n) -> called.set(true));
 
         box.setValue(6.9);
 
@@ -63,12 +63,12 @@ public class BoxTest {
 
         var box = new Box<Double>();
 
-        box.changedEvent().addListener((o, n) -> {
+        box.onChanged().addListener((o, n) -> {
             assertFalse(secondCalled.get());
             firstCalled.set(true);
         });
 
-        box.changedEvent().addListener((o, n) -> secondCalled.set(true));
+        box.onChanged().addListener((o, n) -> secondCalled.set(true));
 
         box.setValue(6.9);
 
