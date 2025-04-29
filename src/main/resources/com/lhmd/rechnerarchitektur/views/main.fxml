@@ -16,6 +16,7 @@
 
 <?import com.lhmd.rechnerarchitektur.components.*?>
 
+<?import javafx.scene.control.ScrollPane?>
 <fx:root type="VBox" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
   <children>
     <MainMenuBar fx:id="mainMenuBar" />
@@ -28,7 +29,9 @@
         </AnchorPane>
         <AnchorPane minWidth="280">
           <children>
-              <BitsTableView fx:id="registerTableView" numberOfBits="8" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+              <ScrollPane fitToWidth="true" maxWidth="Infinity" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <VBox fx:id="registerPane" maxWidth="Infinity" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+              </ScrollPane>
           </children>
         </AnchorPane>
       </items>

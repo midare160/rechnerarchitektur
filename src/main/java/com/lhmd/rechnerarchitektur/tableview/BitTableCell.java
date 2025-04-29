@@ -12,25 +12,31 @@ public class BitTableCell<S> extends FormattedTableCell<S, Boolean> {
     }
 
     public void resetChanged() {
+        var nextActive = false;
         var property = getProperty();
 
-        if (property == null) {
-            return;
+        if (property != null) {
+            nextActive = property.isChanged();
+            property.resetChanged();
         }
 
-        property.resetChanged();
-        updatePseudoClass(false);
+        updatePseudoClass(nextActive);
     }
 
     @Override
     protected void updateItem(Boolean item, boolean empty) {
         super.updateItem(item, empty);
 
-        if (empty || item == null) {
-            return;
-        }
+        var nextActive = !empty && item != null && getProperty().isChanged();
+        updatePseudoClass(nextActive);
+    }
 
-        updatePseudoClass(getProperty().isChanged());
+    @Override
+    public void updateIndex(int i) {
+        super.updateIndex(i);
+
+        var nextActive = i >= 0 && getItem() != null && getProperty().isChanged();
+        updatePseudoClass(nextActive);
     }
 
     private void onMouseClicked(MouseEvent e) {
@@ -38,8 +44,14 @@ public class BitTableCell<S> extends FormattedTableCell<S, Boolean> {
         property.set(!property.get());
     }
 
-    private void updatePseudoClass(boolean isChanged) {
-        pseudoClassStateChanged(PseudoClasses.CHANGED, isChanged);
+    private void updatePseudoClass(boolean active) {
+//        pseudoClassStateChanged(PseudoClasses.CHANGED, active);
+
+        if (active) {
+            setStyle("-fx-background-color: red");
+        } else {
+            setStyle("");
+        }
     }
 
     private BitPointerProperty getProperty() {

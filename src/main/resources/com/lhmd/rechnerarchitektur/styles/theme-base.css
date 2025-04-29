@@ -29,6 +29,6 @@
     -fx-background-color: -blue-highlight-color;
 }
 
-.table-cell:changed {
+.label:changed {
     -fx-background-color: -green-hightlight-color;
 }

@@ -10,6 +10,7 @@ import com.lhmd.rechnerarchitektur.parsing.*;
 import javafx.beans.Observable;
 import javafx.collections.*;
 import javafx.fxml.FXML;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;
@@ -23,7 +24,8 @@ public class MainView extends VBox {
     private InstructionsTableView instructionsTableView;
 
     @FXML
-    private BitsTableView registerTableView;
+//    private BitsTableView registerTableView;
+    private VBox registerPane;
 
     private ProgramMemory programMemory;
     private DataMemory dataMemory;
@@ -68,18 +70,22 @@ public class MainView extends VBox {
     private void initializeCpu() {
         cpu = new Cpu(programMemory, dataMemory, new ProgramStack());
         cpu.onBreakpointReached().addListener(mainMenuBar::pause);
-        cpu.onNextInstruction().addListener(registerTableView::resetChangedCells);
+//        cpu.onNextInstruction().addListener(registerTableView::resetChangedCells);
     }
 
     private void initializeRegisterTableView() {
         var registers = dataMemory.registers();
-        var items = new ArrayList<BitPointerSet>(registers.size());
+        var controls = new ArrayList<Register>(registers.size());
+
+//        for (var i = 0; i < registers.size(); i++) {
+//            items.add(new BitPointerSet("0x%04X".formatted(i), registers.get(i)));
+//        }
 
         for (var i = 0; i < registers.size(); i++) {
-            items.add(new BitPointerSet("0x%04X".formatted(i), registers.get(i)));
+            controls.add(new Register(registers.get(i), 8, "0x%04X".formatted(i)));
         }
 
-        registerTableView.setItems(FXCollections.observableList(items));
+        registerPane.getChildren().addAll(controls);
     }
 
     private void onMainMenuBarFileOpened(MainMenuBarEvent<String> e) {
@@ -109,7 +115,7 @@ public class MainView extends VBox {
 
     private void onMainMenuBarReset(MainMenuBarEvent<Void> e) {
         cpu.reset();
-        registerTableView.resetChangedCells();
+//        registerTableView.resetChangedCells();
     }
 
     private void onBreakpointToggled(ListChangeListener.Change<? extends InstructionRowModel> c) {

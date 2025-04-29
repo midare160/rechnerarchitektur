@@ -36,8 +36,8 @@ public class BitsTableView extends TableView<BitPointerSet> {
             final var finalI = i;
 
             var column = new TableColumn<BitPointerSet, Boolean>(Integer.toString(i));
-            column.setCellValueFactory(p -> p.getValue().get(finalI));
             column.setCellFactory(p -> new BitTableCell<>());
+            column.setCellValueFactory(p -> p.getValue().get(finalI));
             column.getStyleClass().add("align-center");
 
             getColumns().add(column);
