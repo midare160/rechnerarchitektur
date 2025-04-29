@@ -6,8 +6,7 @@ import javafx.beans.NamedArg;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class BitPointerTable extends ScrollPane {
     private final int numberOfBits;
@@ -20,9 +19,7 @@ public class BitPointerTable extends ScrollPane {
         this.rows = new ArrayList<>();
 
         setFitToWidth(true);
-
-        rowsVBox.setMaxWidth(Double.MAX_VALUE);
-        getChildren().add(rowsVBox);
+        setContent(rowsVBox);
     }
 
     public void addRow(IntBox intBox, String name) {

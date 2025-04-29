@@ -3,6 +3,7 @@ package com.lhmd.rechnerarchitektur.components;
 import com.lhmd.rechnerarchitektur.PseudoClasses;
 import com.lhmd.rechnerarchitektur.common.IntUtils;
 import com.lhmd.rechnerarchitektur.values.IntBox;
+import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
@@ -43,6 +44,6 @@ public class BitPointerCell extends Label {
     }
 
     private void updateText() {
-        setText(isBitSet() ? "1" : "0");
+        Platform.runLater(() -> setText(isBitSet() ? "1" : "0"));
     }
 }
