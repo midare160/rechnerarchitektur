@@ -2,11 +2,9 @@ package com.lhmd.rechnerarchitektur.components;
 
 import com.lhmd.rechnerarchitektur.values.IntBox;
 import javafx.scene.control.Label;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
+import javafx.scene.layout.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class BitPointerRow extends HBox {
     private final List<BitPointerCell> cells;
