@@ -63,8 +63,6 @@ public class Cpu extends Thread {
 
                 nextInstruction();
             }
-
-            Runner.runUnchecked(() -> Thread.sleep(100));
         }
     }
 

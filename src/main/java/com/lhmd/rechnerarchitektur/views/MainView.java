@@ -3,17 +3,15 @@ package com.lhmd.rechnerarchitektur.views;
 import com.lhmd.rechnerarchitektur.Cpu;
 import com.lhmd.rechnerarchitektur.common.*;
 import com.lhmd.rechnerarchitektur.components.*;
-import com.lhmd.rechnerarchitektur.events.MainMenuBarEvent;
+import com.lhmd.rechnerarchitektur.events.*;
 import com.lhmd.rechnerarchitektur.memory.*;
 import com.lhmd.rechnerarchitektur.models.*;
 import com.lhmd.rechnerarchitektur.parsing.*;
 import javafx.beans.Observable;
 import javafx.collections.*;
 import javafx.fxml.FXML;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 
-import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 public class MainView extends VBox {
@@ -24,8 +22,7 @@ public class MainView extends VBox {
     private InstructionsTableView instructionsTableView;
 
     @FXML
-//    private BitsTableView registerTableView;
-    private VBox registerPane;
+    private BitPointerTable registerTable;
 
     private ProgramMemory programMemory;
     private DataMemory dataMemory;
@@ -69,23 +66,17 @@ public class MainView extends VBox {
 
     private void initializeCpu() {
         cpu = new Cpu(programMemory, dataMemory, new ProgramStack());
+
         cpu.onBreakpointReached().addListener(mainMenuBar::pause);
-//        cpu.onNextInstruction().addListener(registerTableView::resetChangedCells);
+        cpu.onNextInstruction().addListener(registerTable::resetChanged);
     }
 
     private void initializeRegisterTableView() {
         var registers = dataMemory.registers();
-        var controls = new ArrayList<Register>(registers.size());
-
-//        for (var i = 0; i < registers.size(); i++) {
-//            items.add(new BitPointerSet("0x%04X".formatted(i), registers.get(i)));
-//        }
 
         for (var i = 0; i < registers.size(); i++) {
-            controls.add(new Register(registers.get(i), 8, "0x%04X".formatted(i)));
+            registerTable.addRow(registers.get(i), "0x%04X".formatted(i));
         }
-
-        registerPane.getChildren().addAll(controls);
     }
 
     private void onMainMenuBarFileOpened(MainMenuBarEvent<String> e) {
@@ -115,7 +106,7 @@ public class MainView extends VBox {
 
     private void onMainMenuBarReset(MainMenuBarEvent<Void> e) {
         cpu.reset();
-//        registerTableView.resetChangedCells();
+        registerTable.resetChanged();
     }
 
     private void onBreakpointToggled(ListChangeListener.Change<? extends InstructionRowModel> c) {

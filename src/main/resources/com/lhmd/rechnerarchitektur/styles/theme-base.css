@@ -21,14 +21,18 @@
     -fx-alignment: center;
 }
 
-.table-row-cell:breakpoint-active {
+.monospaced {
+    -fx-font-family: "Consolas";
+}
+
+*:breakpoint-active {
     -fx-background-color: -red-highlight-color;
 }
 
-.table-row-cell:next {
+*:next {
     -fx-background-color: -blue-highlight-color;
 }
 
-.label:changed {
+*:changed {
     -fx-background-color: -green-hightlight-color;
 }
