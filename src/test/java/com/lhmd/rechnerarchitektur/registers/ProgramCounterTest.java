@@ -76,7 +76,7 @@ public class ProgramCounterTest {
     public void override_programCounterAndPclGetUpdated() {
         pclathRegister.set(2);
 
-        programCounter.override(0b0_1001_1100_0101);
+        programCounter.set(0b0_1001_1100_0101);
 
         assertEquals(0b0_1001_1100_0101, programCounter.get());
         assertEquals(0b1100_0101, pclRegister.get());

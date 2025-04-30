@@ -4,13 +4,16 @@ import com.lhmd.rechnerarchitektur.common.*;
 import com.lhmd.rechnerarchitektur.instructions.*;
 
 import java.io.*;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.util.*;
 
 public class InstructionParser {
+    public static final Charset CHARSET = StandardCharsets.ISO_8859_1;
+
     public static <T extends Instruction> List<T> parseFile(Class<T> instructionClass, String path) throws IOException {
-        try (var reader = Files.newBufferedReader(Path.of(path), StandardCharsets.ISO_8859_1)) {
+        try (var reader = Files.newBufferedReader(Path.of(path), CHARSET)) {
             return reader.lines()
                     .map(l -> parseLine(instructionClass, l))
                     .toList();

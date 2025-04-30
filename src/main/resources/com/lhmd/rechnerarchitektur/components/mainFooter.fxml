@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<?import com.lhmd.rechnerarchitektur.components.BitPointerRow?>
+
+<fx:root type="GridPane" id="mainFooter" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
+    <BitPointerRow fx:id="wRegisterRow" numberOfBits="8" name="W" GridPane.columnIndex="0" />
+    <Region HBox.hgrow="ALWAYS" GridPane.columnIndex="1" />
+    <BitPointerRow fx:id="programCounterRow" numberOfBits="13" name="PC" GridPane.columnIndex="2" />
+    <columnConstraints>
+        <ColumnConstraints percentWidth="20" />
+        <ColumnConstraints percentWidth="45" />
+        <ColumnConstraints percentWidth="35" />
+    </columnConstraints>
+    <padding>
+        <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+    </padding>
+</fx:root>

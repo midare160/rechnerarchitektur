@@ -8,7 +8,9 @@ import java.util.*;
 import java.util.stream.*;
 
 public class DataMemory {
-    private static final int BANK_SIZE = 128;
+    public static final int MAX_SIZE = 256;
+    public static final int BANK_SIZE = MAX_SIZE / 2;
+
     private static final Set<Integer> MIRRORED_ADDRESSES;
 
     static {
@@ -57,7 +59,7 @@ public class DataMemory {
 
     public void reset() {
         wRegister.set(0);
-        programCounter.override(0);
+        programCounter.set(0);
 
         for (var register : registers) {
             register.set(0);
@@ -66,7 +68,7 @@ public class DataMemory {
 
     private IntBox[] getInitialRegisters() {
         // PIC16FX is partitioned into 2 banks
-        var registerArray = new IntBox[2 * BANK_SIZE];
+        var registerArray = new IntBox[MAX_SIZE];
 
         for (var i = 0x00; i < registerArray.length; i++) {
             // Address was already mirrored

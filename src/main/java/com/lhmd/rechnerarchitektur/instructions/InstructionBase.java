@@ -31,7 +31,7 @@ public abstract class InstructionBase {
 
     protected void popStack(ExecutionParams params) {
         var stackAddress = params.programStack().pop();
-        params.dataMemory().programCounter().override(stackAddress);
+        params.dataMemory().programCounter().set(stackAddress);
     }
 
     protected void updateC_Add(ExecutionParams params, int a, int b) {

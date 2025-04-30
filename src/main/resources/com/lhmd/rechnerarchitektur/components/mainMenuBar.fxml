@@ -5,8 +5,8 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.layout.HBox?>
-
 <?import javafx.scene.layout.Region?>
+
 <fx:root type="HBox" prefWidth="600.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" >
     <MenuBar>
         <menus>

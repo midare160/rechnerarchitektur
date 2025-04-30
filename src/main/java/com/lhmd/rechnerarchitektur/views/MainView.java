@@ -24,6 +24,9 @@ public class MainView extends VBox {
     @FXML
     private BitPointerTable registerTable;
 
+    @FXML
+    private MainFooter mainFooter;
+
     private ProgramMemory programMemory;
     private DataMemory dataMemory;
     private Cpu cpu;
@@ -60,7 +63,7 @@ public class MainView extends VBox {
         dataMemory = new DataMemory();
 
         dataMemory.programCounter()
-                .changedEvent()
+                .onChanged()
                 .addListener((o, n) -> instructionsTableView.setNextRow(n));
     }
 
@@ -68,7 +71,7 @@ public class MainView extends VBox {
         cpu = new Cpu(programMemory, dataMemory, new ProgramStack());
 
         cpu.onBreakpointReached().addListener(mainMenuBar::pause);
-        cpu.onNextInstruction().addListener(registerTable::resetChanged);
+        cpu.onNextInstruction().addListener(this::resetChanged);
     }
 
     private void initializeRegisterTableView() {
@@ -77,6 +80,10 @@ public class MainView extends VBox {
         for (var i = 0; i < registers.size(); i++) {
             registerTable.addRow(registers.get(i), "0x%04X".formatted(i));
         }
+    }
+
+    private void initializeMainFooter() {
+        mainFooter.setData(dataMemory.W(), dataMemory.programCounter());
     }
 
     private void onMainMenuBarFileOpened(MainMenuBarEvent<String> e) {
@@ -92,6 +99,7 @@ public class MainView extends VBox {
         initializeDataMemory();
         initializeCpu();
         initializeRegisterTableView();
+        initializeMainFooter();
     }
 
     private void onMainMenuBarRun(MainMenuBarEvent<Void> e) {
@@ -106,7 +114,7 @@ public class MainView extends VBox {
 
     private void onMainMenuBarReset(MainMenuBarEvent<Void> e) {
         cpu.reset();
-        registerTable.resetChanged();
+        resetChanged();
     }
 
     private void onBreakpointToggled(ListChangeListener.Change<? extends InstructionRowModel> c) {
@@ -127,5 +135,10 @@ public class MainView extends VBox {
                 cpu.removeBreakpoint(address);
             }
         }
+    }
+
+    private void resetChanged(){
+        registerTable.resetChanged();
+        mainFooter.resetChanged();
     }
 }

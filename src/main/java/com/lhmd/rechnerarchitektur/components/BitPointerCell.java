@@ -2,27 +2,39 @@ package com.lhmd.rechnerarchitektur.components;
 
 import com.lhmd.rechnerarchitektur.PseudoClasses;
 import com.lhmd.rechnerarchitektur.common.IntUtils;
+import com.lhmd.rechnerarchitektur.events.ChangeListener;
 import com.lhmd.rechnerarchitektur.values.IntBox;
 import javafx.application.Platform;
+import javafx.beans.NamedArg;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 
 public class BitPointerCell extends Label {
-    private final IntBox intBox;
     private final int bitIndex;
     private final boolean readOnly;
+    private final ChangeListener<Integer> changeListener;
 
-    public BitPointerCell(IntBox intBox, int bitIndex, boolean readOnly) {
-        this.intBox = intBox;
+    private IntBox intBox;
+
+    public BitPointerCell(@NamedArg("bitIndex") int bitIndex, @NamedArg("readOnly") boolean readOnly) {
         this.bitIndex = IntUtils.requireValidBitIndex(bitIndex);
         this.readOnly = readOnly;
+        this.changeListener = this::onIntBoxChanged;
 
         setOnMouseClicked(this::onMouseClicked);
-        intBox.onChanged().addListener(this::onIntBoxChanged);
 
         setAlignment(Pos.CENTER);
         updateText();
+    }
+
+    public void setData(IntBox intBox) {
+        if (this.intBox != null) {
+            this.intBox.onChanged().removeListener(changeListener);
+        }
+
+        this.intBox = intBox;
+        this.intBox.onChanged().addListener(changeListener);
     }
 
     public void setChanged(boolean changed) {
@@ -30,7 +42,7 @@ public class BitPointerCell extends Label {
     }
 
     private void onMouseClicked(MouseEvent e) {
-        if (!readOnly) {
+        if (!readOnly && intBox != null) {
             intBox.set(IntUtils.changeBit(intBox.get(), bitIndex, !isBitSet()));
         }
     }
@@ -44,10 +56,11 @@ public class BitPointerCell extends Label {
     }
 
     private boolean isBitSet() {
-        return IntUtils.isBitSet(intBox.get(), bitIndex);
+        return intBox != null && IntUtils.isBitSet(intBox.get(), bitIndex);
     }
 
     private void updateText() {
-        Platform.runLater(() -> setText(isBitSet() ? "1" : "0"));
+        var text = isBitSet() ? "1" : "0";
+        Platform.runLater(() -> setText(text));
     }
 }

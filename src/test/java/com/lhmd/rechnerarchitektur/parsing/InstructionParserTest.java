@@ -20,7 +20,7 @@ public class InstructionParserTest {
 
         var tempFilePath = Files.createTempFile(null, ".lst");
         tempFilePath.toFile().deleteOnExit();
-        Files.writeString(tempFilePath, rawLines);
+        Files.writeString(tempFilePath, rawLines, InstructionParser.CHARSET);
 
         var instructions = InstructionParser.parseFile(TestInstruction.class, tempFilePath.toString());
 

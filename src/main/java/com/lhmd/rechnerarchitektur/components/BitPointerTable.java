@@ -25,7 +25,8 @@ public class BitPointerTable extends ScrollPane {
     }
 
     public void addRow(IntBox intBox, String name) {
-        var row = new BitPointerRow(intBox, numberOfBits, name, readOnly);
+        var row = new BitPointerRow(numberOfBits, name, readOnly);
+        row.setData(intBox);
 
         rows.add(row);
         rowsVBox.getChildren().add(row);

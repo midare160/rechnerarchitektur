@@ -3,7 +3,7 @@
 <?import javafx.scene.control.cell.*?>
 <?import javafx.scene.control.*?>
 
-<fx:root type="TableView" styleClass="instructionsTable, headless, striped" xmlns:fx="http://javafx.com/fxml" xmlns="http://javafx.com/javafx">
+<fx:root type="TableView" id="instructionsTable" styleClass="headless, striped" xmlns:fx="http://javafx.com/fxml" xmlns="http://javafx.com/javafx">
     <columns>
         <TableColumn prefWidth="-Infinity" resizable="false">
             <cellValueFactory>

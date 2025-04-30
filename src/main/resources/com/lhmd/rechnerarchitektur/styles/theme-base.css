@@ -2,37 +2,35 @@
     src: url('../fonts/consolas.ttf');
 }
 
+#instructionsTable .table-row-cell {
+    -fx-cell-size: 25;
+    -fx-font-family: "Consolas";
+}
+
+#mainFooter {
+    -fx-border-style: solid none none none;
+    -fx-border-width: 2;
+    -fx-border-color: -color-accent-emphasis;
+}
+
 .headless .column-header-background {
     -fx-max-height: 0;
     -fx-pref-height: 0;
     -fx-min-height: 0;
 }
 
-.instructionsTable .table-row-cell {
-    -fx-cell-size: 25;
-    -fx-font-family: "Consolas";
-}
-
-.bitsTable .table-row-cell {
-    -fx-cell-size: 25;
-}
-
-.bitsTable .column-header .label {
-    -fx-alignment: center;
-}
-
 .monospaced {
     -fx-font-family: "Consolas";
 }
 
-*:breakpoint-active {
+:breakpoint-active {
     -fx-background-color: -red-highlight-color;
 }
 
-*:next {
+:next {
     -fx-background-color: -blue-highlight-color;
 }
 
-*:changed {
-    -fx-background-color: -green-hightlight-color;
+:changed {
+    -fx-background-color: -green-highlight-color;
 }
