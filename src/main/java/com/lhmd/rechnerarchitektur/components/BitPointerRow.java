@@ -13,30 +13,30 @@ import javafx.scene.text.TextFlow;
 import java.util.*;
 
 public class BitPointerRow extends HBox {
-    private final List<BitPointerCell> cells;
+    private final BitPointerCell[] cells;
     private final String name;
-    private final Tooltip tooltip;
+    private final Text tooltipText;
     private final ChangeListener<Integer> changeListener;
 
     private IntBox intBox;
 
     public BitPointerRow(@NamedArg("numberOfBits") int numberOfBits, @NamedArg("name") String name, @NamedArg("readOnly") boolean readOnly) {
-        this.cells = new ArrayList<>(numberOfBits);
+        this.cells = new BitPointerCell[numberOfBits];
         this.name = name;
-        this.tooltip = new Tooltip();
+        this.tooltipText = new Text(name);
         this.changeListener = (o, n) -> updateTooltipText();
 
         setMaxWidth(Double.MAX_VALUE);
+        initializeTooltip();
+
+        // TODO don't resize like cell labels
         addChildLabel(new Label(name));
 
         for (var i = numberOfBits - 1; i >= 0; i--) {
             var cell = new BitPointerCell(i, readOnly);
-            cells.add(cell);
+            cells[i] = cell;
             addChildLabel(cell);
         }
-
-        Tooltip.install(this, tooltip);
-        updateTooltipText();
     }
 
     public void setData(IntBox intBox) {
@@ -58,6 +58,20 @@ public class BitPointerRow extends HBox {
         }
     }
 
+    private void initializeTooltip() {
+        var headerText = new Text(name);
+        headerText.getStyleClass().add("text-bold");
+
+        var textFlow = new TextFlow(headerText, tooltipText);
+
+        var tooltip = new Tooltip();
+        tooltip.setGraphic(textFlow);
+        tooltip.setWrapText(true);
+
+        Tooltip.install(this, tooltip);
+        updateTooltipText();
+    }
+
     private void addChildLabel(Label label) {
         label.setMaxWidth(Double.MAX_VALUE);
         label.setAlignment(Pos.CENTER);
@@ -69,11 +83,9 @@ public class BitPointerRow extends HBox {
     }
 
     private void updateTooltipText() {
-        final var text = "%xh\n%dd";
-
         var currentValue = intBox == null ? 0 : intBox.get();
-        var formatted = text.formatted(currentValue, currentValue);
+        var text = "\n%Xh\n%dd".formatted(currentValue, currentValue);
 
-        Platform.runLater(() -> tooltip.setText(formatted));
+        Platform.runLater(() -> tooltipText.setText(text));
     }
 }
