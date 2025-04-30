@@ -9,7 +9,7 @@ import java.util.*;
 public class BitPointerRow extends HBox {
     private final List<BitPointerCell> cells;
 
-    public BitPointerRow(IntBox intBox, int numberOfBits, String name) {
+    public BitPointerRow(IntBox intBox, int numberOfBits, String name, boolean readOnly) {
         this.cells = new ArrayList<>(numberOfBits);
 
         setMaxWidth(Double.MAX_VALUE);
@@ -19,7 +19,7 @@ public class BitPointerRow extends HBox {
         addChildLabel(nameLabel);
 
         for (var i = numberOfBits - 1; i >= 0; i--) {
-            var cell = new BitPointerCell(intBox, i);
+            var cell = new BitPointerCell(intBox, i, readOnly);
             cells.add(cell);
             addChildLabel(cell);
         }

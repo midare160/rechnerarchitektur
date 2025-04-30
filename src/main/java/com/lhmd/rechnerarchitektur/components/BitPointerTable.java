@@ -10,11 +10,13 @@ import java.util.*;
 
 public class BitPointerTable extends ScrollPane {
     private final int numberOfBits;
+    private final boolean readOnly;
     private final VBox rowsVBox;
     private final List<BitPointerRow> rows;
 
-    public BitPointerTable(@NamedArg("numberOfBits") int numberOfBits) {
+    public BitPointerTable(@NamedArg("numberOfBits") int numberOfBits, @NamedArg("readOnly") boolean readOnly) {
         this.numberOfBits = IntUtils.requireLargerZero(numberOfBits);
+        this.readOnly = readOnly;
         this.rowsVBox = new VBox();
         this.rows = new ArrayList<>();
 
@@ -23,7 +25,7 @@ public class BitPointerTable extends ScrollPane {
     }
 
     public void addRow(IntBox intBox, String name) {
-        var row = new BitPointerRow(intBox, numberOfBits, name);
+        var row = new BitPointerRow(intBox, numberOfBits, name, readOnly);
 
         rows.add(row);
         rowsVBox.getChildren().add(row);

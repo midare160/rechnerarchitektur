@@ -13,16 +13,17 @@
 <?import javafx.scene.text.Font?>
 
 <?import com.lhmd.rechnerarchitektur.components.*?>
+<?import com.lhmd.rechnerarchitektur.common.*?>
 
 <fx:root type="VBox" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
   <MainMenuBar fx:id="mainMenuBar" />
   <SplitPane dividerPositions="0.75" focusTraversable="true" VBox.vgrow="ALWAYS">
     <AnchorPane>
-      <InstructionsTableView fx:id="instructionsTableView" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+      <InstructionsTableView fx:id="instructionsTableView" FxUtils.allAnchors="0.0" />
     </AnchorPane>
     <TabPane tabClosingPolicy="UNAVAILABLE" minWidth="280">
       <Tab text="Registers">
-        <BitPointerTable fx:id="registerTable" numberOfBits="8" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+        <BitPointerTable fx:id="registerTable" numberOfBits="8" FxUtils.allAnchors="0.0" />
       </Tab>
       <Tab text="Pins">
       </Tab>

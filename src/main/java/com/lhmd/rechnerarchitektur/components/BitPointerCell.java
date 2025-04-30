@@ -11,10 +11,12 @@ import javafx.scene.input.MouseEvent;
 public class BitPointerCell extends Label {
     private final IntBox intBox;
     private final int bitIndex;
+    private final boolean readOnly;
 
-    public BitPointerCell(IntBox intBox, int bitIndex) {
+    public BitPointerCell(IntBox intBox, int bitIndex, boolean readOnly) {
         this.intBox = intBox;
         this.bitIndex = IntUtils.requireValidBitIndex(bitIndex);
+        this.readOnly = readOnly;
 
         setOnMouseClicked(this::onMouseClicked);
         intBox.onChanged().addListener(this::onIntBoxChanged);
@@ -28,7 +30,9 @@ public class BitPointerCell extends Label {
     }
 
     private void onMouseClicked(MouseEvent e) {
-        intBox.set(IntUtils.changeBit(intBox.get(), bitIndex, !isBitSet()));
+        if (!readOnly) {
+            intBox.set(IntUtils.changeBit(intBox.get(), bitIndex, !isBitSet()));
+        }
     }
 
     private void onIntBoxChanged(Integer oldValue, Integer newValue) {

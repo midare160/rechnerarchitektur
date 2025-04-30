@@ -2,8 +2,9 @@ package com.lhmd.rechnerarchitektur.common;
 
 import com.lhmd.rechnerarchitektur.Launcher;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuItem;
+import javafx.scene.Node;
+import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
 
 public class FxUtils {
     public static <T> void loadHierarchy(T controller, String fxmlPath) {
@@ -12,6 +13,17 @@ public class FxUtils {
         loader.setController(controller);
 
         Runner.runUnchecked(loader::load);
+    }
+
+    public static void setAllAnchors(Node child, Double value) {
+        AnchorPane.setTopAnchor(child, value);
+        AnchorPane.setRightAnchor(child, value);
+        AnchorPane.setBottomAnchor(child, value);
+        AnchorPane.setLeftAnchor(child, value);
+    }
+
+    public static Double getAllAnchors(Node child) {
+        return AnchorPane.getTopAnchor(child);
     }
 
     /**
