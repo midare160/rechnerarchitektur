@@ -3,8 +3,8 @@ package com.lhmd.rechnerarchitektur.views;
 import com.lhmd.rechnerarchitektur.Cpu;
 import com.lhmd.rechnerarchitektur.common.*;
 import com.lhmd.rechnerarchitektur.components.*;
-import com.lhmd.rechnerarchitektur.events.MainMenuBarEvent;
-import com.lhmd.rechnerarchitektur.instructions.*;
+import com.lhmd.rechnerarchitektur.events.*;
+import com.lhmd.rechnerarchitektur.instructions.InstructionRowModel;
 import com.lhmd.rechnerarchitektur.memory.*;
 import com.lhmd.rechnerarchitektur.parsing.*;
 import javafx.beans.Observable;
@@ -21,6 +21,9 @@ public class MainView extends VBox {
     @FXML
     private InstructionsTableView instructionsTableView;
 
+    @FXML
+    private BitPointerTable registerTable;
+
     private ProgramMemory programMemory;
     private DataMemory dataMemory;
     private Cpu cpu;
@@ -29,17 +32,19 @@ public class MainView extends VBox {
         FxUtils.loadHierarchy(this, "views/main.fxml");
     }
 
+    public void shutdownCpu() {
+        if (cpu != null) {
+            cpu.shutdown();
+        }
+    }
+
     @FXML
-    public void initialize() {
+    private void initialize() {
         addEventHandler(MainMenuBarEvent.ON_FILE_OPENED, this::onMainMenuBarFileOpened);
         addEventHandler(MainMenuBarEvent.ON_RUN, this::onMainMenuBarRun);
         addEventHandler(MainMenuBarEvent.ON_PAUSE, e -> cpu.setPaused(true));
         addEventHandler(MainMenuBarEvent.ON_NEXT, e -> cpu.nextInstruction());
-        addEventHandler(MainMenuBarEvent.ON_RESET, e -> cpu.reset());
-    }
-
-    public void shutdownCpu() {
-        cpu.shutdown();
+        addEventHandler(MainMenuBarEvent.ON_RESET, this::onMainMenuBarReset);
     }
 
     private void initializeProgramMemory() {
@@ -61,7 +66,17 @@ public class MainView extends VBox {
 
     private void initializeCpu() {
         cpu = new Cpu(programMemory, dataMemory, new ProgramStack());
+
         cpu.onBreakpointReached().addListener(mainMenuBar::pause);
+        cpu.onNextInstruction().addListener(registerTable::resetChanged);
+    }
+
+    private void initializeRegisterTableView() {
+        var registers = dataMemory.registers();
+
+        for (var i = 0; i < registers.size(); i++) {
+            registerTable.addRow(registers.get(i), "0x%04X".formatted(i));
+        }
     }
 
     private void onMainMenuBarFileOpened(MainMenuBarEvent<String> e) {
@@ -76,6 +91,7 @@ public class MainView extends VBox {
         initializeProgramMemory();
         initializeDataMemory();
         initializeCpu();
+        initializeRegisterTableView();
     }
 
     private void onMainMenuBarRun(MainMenuBarEvent<Void> e) {
@@ -86,6 +102,11 @@ public class MainView extends VBox {
         }
 
         cpu.setPaused(false);
+    }
+
+    private void onMainMenuBarReset(MainMenuBarEvent<Void> e) {
+        cpu.reset();
+        registerTable.resetChanged();
     }
 
     private void onBreakpointToggled(ListChangeListener.Change<? extends InstructionRowModel> c) {

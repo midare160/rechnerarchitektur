@@ -14,7 +14,7 @@ public abstract class Register {
     }
 
     public ChangedEvent<Integer> changedEvent() {
-        return register.changedEvent();
+        return register.onChanged();
     }
 
     protected boolean isBitSet(int index) {

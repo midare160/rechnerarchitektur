@@ -26,16 +26,6 @@ public class InstructionsTableView extends TableView<InstructionRowModel> {
         FxUtils.loadHierarchy(this, "components/instructionsTableView.fxml");
     }
 
-    @FXML
-    public void initialize() {
-        setRowFactory(p -> new InstructionTableRow());
-
-        breakpointColumn.setCellFactory(p -> new BreakpointTableCell());
-        addressColumn.setCellFactory(p -> new FormattedTableCell<>("%04X"::formatted));
-        instructionColumn.setCellFactory(p -> new FormattedTableCell<>("%04X"::formatted));
-        lineNumberColumn.setCellFactory(p -> new FormattedTableCell<>("%05d"::formatted));
-    }
-
     public void setNextRow(Integer address) {
         for (var rowModel : getItems()) {
             var isNext = Objects.equals(address, rowModel.getAddress());
@@ -45,5 +35,15 @@ public class InstructionsTableView extends TableView<InstructionRowModel> {
                 scrollTo(rowModel);
             }
         }
+    }
+
+    @FXML
+    private void initialize() {
+        setRowFactory(p -> new InstructionTableRow());
+
+        breakpointColumn.setCellFactory(p -> new BreakpointTableCell());
+        addressColumn.setCellFactory(p -> new FormattedTableCell<>("%04X"::formatted));
+        instructionColumn.setCellFactory(p -> new FormattedTableCell<>("%04X"::formatted));
+        lineNumberColumn.setCellFactory(p -> new FormattedTableCell<>("%05d"::formatted));
     }
 }

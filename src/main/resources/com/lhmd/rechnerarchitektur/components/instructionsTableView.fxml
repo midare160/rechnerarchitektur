@@ -3,8 +3,7 @@
 <?import javafx.scene.control.cell.*?>
 <?import javafx.scene.control.*?>
 
-<fx:root type="TableView" styleClass="instructionsTable, striped" xmlns:fx="http://javafx.com/fxml/1"
-         xmlns="http://javafx.com/javafx/19">
+<fx:root type="TableView" styleClass="instructionsTable, headless, striped" xmlns:fx="http://javafx.com/fxml" xmlns="http://javafx.com/javafx">
     <columns>
         <TableColumn prefWidth="-Infinity" resizable="false">
             <cellValueFactory>
@@ -38,6 +37,6 @@
         </TableColumn>
     </columns>
     <columnResizePolicy>
-        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN"/>
     </columnResizePolicy>
 </fx:root>

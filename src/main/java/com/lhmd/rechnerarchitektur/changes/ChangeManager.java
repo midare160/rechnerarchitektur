@@ -5,6 +5,7 @@ package com.lhmd.rechnerarchitektur.changes;
  */
 public class ChangeManager {
     private boolean isChanging;
+    private boolean isChanged;
 
     public TempValue<Boolean> beginChange() {
         return new TempValue<>(isChanging, true, c -> isChanging = c);
@@ -12,5 +13,13 @@ public class ChangeManager {
 
     public boolean isChanging() {
         return isChanging;
+    }
+
+    public boolean isChanged() {
+        return isChanged;
+    }
+
+    public void setChanged(boolean changed) {
+        isChanged = changed;
     }
 }

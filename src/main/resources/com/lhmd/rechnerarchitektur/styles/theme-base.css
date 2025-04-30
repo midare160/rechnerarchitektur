@@ -2,7 +2,7 @@
     src: url('../fonts/consolas.ttf');
 }
 
-.instructionsTable .column-header-background {
+.headless .column-header-background {
     -fx-max-height: 0;
     -fx-pref-height: 0;
     -fx-min-height: 0;
@@ -13,10 +13,26 @@
     -fx-font-family: "Consolas";
 }
 
-.table-row-cell:breakpoint-active {
+.bitsTable .table-row-cell {
+    -fx-cell-size: 25;
+}
+
+.bitsTable .column-header .label {
+    -fx-alignment: center;
+}
+
+.monospaced {
+    -fx-font-family: "Consolas";
+}
+
+*:breakpoint-active {
     -fx-background-color: -red-highlight-color;
 }
 
-.table-row-cell:next {
+*:next {
     -fx-background-color: -blue-highlight-color;
+}
+
+*:changed {
+    -fx-background-color: -green-hightlight-color;
 }
