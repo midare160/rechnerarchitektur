@@ -3,7 +3,7 @@ package com.lhmd.rechnerarchitektur.values;
 import java.util.Objects;
 
 /**
- * Represents a {@code Box<Integer>} that disallows null values.
+ * Represents a {@code Box<Integer>} that disallows {@code null} values.
  */
 public class IntBox extends Box<Integer> {
     public IntBox() {
@@ -24,7 +24,6 @@ public class IntBox extends Box<Integer> {
 
     @Override
     public void setValue(Integer value) {
-        Objects.requireNonNull(value);
-        super.setValue(value);
+        super.setValue(Objects.requireNonNull(value));
     }
 }

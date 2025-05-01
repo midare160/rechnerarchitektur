@@ -7,6 +7,12 @@
     -fx-font-family: "Consolas";
 }
 
+#breakpointColumn {
+    -fx-border-width: 0 1 0 0;
+    -fx-border-color: -color-border-subtle;
+    -fx-text-fill: -color-fg-subtle;
+}
+
 #mainFooter {
     -fx-border-style: solid none none none;
     -fx-border-width: 2;

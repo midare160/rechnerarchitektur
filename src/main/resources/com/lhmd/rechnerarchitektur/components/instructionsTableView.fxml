@@ -10,7 +10,7 @@
                 <PropertyValueFactory property="isNext"/>
             </cellValueFactory>
         </TableColumn>
-        <TableColumn fx:id="breakpointColumn" prefWidth="30" resizable="false" styleClass="align-right">
+        <TableColumn fx:id="breakpointColumn" prefWidth="35" resizable="false" styleClass="align-right">
             <cellValueFactory>
                 <PropertyValueFactory property="breakpointSvgUrl"/>
             </cellValueFactory>

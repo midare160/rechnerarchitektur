@@ -17,6 +17,7 @@ public class BitPointerCell extends Label {
     private final ChangeListener<Integer> changeListener;
 
     private IntBox intBox;
+    private boolean previousValue;
 
     public BitPointerCell(@NamedArg("bitIndex") int bitIndex, @NamedArg("readOnly") boolean readOnly) {
         this.bitIndex = IntUtils.requireValidBitIndex(bitIndex);
@@ -39,10 +40,13 @@ public class BitPointerCell extends Label {
 
         this.intBox = intBox;
         this.intBox.onChanged().addListener(changeListener);
+
+        resetChanged();
     }
 
-    public void setChanged(boolean changed) {
-        pseudoClassStateChanged(PseudoClasses.CHANGED, changed);
+    public void resetChanged() {
+        previousValue = isBitSet();
+        setChanged(false);
     }
 
     private void onMouseClicked(MouseEvent e) {
@@ -54,9 +58,12 @@ public class BitPointerCell extends Label {
     private void onIntBoxChanged(Integer oldValue, Integer newValue) {
         updateText();
 
-        if (IntUtils.isBitSet(oldValue, bitIndex) != IntUtils.isBitSet(newValue, bitIndex)) {
-            setChanged(true);
-        }
+        var isChanged = previousValue != IntUtils.isBitSet(newValue, bitIndex);
+        setChanged(isChanged);
+    }
+
+    private void setChanged(boolean changed) {
+        pseudoClassStateChanged(PseudoClasses.CHANGED, changed);
     }
 
     private boolean isBitSet() {
