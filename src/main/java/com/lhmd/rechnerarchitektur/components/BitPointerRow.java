@@ -7,15 +7,13 @@ import javafx.beans.NamedArg;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
-
-import java.util.*;
+import javafx.scene.text.*;
+import javafx.util.Duration;
 
 public class BitPointerRow extends HBox {
     private final BitPointerCell[] cells;
     private final String name;
-    private final Text tooltipText;
+    private final Tooltip tooltip;
     private final ChangeListener<Integer> changeListener;
 
     private IntBox intBox;
@@ -23,7 +21,7 @@ public class BitPointerRow extends HBox {
     public BitPointerRow(@NamedArg("numberOfBits") int numberOfBits, @NamedArg("name") String name, @NamedArg("readOnly") boolean readOnly) {
         this.cells = new BitPointerCell[numberOfBits];
         this.name = name;
-        this.tooltipText = new Text(name);
+        this.tooltip = new Tooltip();
         this.changeListener = (o, n) -> updateTooltipText();
 
         setMaxWidth(Double.MAX_VALUE);
@@ -62,11 +60,10 @@ public class BitPointerRow extends HBox {
         var headerText = new Text(name);
         headerText.getStyleClass().add("text-bold");
 
-        var textFlow = new TextFlow(headerText, tooltipText);
-
-        var tooltip = new Tooltip();
-        tooltip.setGraphic(textFlow);
-        tooltip.setWrapText(true);
+        tooltip.setGraphic(headerText);
+        tooltip.setContentDisplay(ContentDisplay.TOP);
+        tooltip.setTextAlignment(TextAlignment.RIGHT);
+        tooltip.setShowDuration(Duration.INDEFINITE);
 
         Tooltip.install(this, tooltip);
         updateTooltipText();
@@ -84,8 +81,8 @@ public class BitPointerRow extends HBox {
 
     private void updateTooltipText() {
         var currentValue = intBox == null ? 0 : intBox.get();
-        var text = "\n%Xh\n%dd".formatted(currentValue, currentValue);
+        var text = "%sb\n%Xh\n%<dd".formatted(Integer.toBinaryString(currentValue), currentValue);
 
-        Platform.runLater(() -> tooltipText.setText(text));
+        Platform.runLater(() -> tooltip.setText(text));
     }
 }
