@@ -4,7 +4,7 @@ import com.lhmd.rechnerarchitektur.events.ChangeListener;
 import com.lhmd.rechnerarchitektur.values.IntBox;
 import javafx.application.Platform;
 import javafx.beans.NamedArg;
-import javafx.geometry.Pos;
+import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
@@ -26,15 +26,13 @@ public class BitPointerRow extends HBox {
 
         setMaxWidth(Double.MAX_VALUE);
         initializeTooltip();
-
-        // TODO don't resize like cell labels
-        addChildLabel(new Label(name));
+        initializeNameLabel();
 
         for (var i = numberOfBits - 1; i >= 0; i--) {
-            var cell = new BitPointerCell(i, readOnly);
-            cells[i] = cell;
-            addChildLabel(cell);
+            cells[i] = new BitPointerCell(i, readOnly);
         }
+
+        getChildren().addAll(cells);
     }
 
     public void setData(IntBox intBox) {
@@ -69,12 +67,11 @@ public class BitPointerRow extends HBox {
         updateTooltipText();
     }
 
-    private void addChildLabel(Label label) {
-        label.setMaxWidth(Double.MAX_VALUE);
-        label.setAlignment(Pos.CENTER);
+    private void initializeNameLabel() {
+        var label = new Label(name);
+        label.setMaxHeight(Double.MAX_VALUE);
         label.getStyleClass().add("monospaced");
-
-        HBox.setHgrow(label, Priority.ALWAYS);
+        HBox.setMargin(label, new Insets(0, 5, 0, 0));
 
         getChildren().add(label);
     }

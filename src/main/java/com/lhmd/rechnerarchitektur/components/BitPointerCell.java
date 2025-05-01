@@ -9,6 +9,7 @@ import javafx.beans.NamedArg;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.*;
 
 public class BitPointerCell extends Label {
     private final int bitIndex;
@@ -22,9 +23,12 @@ public class BitPointerCell extends Label {
         this.readOnly = readOnly;
         this.changeListener = this::onIntBoxChanged;
 
+        setAlignment(Pos.CENTER);
+        setMaxWidth(Double.MAX_VALUE);
+        HBox.setHgrow(this, Priority.ALWAYS);
+
         setOnMouseClicked(this::onMouseClicked);
 
-        setAlignment(Pos.CENTER);
         updateText();
     }
 
