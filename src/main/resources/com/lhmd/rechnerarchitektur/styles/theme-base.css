@@ -2,6 +2,10 @@
     src: url('../fonts/consolas.ttf');
 }
 
+@font-face {
+    src: url('../fonts/consolas-bold.ttf');
+}
+
 #instructionsTable .table-row-cell {
     -fx-cell-size: 25;
     -fx-font-family: "Consolas";

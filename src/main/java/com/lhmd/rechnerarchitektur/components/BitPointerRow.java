@@ -4,7 +4,7 @@ import com.lhmd.rechnerarchitektur.events.ChangeListener;
 import com.lhmd.rechnerarchitektur.values.IntBox;
 import javafx.application.Platform;
 import javafx.beans.NamedArg;
-import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
@@ -29,10 +29,11 @@ public class BitPointerRow extends HBox {
         initializeNameLabel();
 
         for (var i = numberOfBits - 1; i >= 0; i--) {
-            cells[i] = new BitPointerCell(i, readOnly);
-        }
+            var cell = new BitPointerCell(i, readOnly);
 
-        getChildren().addAll(cells);
+            cells[i] = cell;
+            getChildren().add(cell);
+        }
     }
 
     public void setData(IntBox intBox) {
@@ -50,7 +51,7 @@ public class BitPointerRow extends HBox {
 
     public void resetChanged() {
         for (var cell : cells) {
-            cell.setChanged(false);
+            cell.resetChanged();
         }
     }
 
@@ -70,10 +71,9 @@ public class BitPointerRow extends HBox {
     private void initializeNameLabel() {
         var label = new Label(name);
         label.setMaxHeight(Double.MAX_VALUE);
-        label.getStyleClass().add("monospaced");
-        HBox.setMargin(label, new Insets(0, 5, 0, 0));
+        label.getStyleClass().addAll("monospaced", "text-bold");
 
-        getChildren().add(label);
+        getChildren().addAll(label, new Separator(Orientation.VERTICAL));
     }
 
     private void updateTooltipText() {
