@@ -28,7 +28,7 @@ public class Launcher extends Application {
         stage.setScene(scene);
         stage.setTitle(ProgramInfo.PROGRAM_NAME);
         stage.setOnCloseRequest(e -> {
-            Runner.runUnchecked(Configuration::save);
+            Runner.unchecked(Configuration::save);
             mainView.shutdownCpu();
         });
         stage.centerOnScreen();

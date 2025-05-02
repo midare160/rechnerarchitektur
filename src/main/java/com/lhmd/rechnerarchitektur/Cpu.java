@@ -63,12 +63,12 @@ public class Cpu extends Thread {
     public void run() {
         while (isRunning) {
             // TODO calculate speed from MHz
-            Runner.runUnchecked(() -> Thread.sleep(200));
+            Runner.unchecked(() -> Thread.sleep(200));
             pauseOnBreakpoint();
 
             synchronized (this) {
                 while (isPaused && isRunning) {
-                    Runner.runUnchecked(this::wait);
+                    Runner.unchecked(() -> wait());
                 }
             }
 

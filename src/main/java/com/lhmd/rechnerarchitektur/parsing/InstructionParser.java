@@ -21,7 +21,7 @@ public class InstructionParser {
     }
 
     public static <T extends Instruction> T parseLine(Class<T> instructionClass, String line) {
-        var instruction = Runner.getUnchecked(() -> instructionClass.getDeclaredConstructor().newInstance());
+        var instruction = Runner.unchecked(() -> instructionClass.getDeclaredConstructor().newInstance());
 
         instruction.setAddress(IntUtils.tryParse(line.substring(0, 4), 16));
         instruction.setInstruction(IntUtils.tryParse(line.substring(5, 9), 16));

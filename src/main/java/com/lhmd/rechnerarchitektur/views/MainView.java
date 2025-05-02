@@ -87,7 +87,7 @@ public class MainView extends VBox {
     }
 
     private void onMainMenuBarFileOpened(MainMenuBarEvent<String> e) {
-        var parsedInstructions = Runner.getUnchecked(() -> InstructionParser.parseFile(InstructionRowModel.class, e.getData()));
+        var parsedInstructions = Runner.unchecked(() -> InstructionParser.parseFile(InstructionRowModel.class, e.getData()));
 
         var observedInstructions = FXCollections.observableList(parsedInstructions, i -> new Observable[]{i.isBreakpointActiveProperty()});
         observedInstructions.addListener(this::onBreakpointToggled);

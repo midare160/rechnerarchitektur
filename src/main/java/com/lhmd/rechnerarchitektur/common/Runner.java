@@ -6,11 +6,11 @@ public class Runner {
     private Runner() {
     }
 
-    public static void runUnchecked(ThrowingRunnable runnable) {
+    public static void unchecked(ThrowingRunnable runnable) {
         runnable.run();
     }
 
-    public static <T> T getUnchecked(ThrowingSupplier<T> supplier) {
+    public static <T> T unchecked(ThrowingSupplier<T> supplier) {
         return supplier.get();
     }
 
