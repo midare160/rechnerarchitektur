@@ -36,12 +36,20 @@ public class Cpu extends Thread {
         this.lastBreakpointAddress = -1;
     }
 
-    public boolean isPaused() {
-        return isPaused;
+    public ActionEvent onBreakpointReached() {
+        return onBreakpointReached;
     }
 
-    public void setPaused(boolean value) {
-        isPaused = value;
+    public ActionEvent onNextInstruction() {
+        return onNextInstruction;
+    }
+
+    public void addBreakpoint(int address) {
+        breakpointAddresses.add(address);
+    }
+
+    public void removeBreakpoint(int address) {
+        breakpointAddresses.remove(address);
     }
 
     @Override
@@ -50,20 +58,35 @@ public class Cpu extends Thread {
         super.start();
     }
 
+    // Implementation as described in https://docs.oracle.com/javase/7/docs/technotes/guides/concurrency/threadPrimitiveDeprecation.html
     @Override
     public void run() {
         while (isRunning) {
-            while (!isPaused) {
-                // TODO calculate speed from MHz
-                Runner.runUnchecked(() -> Thread.sleep(200));
+            // TODO calculate speed from MHz
+            Runner.runUnchecked(() -> Thread.sleep(200));
+            pauseOnBreakpoint();
 
-                if (pauseOnBreakpoint()) {
-                    break;
+            synchronized (this) {
+                while (isPaused && isRunning) {
+                    Runner.runUnchecked(this::wait);
                 }
-
-                nextInstruction();
             }
+
+            nextInstruction();
         }
+    }
+
+    public synchronized void setPaused(boolean value) {
+        isPaused = value;
+
+        if (!isPaused) {
+            notify();
+        }
+    }
+
+    public synchronized void shutdown() {
+        isRunning = false;
+        notify();
     }
 
     public void nextInstruction() {
@@ -80,27 +103,6 @@ public class Cpu extends Thread {
         }
     }
 
-    public void addBreakpoint(int address) {
-        breakpointAddresses.add(address);
-    }
-
-    public void removeBreakpoint(int address) {
-        breakpointAddresses.remove(address);
-    }
-
-    public ActionEvent onBreakpointReached() {
-        return onBreakpointReached;
-    }
-
-    public ActionEvent onNextInstruction() {
-        return onNextInstruction;
-    }
-
-    public void shutdown() {
-        isPaused = true;
-        isRunning = false;
-    }
-
     public void reset() {
         lastBreakpointAddress = -1;
 
@@ -108,17 +110,15 @@ public class Cpu extends Thread {
         programStack.reset();
     }
 
-    private boolean pauseOnBreakpoint() {
+    private void pauseOnBreakpoint() {
         var currentAddress = dataMemory.programCounter().get();
 
         if (currentAddress == lastBreakpointAddress || !breakpointAddresses.contains(currentAddress)) {
-            return false;
+            return;
         }
 
         isPaused = true;
         lastBreakpointAddress = currentAddress;
         onBreakpointReached.fire();
-
-        return true;
     }
 }
