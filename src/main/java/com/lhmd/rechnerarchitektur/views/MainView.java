@@ -30,11 +30,15 @@ public class MainView extends VBox {
     @FXML
     private MainFooter mainFooter;
 
-    private ProgramMemory programMemory;
-    private DataMemory dataMemory;
-    private Cpu cpu;
+    private final DataMemory dataMemory;
+    private final ProgramStack programStack;
+    private final Cpu cpu;
 
     public MainView() {
+        this.dataMemory = new DataMemory();
+        this.programStack = new ProgramStack();
+        this.cpu = new Cpu(dataMemory, programStack);
+
         FxUtils.loadHierarchy(this, "views/main.fxml");
     }
 
@@ -46,42 +50,27 @@ public class MainView extends VBox {
 
     @FXML
     private void initialize() {
+        initializeData();
+        initializeEvents();
+    }
+
+    private void initializeData() {
+        registerTable.setData(dataMemory);
+        stackTable.setData(programStack);
+        mainFooter.setData(dataMemory.W(), dataMemory.programCounter());
+    }
+
+    private void initializeEvents() {
         addEventHandler(MainMenuBarEvent.ON_FILE_OPENED, this::onMainMenuBarFileOpened);
         addEventHandler(MainMenuBarEvent.ON_RUN, this::onMainMenuBarRun);
         addEventHandler(MainMenuBarEvent.ON_PAUSE, e -> cpu.setPaused(true));
         addEventHandler(MainMenuBarEvent.ON_NEXT, e -> cpu.nextInstruction());
         addEventHandler(MainMenuBarEvent.ON_RESET, this::onMainMenuBarReset);
-    }
 
-    private void initializeProgramMemory() {
-        var decodedInstructions = instructionsTableView.getItems()
-                .stream()
-                .filter(InstructionRowModel::isExecutable)
-                .collect(Collectors.toMap(InstructionRowModel::getAddress, i -> InstructionDecoder.decode(i.getInstruction())));
-
-        programMemory = new ProgramMemory(decodedInstructions);
-    }
-
-    private void initializeDataMemory() {
-        dataMemory = new DataMemory();
-
-        dataMemory.programCounter()
-                .onChanged()
-                .addListener((o, n) -> instructionsTableView.setNextRow(n));
-    }
-
-    private void initializeCpu() {
-        cpu = new Cpu(dataMemory, new ProgramStack());
-        cpu.setProgramMemory(programMemory);
+        dataMemory.programCounter().onChanged().addListener((o, n) -> instructionsTableView.setNextRow(n));
 
         cpu.onBreakpointReached().addListener(mainMenuBar::pause);
         cpu.onNextInstruction().addListener(this::resetChanged);
-    }
-
-    private void initializeBitPointers() {
-        registerTable.setData(dataMemory);
-        stackTable.setData(new ProgramStack());
-        mainFooter.setData(dataMemory.W(), dataMemory.programCounter());
     }
 
     private void onMainMenuBarFileOpened(MainMenuBarEvent<String> e) {
@@ -90,13 +79,13 @@ public class MainView extends VBox {
         var observedInstructions = FXCollections.observableList(parsedInstructions, i -> new Observable[]{i.isBreakpointActiveProperty()});
         observedInstructions.addListener(this::onBreakpointToggled);
 
+        var decodedInstructions = parsedInstructions.stream()
+                .filter(InstructionRowModel::isExecutable)
+                .collect(Collectors.toMap(InstructionRowModel::getAddress, i -> InstructionDecoder.decode(i.getInstruction())));
+
         instructionsTableView.setItems(observedInstructions);
         mainMenuBar.setRunnable(true);
-
-        initializeProgramMemory();
-        initializeDataMemory();
-        initializeCpu();
-        initializeBitPointers();
+        cpu.setProgramMemory(new ProgramMemory(decodedInstructions));
     }
 
     private void onMainMenuBarRun(MainMenuBarEvent<Void> e) {
@@ -136,6 +125,7 @@ public class MainView extends VBox {
 
     private void resetChanged() {
         registerTable.resetChanged();
+        stackTable.resetChanged();
         mainFooter.resetChanged();
     }
 }
