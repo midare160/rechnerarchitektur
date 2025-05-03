@@ -15,51 +15,51 @@ public abstract class InstructionBase {
         return instruction;
     }
 
-    public abstract void execute(ExecutionParams params);
+    public abstract void execute(ExecutionContext context);
 
     public boolean isTwoCycle() {
         return false;
     }
 
-    protected int getW(ExecutionParams params) {
-        return params.dataMemory().W().get();
+    protected int getW(ExecutionContext context) {
+        return context.dataMemory().W().get();
     }
 
-    protected void setW(ExecutionParams params, int w) {
-        params.dataMemory().W().set(w);
+    protected void setW(ExecutionContext context, int w) {
+        context.dataMemory().W().set(w);
     }
 
-    protected void popStack(ExecutionParams params) {
-        var stackAddress = params.programStack().pop();
-        params.dataMemory().programCounter().set(stackAddress);
+    protected void popStack(ExecutionContext context) {
+        var stackAddress = context.programStack().pop();
+        context.dataMemory().programCounter().set(stackAddress);
     }
 
-    protected void updateC_Add(ExecutionParams params, int a, int b) {
-        params.dataMemory().status().setC(a + b > 255);
+    protected void updateC_Add(ExecutionContext context, int a, int b) {
+        context.dataMemory().status().setC(a + b > 255);
     }
 
-    protected void updateC_Sub(ExecutionParams params, int a, int b) {
-        params.dataMemory().status().setC(b >= a);
+    protected void updateC_Sub(ExecutionContext context, int a, int b) {
+        context.dataMemory().status().setC(b >= a);
     }
 
-    protected void updateDC_Add(ExecutionParams params, int a, int b) {
+    protected void updateDC_Add(ExecutionContext context, int a, int b) {
         // Mask to get lower 4 bits (nibble)
         var lowerNibbleSum = (a & 0x0F) + (b & 0x0F);
         var carryOccured = lowerNibbleSum > 0x0F;
 
         // DC = true if carry from bit 3
-        params.dataMemory().status().setDC(carryOccured);
+        context.dataMemory().status().setDC(carryOccured);
     }
 
-    protected void updateDC_Sub(ExecutionParams params, int a, int b) {
+    protected void updateDC_Sub(ExecutionContext context, int a, int b) {
         // For subtraction, polarity is reversed
         var noBorrowOccured = (a & 0x0F) >= (b & 0x0F);
 
         // DC = true if no borrow from bit 3
-        params.dataMemory().status().setDC(noBorrowOccured);
+        context.dataMemory().status().setDC(noBorrowOccured);
     }
 
-    protected void updateZ(ExecutionParams params, int result) {
-        params.dataMemory().status().setZ(result == 0);
+    protected void updateZ(ExecutionContext context, int result) {
+        context.dataMemory().status().setZ(result == 0);
     }
 }

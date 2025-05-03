@@ -17,9 +17,9 @@ public class Retlw extends InstructionBase {
     }
 
     @Override
-    public void execute(ExecutionParams params) {
-        setW(params, literal);
-        popStack(params);
+    public void execute(ExecutionContext context) {
+        setW(context, literal);
+        popStack(context);
     }
 
     @Override

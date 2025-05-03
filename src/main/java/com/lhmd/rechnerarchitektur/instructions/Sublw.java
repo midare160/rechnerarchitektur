@@ -16,14 +16,14 @@ public class Sublw extends InstructionBase {
     }
 
     @Override
-    public void execute(ExecutionParams params) {
-        var currentW = getW(params);
+    public void execute(ExecutionContext context) {
+        var currentW = getW(context);
         var result = Math.floorMod(literal - currentW, 256);
 
-        setW(params, result);
+        setW(context, result);
 
-        updateC_Sub(params, currentW, literal);
-        updateDC_Sub(params, currentW, literal);
-        updateZ(params, result);
+        updateC_Sub(context, currentW, literal);
+        updateDC_Sub(context, currentW, literal);
+        updateZ(context, result);
     }
 }

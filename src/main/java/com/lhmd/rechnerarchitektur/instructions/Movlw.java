@@ -15,7 +15,7 @@ public class Movlw extends InstructionBase {
     }
 
     @Override
-    public void execute(ExecutionParams params) {
-        setW(params, literal);
+    public void execute(ExecutionContext context) {
+        setW(context, literal);
     }
 }

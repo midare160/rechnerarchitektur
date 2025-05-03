@@ -18,11 +18,11 @@ public class Call extends InstructionBase {
     }
 
     @Override
-    public void execute(ExecutionParams params) {
-        var stackValue = params.dataMemory().programCounter().get() + 1;
-        params.programStack().push(stackValue);
+    public void execute(ExecutionContext context) {
+        var stackValue = context.dataMemory().programCounter().get() + 1;
+        context.programStack().push(stackValue);
 
-        params.dataMemory().programCounter().fromJump(address);
+        context.dataMemory().programCounter().fromJump(address);
     }
 
     @Override

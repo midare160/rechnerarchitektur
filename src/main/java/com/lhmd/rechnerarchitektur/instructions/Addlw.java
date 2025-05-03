@@ -15,14 +15,14 @@ public class Addlw extends InstructionBase {
     }
 
     @Override
-    public void execute(ExecutionParams params) {
-        var currentW = getW(params);
+    public void execute(ExecutionContext context) {
+        var currentW = getW(context);
         var result = (currentW + literal) % 256;
 
-        setW(params, result);
+        setW(context, result);
 
-        updateC_Add(params, currentW, literal);
-        updateDC_Add(params, currentW, literal);
-        updateZ(params, result);
+        updateC_Add(context, currentW, literal);
+        updateDC_Add(context, currentW, literal);
+        updateZ(context, result);
     }
 }

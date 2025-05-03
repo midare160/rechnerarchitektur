@@ -15,10 +15,10 @@ public class Andlw extends InstructionBase {
     }
 
     @Override
-    public void execute(ExecutionParams params) {
-        var result = getW(params) & literal;
+    public void execute(ExecutionContext context) {
+        var result = getW(context) & literal;
 
-        setW(params, result);
-        updateZ(params, result);
+        setW(context, result);
+        updateZ(context, result);
     }
 }

@@ -11,8 +11,8 @@ public class Return extends InstructionBase {
     }
 
     @Override
-    public void execute(ExecutionParams params) {
-        popStack(params);
+    public void execute(ExecutionContext context) {
+        popStack(context);
     }
 
     @Override

@@ -68,7 +68,8 @@ public class MainView extends VBox {
     }
 
     private void initializeCpu() {
-        cpu = new Cpu(programMemory, dataMemory, new ProgramStack());
+        cpu = new Cpu(dataMemory, new ProgramStack());
+        cpu.setProgramMemory(programMemory);
 
         cpu.onBreakpointReached().addListener(mainMenuBar::pause);
         cpu.onNextInstruction().addListener(this::resetChanged);
@@ -137,7 +138,7 @@ public class MainView extends VBox {
         }
     }
 
-    private void resetChanged(){
+    private void resetChanged() {
         registerTable.resetChanged();
         mainFooter.resetChanged();
     }

@@ -2,38 +2,40 @@ package com.lhmd.rechnerarchitektur;
 
 import com.lhmd.rechnerarchitektur.common.Runner;
 import com.lhmd.rechnerarchitektur.events.ActionEvent;
-import com.lhmd.rechnerarchitektur.instructions.ExecutionParams;
+import com.lhmd.rechnerarchitektur.instructions.ExecutionContext;
 import com.lhmd.rechnerarchitektur.memory.*;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class Cpu extends Thread {
-    private final ProgramMemory programMemory;
     private final DataMemory dataMemory;
     private final ProgramStack programStack;
-    private final ExecutionParams executionParams;
+    private final ExecutionContext executionContext;
     private final Set<Integer> breakpointAddresses;
 
     private final ActionEvent onBreakpointReached;
     private final ActionEvent onNextInstruction;
 
+    private ProgramMemory programMemory;
     private int lastBreakpointAddress;
 
     private volatile boolean isRunning;
     private volatile boolean isPaused;
 
-    public Cpu(ProgramMemory programMemory, DataMemory dataMemory, ProgramStack programStack) {
-        this.programMemory = programMemory;
+    public Cpu(DataMemory dataMemory, ProgramStack programStack) {
         this.dataMemory = dataMemory;
         this.programStack = programStack;
-        this.executionParams = new ExecutionParams(dataMemory, programStack);
+        this.executionContext = new ExecutionContext(dataMemory, programStack);
         this.breakpointAddresses = new HashSet<>();
 
         this.onBreakpointReached = new ActionEvent();
         this.onNextInstruction = new ActionEvent();
 
         this.lastBreakpointAddress = -1;
+    }
+
+    public void setProgramMemory(ProgramMemory programMemory) {
+        this.programMemory = programMemory;
     }
 
     public ActionEvent onBreakpointReached() {
@@ -90,13 +92,15 @@ public class Cpu extends Thread {
     }
 
     public void nextInstruction() {
+        if (!isRunning) return;
+
         onNextInstruction.fire();
 
         var address = dataMemory.programCounter().get();
         dataMemory.programCounter().increment();
 
         var currentInstruction = programMemory.get(address);
-        currentInstruction.execute(executionParams);
+        currentInstruction.execute(executionContext);
 
         if (currentInstruction.isTwoCycle()) {
             // TODO add additional 4 cycles
