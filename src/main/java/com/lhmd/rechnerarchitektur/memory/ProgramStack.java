@@ -6,6 +6,7 @@ import java.util.List;
 
 public class ProgramStack {
     public static final int MAX_SIZE = 8;
+    public static final int ELEMENT_WIDTH = 13;
 
     private final IntBox pointer;
     private final IntBox[] elements;

@@ -1,11 +1,18 @@
 package com.lhmd.rechnerarchitektur.instructions;
 
+import com.lhmd.rechnerarchitektur.memory.ProgramMemory;
+
 public abstract class InstructionBase {
+    public static final int MAX_SIZE = (int) Math.pow(2, ProgramMemory.INSTRUCTION_WIDTH) - 1;
+
     private final int instruction;
 
     public InstructionBase(int instruction) {
-        if (instruction > 0b11_1111_1111_1111) {
-            throw new IllegalArgumentException("Instruction may only be 14 bits wide. Parameter was " + instruction);
+        if (instruction > MAX_SIZE) {
+            throw new IllegalArgumentException("Instruction may only be %d bits wide (%dd). Parameter was %d".formatted(
+                    ProgramMemory.INSTRUCTION_WIDTH,
+                    MAX_SIZE,
+                    instruction));
         }
 
         this.instruction = instruction;

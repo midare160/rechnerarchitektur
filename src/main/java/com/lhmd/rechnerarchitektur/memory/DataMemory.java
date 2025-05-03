@@ -10,6 +10,7 @@ import java.util.stream.*;
 public class DataMemory {
     public static final int MAX_SIZE = 256;
     public static final int BANK_SIZE = MAX_SIZE / 2;
+    public static final int REGISTER_WIDTH = 8;
 
     private static final Set<Integer> MIRRORED_ADDRESSES;
 

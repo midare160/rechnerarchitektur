@@ -6,6 +6,7 @@ import java.util.*;
 
 public class ProgramMemory {
     public static final int MAX_SIZE = 1024;
+    public static final int INSTRUCTION_WIDTH = 14;
 
     private final InstructionBase[] instructions;
 

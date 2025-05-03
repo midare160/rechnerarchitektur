@@ -14,7 +14,10 @@
     </AnchorPane>
     <TabPane tabClosingPolicy="UNAVAILABLE" minWidth="280">
       <Tab text="Registers">
-        <BitPointerTable fx:id="registerTable" numberOfBits="8" FxUtils.allAnchors="0.0" />
+        <RegisterTable fx:id="registerTable" FxUtils.allAnchors="0.0" />
+      </Tab>
+      <Tab text="Stack">
+        <StackTable fx:id="stackTable" FxUtils.allAnchors="0.0" />
       </Tab>
       <Tab text="Pins">
       </Tab>

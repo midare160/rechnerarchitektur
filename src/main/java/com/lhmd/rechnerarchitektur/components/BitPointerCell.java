@@ -13,15 +13,13 @@ import javafx.scene.layout.*;
 
 public class BitPointerCell extends Label {
     private final int bitIndex;
-    private final boolean readOnly;
     private final ChangeListener<Integer> changeListener;
 
     private IntBox intBox;
     private boolean previousValue;
 
-    public BitPointerCell(@NamedArg("bitIndex") int bitIndex, @NamedArg("readOnly") boolean readOnly) {
+    public BitPointerCell(@NamedArg("bitIndex") int bitIndex) {
         this.bitIndex = IntUtils.requireValidBitIndex(bitIndex);
-        this.readOnly = readOnly;
         this.changeListener = this::onIntBoxChanged;
 
         setAlignment(Pos.CENTER);
@@ -50,7 +48,7 @@ public class BitPointerCell extends Label {
     }
 
     private void onMouseClicked(MouseEvent e) {
-        if (!readOnly && intBox != null) {
+        if (intBox != null) {
             intBox.set(IntUtils.changeBit(intBox.get(), bitIndex, !isBitSet()));
         }
     }

@@ -22,7 +22,10 @@ public class MainView extends VBox {
     private InstructionsTableView instructionsTableView;
 
     @FXML
-    private BitPointerTable registerTable;
+    private RegisterTable registerTable;
+
+    @FXML
+    private StackTable stackTable;
 
     @FXML
     private MainFooter mainFooter;
@@ -75,15 +78,9 @@ public class MainView extends VBox {
         cpu.onNextInstruction().addListener(this::resetChanged);
     }
 
-    private void initializeRegisterTableView() {
-        var registers = dataMemory.registers();
-
-        for (var i = 0; i < registers.size(); i++) {
-            registerTable.addRow(registers.get(i), "0x%04X".formatted(i));
-        }
-    }
-
-    private void initializeMainFooter() {
+    private void initializeBitPointers() {
+        registerTable.setData(dataMemory);
+        stackTable.setData(new ProgramStack());
         mainFooter.setData(dataMemory.W(), dataMemory.programCounter());
     }
 
@@ -99,8 +96,7 @@ public class MainView extends VBox {
         initializeProgramMemory();
         initializeDataMemory();
         initializeCpu();
-        initializeRegisterTableView();
-        initializeMainFooter();
+        initializeBitPointers();
     }
 
     private void onMainMenuBarRun(MainMenuBarEvent<Void> e) {

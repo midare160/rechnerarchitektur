@@ -14,26 +14,31 @@ public class BitPointerRow extends HBox {
     private final BitPointerCell[] cells;
     private final String name;
     private final Tooltip tooltip;
+    private final Label nameLabel;
+
     private final ChangeListener<Integer> changeListener;
 
     private IntBox intBox;
 
-    public BitPointerRow(@NamedArg("numberOfBits") int numberOfBits, @NamedArg("name") String name, @NamedArg("readOnly") boolean readOnly) {
+    public BitPointerRow(@NamedArg("numberOfBits") int numberOfBits, @NamedArg("name") String name) {
         this.cells = new BitPointerCell[numberOfBits];
         this.name = name;
-        this.tooltip = new Tooltip();
+        this.tooltip = initializeTooltip();
+        this.nameLabel = initializeNameLabel();
         this.changeListener = (o, n) -> updateTooltipText();
 
         setMaxWidth(Double.MAX_VALUE);
-        initializeTooltip();
-        initializeNameLabel();
 
         for (var i = numberOfBits - 1; i >= 0; i--) {
-            var cell = new BitPointerCell(i, readOnly);
+            var cell = new BitPointerCell(i);
 
             cells[i] = cell;
             getChildren().add(cell);
         }
+    }
+
+    public Label nameLabel() {
+        return nameLabel;
     }
 
     public void setData(IntBox intBox) {
@@ -55,10 +60,11 @@ public class BitPointerRow extends HBox {
         }
     }
 
-    private void initializeTooltip() {
+    private Tooltip initializeTooltip() {
         var headerText = new Text(name);
         headerText.getStyleClass().add("text-bold");
 
+        var tooltip = new Tooltip();
         tooltip.setGraphic(headerText);
         tooltip.setContentDisplay(ContentDisplay.TOP);
         tooltip.setTextAlignment(TextAlignment.RIGHT);
@@ -66,14 +72,17 @@ public class BitPointerRow extends HBox {
 
         Tooltip.install(this, tooltip);
         updateTooltipText();
+
+        return tooltip;
     }
 
-    private void initializeNameLabel() {
+    private Label initializeNameLabel() {
         var label = new Label(name);
-        label.setMaxHeight(Double.MAX_VALUE);
         label.getStyleClass().addAll("monospaced", "text-bold");
 
         getChildren().addAll(label, new Separator(Orientation.VERTICAL));
+
+        return label;
     }
 
     private void updateTooltipText() {
