@@ -10,8 +10,8 @@ public class Box<T extends Comparable<T>> implements Comparable<Box<T>> {
     private T value;
 
     public Box(T value) {
-        onChanged = new ChangedEvent<>();
-        setValue(value);
+        this.onChanged = new ChangedEvent<>();
+        this.value = value;
     }
 
     public Box() {
