@@ -7,6 +7,7 @@ import com.lhmd.rechnerarchitektur.common.FxUtils;
 import com.lhmd.rechnerarchitektur.events.MainMenuBarEvent;
 import com.lhmd.rechnerarchitektur.themes.ThemeManager;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.HBox;
 import javafx.stage.*;
 import javafx.fxml.FXML;
@@ -22,6 +23,9 @@ public class MainMenuBar extends HBox {
 
     @FXML
     private Menu openRecentMenu;
+
+    @FXML
+    private MenuItem closeMenuItem;
 
     @FXML
     private MenuItem quitMenuItem;
@@ -53,10 +57,11 @@ public class MainMenuBar extends HBox {
 
     public void setRunnable(boolean runnable) {
         runMenu.setDisable(!runnable);
-    }
 
-    public boolean isRunnable() {
-        return !runMenu.isDisable();
+        if (!runnable) {
+            pauseMenu.setDisable(true);
+            nextMenu.setDisable(true);
+        }
     }
 
     public void pause() {
@@ -77,6 +82,7 @@ public class MainMenuBar extends HBox {
 
     private void initializeEvents() {
         openMenuItem.setOnAction(this::onOpenMenuItemAction);
+        closeMenuItem.setOnAction(this::onCloseMenuItemAction);
         quitMenuItem.setOnAction(this::onQuitMenuItemAction);
         aboutMenuItem.setOnAction(this::onAboutMenuItemAction);
 
@@ -87,22 +93,28 @@ public class MainMenuBar extends HBox {
     }
 
     private void initializeOpenRecentMenu() {
-        openRecentMenu.getItems().clear();
+        var items = openRecentMenu.getItems();
+        items.clear();
 
         for (var filePath : Configuration.getRecentFiles()) {
             var menuItem = new MenuItem(filePath);
             menuItem.setOnAction(e -> openFile(new File(filePath)));
 
-            openRecentMenu.getItems().add(menuItem);
+            items.add(menuItem);
         }
+
+        items.getFirst().setAccelerator(KeyCombination.valueOf("CTRL+SHIFT+T"));
     }
 
     private void initializeThemeMenu() {
         themeMenu.getItems().clear();
 
+        var shortcutIndex = 1;
+
         for (var themeName : ThemeManager.allThemes().keySet()) {
             var menuItem = new CheckMenuItem(themeName);
             menuItem.setOnAction(this::onThemeMenuItemAction);
+            menuItem.setAccelerator(KeyCombination.valueOf("CTRL+" + shortcutIndex++));
 
             var isCurrentTheme = themeName.equals(ThemeManager.getCurrentThemeName());
             menuItem.setSelected(isCurrentTheme);
@@ -119,7 +131,6 @@ public class MainMenuBar extends HBox {
 
         for (var menu : actionsMenuBar.getMenus()) {
             FxUtils.asMenuItem(menu);
-            menu.setDisable(true);
         }
     }
 
@@ -136,9 +147,13 @@ public class MainMenuBar extends HBox {
         openFile(selectedFile);
     }
 
+    private void onCloseMenuItemAction(ActionEvent e) {
+        fireEvent(new MainMenuBarEvent<>(MainMenuBarEvent.ON_FILE_CLOSED));
+    }
+
     private void onQuitMenuItemAction(ActionEvent e) {
-        var eventArgs = new WindowEvent(getScene().getWindow(), WindowEvent.WINDOW_CLOSE_REQUEST);
-        getScene().getWindow().fireEvent(eventArgs);
+        var event = new WindowEvent(getScene().getWindow(), WindowEvent.WINDOW_CLOSE_REQUEST);
+        getScene().getWindow().fireEvent(event);
     }
 
     private void onAboutMenuItemAction(ActionEvent e) {
@@ -174,32 +189,30 @@ public class MainMenuBar extends HBox {
             return;
         }
 
-        fireEvent(new MainMenuBarEvent<>(MainMenuBarEvent.ON_FILE_OPENED, file.getPath()));
-
         Configuration.addRecentFile(file.getPath());
         initializeOpenRecentMenu();
+
+        fireEvent(new MainMenuBarEvent<>(MainMenuBarEvent.ON_FILE_OPENED, file.getPath()));
     }
 
     private void onRunMenuAction(ActionEvent e) {
-        runMenu.setText("Continue");
         runMenu.setDisable(true);
         nextMenu.setDisable(true);
         pauseMenu.setDisable(false);
-        resetMenu.setDisable(false);
 
-        fireEvent(new MainMenuBarEvent<>(MainMenuBarEvent.ON_RUN, null));
+        fireEvent(new MainMenuBarEvent<>(MainMenuBarEvent.ON_RUN));
     }
 
     private void onResetMenuAction(ActionEvent e) {
-        fireEvent(new MainMenuBarEvent<>(MainMenuBarEvent.ON_RESET, null));
+        fireEvent(new MainMenuBarEvent<>(MainMenuBarEvent.ON_RESET));
     }
 
     private void onPauseMenuAction(ActionEvent e) {
         pause();
-        fireEvent(new MainMenuBarEvent<>(MainMenuBarEvent.ON_PAUSE, null));
+        fireEvent(new MainMenuBarEvent<>(MainMenuBarEvent.ON_PAUSE));
     }
 
     private void onNextMenuAction(ActionEvent e) {
-        fireEvent(new MainMenuBarEvent<>(MainMenuBarEvent.ON_NEXT, null));
+        fireEvent(new MainMenuBarEvent<>(MainMenuBarEvent.ON_NEXT));
     }
 }

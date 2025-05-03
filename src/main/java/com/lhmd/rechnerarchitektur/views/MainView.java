@@ -62,6 +62,7 @@ public class MainView extends VBox {
 
     private void initializeEvents() {
         addEventHandler(MainMenuBarEvent.ON_FILE_OPENED, this::onMainMenuBarFileOpened);
+        addEventHandler(MainMenuBarEvent.ON_FILE_CLOSED, this::onMainMenuBarFileClosed);
         addEventHandler(MainMenuBarEvent.ON_RUN, this::onMainMenuBarRun);
         addEventHandler(MainMenuBarEvent.ON_PAUSE, e -> cpu.setPaused(true));
         addEventHandler(MainMenuBarEvent.ON_NEXT, e -> cpu.nextInstruction());
@@ -83,9 +84,18 @@ public class MainView extends VBox {
                 .filter(InstructionRowModel::isExecutable)
                 .collect(Collectors.toMap(InstructionRowModel::getAddress, i -> InstructionDecoder.decode(i.getInstruction())));
 
+        cpu.setProgramMemory(new ProgramMemory(decodedInstructions));
+
         instructionsTableView.setItems(observedInstructions);
         mainMenuBar.setRunnable(true);
-        cpu.setProgramMemory(new ProgramMemory(decodedInstructions));
+    }
+
+    private void onMainMenuBarFileClosed(MainMenuBarEvent<Void> e) {
+        mainMenuBar.setRunnable(false);
+        instructionsTableView.setItems(FXCollections.emptyObservableList());
+
+        cpu.setPaused(true);
+        cpu.setProgramMemory(null);
     }
 
     private void onMainMenuBarRun(MainMenuBarEvent<Void> e) {

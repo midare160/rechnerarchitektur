@@ -1,60 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.SeparatorMenuItem?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Region?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<fx:root type="HBox" prefWidth="600.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" >
+<fx:root type="HBox" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" >
     <MenuBar>
-        <menus>
-            <Menu mnemonicParsing="false" text="File">
-                <items>
-                    <MenuItem mnemonicParsing="false" text="New" />
-                    <MenuItem fx:id="openMenuItem" mnemonicParsing="false" text="Open…" />
-                    <Menu fx:id="openRecentMenu" mnemonicParsing="false" text="Open Recent" />
-                    <SeparatorMenuItem mnemonicParsing="false" />
-                    <MenuItem mnemonicParsing="false" text="Close" />
-                    <MenuItem mnemonicParsing="false" text="Save" />
-                    <MenuItem mnemonicParsing="false" text="Save As…" />
-                    <MenuItem mnemonicParsing="false" text="Revert" />
-                    <SeparatorMenuItem mnemonicParsing="false" />
-                    <MenuItem mnemonicParsing="false" text="Preferences…" />
-                    <SeparatorMenuItem mnemonicParsing="false" />
-                    <MenuItem fx:id="quitMenuItem" mnemonicParsing="false" text="Quit" />
-                </items>
-            </Menu>
-            <Menu mnemonicParsing="false" text="Edit">
-                <items>
-                    <MenuItem mnemonicParsing="false" text="Undo" />
-                    <MenuItem mnemonicParsing="false" text="Redo" />
-                    <SeparatorMenuItem mnemonicParsing="false" />
-                    <MenuItem mnemonicParsing="false" text="Cut" />
-                    <MenuItem mnemonicParsing="false" text="Copy" />
-                    <MenuItem mnemonicParsing="false" text="Paste" />
-                    <MenuItem mnemonicParsing="false" text="Delete" />
-                    <SeparatorMenuItem mnemonicParsing="false" />
-                    <MenuItem mnemonicParsing="false" text="Select All" />
-                    <MenuItem mnemonicParsing="false" text="Unselect All" />
-                </items>
-            </Menu>
-            <Menu mnemonicParsing="false" text="Help">
-                <items>
-                    <MenuItem fx:id="aboutMenuItem" mnemonicParsing="false" text="About" />
-                </items>
-            </Menu>
-            <Menu fx:id="themeMenu" mnemonicParsing="false" text="Theme" />
-        </menus>
+        <Menu text="File">
+            <MenuItem fx:id="openMenuItem" text="Open…" accelerator="CTRL+O" />
+            <Menu fx:id="openRecentMenu" text="Open Recent" />
+            <SeparatorMenuItem />
+            <MenuItem fx:id="closeMenuItem" text="Close" accelerator="CTRL+W" />
+            <SeparatorMenuItem />
+            <MenuItem fx:id="quitMenuItem" text="Quit" accelerator="ALT+F4" />
+        </Menu>
+        <Menu text="Help">
+            <MenuItem fx:id="aboutMenuItem" text="About" accelerator="F1" />
+        </Menu>
+        <Menu fx:id="themeMenu" text="Theme" />
     </MenuBar>
     <Region styleClass="menu-bar" HBox.hgrow="ALWAYS" />
     <MenuBar fx:id="actionsMenuBar">
-        <menus>
-            <Menu fx:id="runMenu" text="Run" accelerator="CTRL+F5" />
-            <Menu fx:id="nextMenu" text="Next" accelerator="F10" />
-            <Menu fx:id="pauseMenu" text="Pause" accelerator="CTRL+ALT+B" />
-            <Menu fx:id="resetMenu" text="Reset" accelerator="CTRL+R" />
-        </menus>
+        <Menu fx:id="runMenu" text="Run" disable="true" accelerator="CTRL+F5" />
+        <Menu fx:id="nextMenu" text="Next" disable="true" accelerator="F10" />
+        <Menu fx:id="pauseMenu" text="Pause" disable="true" accelerator="CTRL+B" />
+        <Menu fx:id="resetMenu" text="Reset" accelerator="CTRL+R" />
     </MenuBar>
 </fx:root>
