@@ -6,10 +6,10 @@
 <fx:root type="HBox" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" >
     <MenuBar>
         <Menu text="File">
-            <MenuItem fx:id="openMenuItem" text="Open…" accelerator="CTRL+O" />
+            <MenuItem fx:id="openMenuItem" text="Open…" accelerator="SHORTCUT+O" />
             <Menu fx:id="openRecentMenu" text="Open Recent" />
             <SeparatorMenuItem />
-            <MenuItem fx:id="closeMenuItem" text="Close" accelerator="CTRL+W" />
+            <MenuItem fx:id="closeMenuItem" text="Close" accelerator="SHORTCUT+W" />
             <SeparatorMenuItem />
             <MenuItem fx:id="quitMenuItem" text="Quit" accelerator="ALT+F4" />
         </Menu>
@@ -20,9 +20,9 @@
     </MenuBar>
     <Region styleClass="menu-bar" HBox.hgrow="ALWAYS" />
     <MenuBar fx:id="actionsMenuBar">
-        <Menu fx:id="runMenu" text="Run" disable="true" accelerator="CTRL+F5" />
+        <Menu fx:id="runMenu" text="Run" disable="true" accelerator="SHORTCUT+F5" />
         <Menu fx:id="nextMenu" text="Next" disable="true" accelerator="F10" />
-        <Menu fx:id="pauseMenu" text="Pause" disable="true" accelerator="CTRL+B" />
-        <Menu fx:id="resetMenu" text="Reset" accelerator="CTRL+R" />
+        <Menu fx:id="pauseMenu" text="Pause" disable="true" accelerator="SHORTCUT+B" />
+        <Menu fx:id="resetMenu" text="Reset" accelerator="SHORTCUT+R" />
     </MenuBar>
 </fx:root>

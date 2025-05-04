@@ -5,6 +5,7 @@ import com.lhmd.rechnerarchitektur.values.IntBox;
 import javafx.application.Platform;
 import javafx.beans.NamedArg;
 import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
@@ -78,6 +79,8 @@ public class BitPointerRow extends HBox {
 
     private Label initializeNameLabel() {
         var label = new Label(name);
+        label.setAlignment(Pos.CENTER);
+        label.setMaxHeight(Double.MAX_VALUE);
         label.getStyleClass().addAll("monospaced", "text-bold");
 
         getChildren().addAll(label, new Separator(Orientation.VERTICAL));

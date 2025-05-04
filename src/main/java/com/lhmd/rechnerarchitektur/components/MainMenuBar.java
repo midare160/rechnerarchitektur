@@ -103,7 +103,7 @@ public class MainMenuBar extends HBox {
             items.add(menuItem);
         }
 
-        items.getFirst().setAccelerator(KeyCombination.valueOf("CTRL+SHIFT+T"));
+        items.getFirst().setAccelerator(KeyCombination.valueOf("SHORTCUT+SHIFT+T"));
     }
 
     private void initializeThemeMenu() {
@@ -114,7 +114,7 @@ public class MainMenuBar extends HBox {
         for (var themeName : ThemeManager.allThemes().keySet()) {
             var menuItem = new CheckMenuItem(themeName);
             menuItem.setOnAction(this::onThemeMenuItemAction);
-            menuItem.setAccelerator(KeyCombination.valueOf("CTRL+" + shortcutIndex++));
+            menuItem.setAccelerator(KeyCombination.valueOf("SHORTCUT+" + shortcutIndex++));
 
             var isCurrentTheme = themeName.equals(ThemeManager.getCurrentThemeName());
             menuItem.setSelected(isCurrentTheme);
