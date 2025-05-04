@@ -87,6 +87,7 @@ public class MainView extends VBox {
         cpu.setProgramMemory(new ProgramMemory(decodedInstructions));
 
         instructionsTableView.setItems(observedInstructions);
+        instructionsTableView.setNextRow(dataMemory.programCounter().get());
         mainMenuBar.setRunnable(true);
     }
 
