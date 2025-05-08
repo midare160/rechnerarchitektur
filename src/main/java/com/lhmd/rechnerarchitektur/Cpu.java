@@ -1,6 +1,7 @@
 package com.lhmd.rechnerarchitektur;
 
 import com.lhmd.rechnerarchitektur.common.Runner;
+import com.lhmd.rechnerarchitektur.computing.Alu;
 import com.lhmd.rechnerarchitektur.events.ActionEvent;
 import com.lhmd.rechnerarchitektur.instructions.ExecutionContext;
 import com.lhmd.rechnerarchitektur.memory.*;
@@ -10,6 +11,7 @@ import java.util.*;
 public class Cpu extends Thread {
     private final DataMemory dataMemory;
     private final ProgramStack programStack;
+    private final Alu alu;
     private final ExecutionContext executionContext;
     private final Set<Integer> breakpointAddresses;
 
@@ -25,7 +27,8 @@ public class Cpu extends Thread {
     public Cpu(DataMemory dataMemory, ProgramStack programStack) {
         this.dataMemory = dataMemory;
         this.programStack = programStack;
-        this.executionContext = new ExecutionContext(dataMemory, programStack);
+        this.alu = new Alu(dataMemory.status());
+        this.executionContext = new ExecutionContext(dataMemory, programStack, alu);
         this.breakpointAddresses = new HashSet<>();
 
         this.onBreakpointReached = new ActionEvent();
