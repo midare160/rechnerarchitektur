@@ -19,7 +19,6 @@ public class Call extends InstructionBase {
 
     @Override
     public void execute(ExecutionContext context) {
-        // TODO check if +1 correct
         var stackValue = context.dataMemory().programCounter().get();
         context.programStack().push(stackValue);
 
