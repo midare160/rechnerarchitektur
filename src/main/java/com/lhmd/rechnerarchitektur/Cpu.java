@@ -16,8 +16,8 @@ public class Cpu extends Thread {
     private final ActionEvent onBreakpointReached;
     private final ActionEvent onNextInstruction;
 
-    private ProgramMemory programMemory;
-    private int lastBreakpointAddress;
+    private volatile ProgramMemory programMemory;
+    private volatile int lastBreakpointAddress;
 
     private volatile boolean isRunning;
     private volatile boolean isPaused;
