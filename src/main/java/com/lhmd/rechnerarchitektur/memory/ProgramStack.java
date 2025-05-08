@@ -13,6 +13,8 @@ public class ProgramStack {
 
     public ProgramStack() {
         pointer = new IntBox();
+        pointer.onChanged().addListener(this::onPointerChanged);
+
         elements = new IntBox[MAX_SIZE];
 
         for (var i = 0; i < elements.length; i++) {
@@ -48,6 +50,14 @@ public class ProgramStack {
 
         for (var element : elements) {
             element.set(0);
+        }
+    }
+
+    private void onPointerChanged(Integer oldValue, Integer newValue) {
+        var modPointer = getPointer(0);
+
+        if (newValue != modPointer) {
+            pointer.set(modPointer);
         }
     }
 
