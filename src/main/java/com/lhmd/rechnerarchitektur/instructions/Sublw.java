@@ -17,13 +17,7 @@ public class Sublw extends InstructionBase {
 
     @Override
     public void execute(ExecutionContext context) {
-        var currentW = getW(context);
-        var result = Math.floorMod(literal - currentW, 256);
-
+        var result = context.alu().sub(literal, getW(context));
         setW(context, result);
-
-        updateC_Sub(context, currentW, literal);
-        updateDC_Sub(context, currentW, literal);
-        updateZ(context, result);
     }
 }

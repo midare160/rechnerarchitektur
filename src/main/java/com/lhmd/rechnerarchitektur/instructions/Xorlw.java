@@ -17,9 +17,7 @@ public class Xorlw extends InstructionBase {
 
     @Override
     public void execute(ExecutionContext context) {
-        var result = getW(context) ^ literal;
-
+        var result = context.alu().xor(getW(context), literal);
         setW(context, result);
-        updateZ(context, result);
     }
 }

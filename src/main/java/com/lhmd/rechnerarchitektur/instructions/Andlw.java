@@ -16,9 +16,7 @@ public class Andlw extends InstructionBase {
 
     @Override
     public void execute(ExecutionContext context) {
-        var result = getW(context) & literal;
-
+        var result = context.alu().and(getW(context), literal);
         setW(context, result);
-        updateZ(context, result);
     }
 }

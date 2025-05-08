@@ -12,7 +12,7 @@ public class Alu {
         this.statusRegister = Objects.requireNonNull(statusRegister);
     }
 
-    public int Add(int a, int b) {
+    public int add(int a, int b) {
         var result = Math.floorMod(a + b, DataMemory.REGISTER_SIZE + 1);
 
         updateC_Add(a, b);
@@ -22,7 +22,7 @@ public class Alu {
         return result;
     }
 
-    public int Sub(int a, int b) {
+    public int sub(int a, int b) {
         var result = Math.floorMod(a - b, DataMemory.REGISTER_SIZE + 1);
 
         updateC_Sub(a, b);
@@ -32,7 +32,7 @@ public class Alu {
         return result;
     }
 
-    public int And(int a, int b) {
+    public int and(int a, int b) {
         var result = a & b;
 
         updateZ(result);
@@ -40,7 +40,7 @@ public class Alu {
         return result;
     }
 
-    public int Or(int a, int b) {
+    public int or(int a, int b) {
         var result = a | b;
 
         updateZ(result);
@@ -48,7 +48,7 @@ public class Alu {
         return result;
     }
 
-    public int Xor(int a, int b) {
+    public int xor(int a, int b) {
         var result = a ^ b;
 
         updateZ(result);
@@ -56,7 +56,7 @@ public class Alu {
         return result;
     }
 
-    public int Not(int a) {
+    public int not(int a) {
         var result = a ^ DataMemory.REGISTER_SIZE;
 
         updateZ(result);

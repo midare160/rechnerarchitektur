@@ -38,33 +38,4 @@ public abstract class InstructionBase {
         var stackAddress = context.programStack().pop();
         context.dataMemory().programCounter().set(stackAddress);
     }
-
-    protected void updateC_Add(ExecutionContext context, int a, int b) {
-        context.dataMemory().status().setC(a + b > 255);
-    }
-
-    protected void updateC_Sub(ExecutionContext context, int a, int b) {
-        context.dataMemory().status().setC(b >= a);
-    }
-
-    protected void updateDC_Add(ExecutionContext context, int a, int b) {
-        // Mask to get lower 4 bits (nibble)
-        var lowerNibbleSum = (a & 0x0F) + (b & 0x0F);
-        var carryOccured = lowerNibbleSum > 0x0F;
-
-        // DC = true if carry from bit 3
-        context.dataMemory().status().setDC(carryOccured);
-    }
-
-    protected void updateDC_Sub(ExecutionContext context, int a, int b) {
-        // For subtraction, polarity is reversed
-        var noBorrowOccured = (a & 0x0F) >= (b & 0x0F);
-
-        // DC = true if no borrow from bit 3
-        context.dataMemory().status().setDC(noBorrowOccured);
-    }
-
-    protected void updateZ(ExecutionContext context, int result) {
-        context.dataMemory().status().setZ(result == 0);
-    }
 }

@@ -16,13 +16,7 @@ public class Addlw extends InstructionBase {
 
     @Override
     public void execute(ExecutionContext context) {
-        var currentW = getW(context);
-        var result = (currentW + literal) % 256;
-
+        var result = context.alu().add(getW(context), literal);
         setW(context, result);
-
-        updateC_Add(context, currentW, literal);
-        updateDC_Add(context, currentW, literal);
-        updateZ(context, result);
     }
 }
