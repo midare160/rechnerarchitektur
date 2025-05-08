@@ -79,7 +79,9 @@ public class BreakpointTableCell extends SvgTableCell<InstructionRowModel> {
     }
 
     private boolean isCommentRow() {
-        return !getTableRow().getItem().isExecutable();
+        return getTableRow() == null
+                || getTableRow().getItem() == null
+                || !getTableRow().getItem().isExecutable();
     }
 
     private void setBreakpointSvgUrl(URL url) {

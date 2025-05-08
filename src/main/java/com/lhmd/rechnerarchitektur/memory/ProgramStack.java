@@ -1,40 +1,68 @@
 package com.lhmd.rechnerarchitektur.memory;
 
-import java.util.Arrays;
+import com.lhmd.rechnerarchitektur.values.IntBox;
+
+import java.util.List;
 
 public class ProgramStack {
     public static final int MAX_SIZE = 8;
+    public static final int ELEMENT_WIDTH = 13;
 
-    private final int[] stack;
-
-    private int pointer;
+    private final IntBox pointer;
+    private final IntBox[] elements;
 
     public ProgramStack() {
-        stack = new int[MAX_SIZE];
+        pointer = new IntBox();
+        pointer.onChanged().addListener(this::onPointerChanged);
+
+        elements = new IntBox[MAX_SIZE];
+
+        for (var i = 0; i < elements.length; i++) {
+            elements[i] = new IntBox();
+        }
     }
 
-    public int pointer() {
+    public IntBox pointer() {
         return pointer;
     }
 
+    public List<IntBox> elements() {
+        return List.of(elements);
+    }
+
     public void push(int value) {
-        stack[pointer] = value;
-        pointer = (pointer + 1) % MAX_SIZE;
+        elements[getPointer(0)].set(value);
+        pointer.set(getPointer(1));
     }
 
     public int pop() {
-        // Negative numbers behave incorrectly with %
-        pointer = Math.floorMod(pointer - 1, MAX_SIZE);
+        pointer.set(getPointer(-1));
 
-        return stack[pointer];
+        return elements[getPointer(0)].get();
     }
 
     public int peek() {
-        return stack[Math.floorMod(pointer - 1, MAX_SIZE)];
+        return elements[getPointer(-1)].get();
     }
 
     public void reset() {
-        pointer = 0;
-        Arrays.fill(stack, 0);
+        pointer.set(0);
+
+        for (var element : elements) {
+            element.set(0);
+        }
+    }
+
+    private void onPointerChanged(Integer oldValue, Integer newValue) {
+        var modPointer = getPointer(0);
+
+        if (newValue != modPointer) {
+            pointer.set(modPointer);
+        }
+    }
+
+    private int getPointer(int offset) {
+        // Negative numbers behave incorrectly with %
+        return Math.floorMod(pointer.get() + offset, MAX_SIZE);
     }
 }

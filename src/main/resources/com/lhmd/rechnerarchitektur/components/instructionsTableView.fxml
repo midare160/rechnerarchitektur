@@ -3,14 +3,14 @@
 <?import javafx.scene.control.cell.*?>
 <?import javafx.scene.control.*?>
 
-<fx:root type="TableView" styleClass="instructionsTable, headless, striped" xmlns:fx="http://javafx.com/fxml" xmlns="http://javafx.com/javafx">
+<fx:root type="TableView" id="instructionsTable" styleClass="headless, striped" xmlns:fx="http://javafx.com/fxml" xmlns="http://javafx.com/javafx">
     <columns>
         <TableColumn prefWidth="-Infinity" resizable="false">
             <cellValueFactory>
                 <PropertyValueFactory property="isNext"/>
             </cellValueFactory>
         </TableColumn>
-        <TableColumn fx:id="breakpointColumn" prefWidth="30" resizable="false" styleClass="align-right">
+        <TableColumn fx:id="breakpointColumn" prefWidth="35" resizable="false" styleClass="align-right">
             <cellValueFactory>
                 <PropertyValueFactory property="breakpointSvgUrl"/>
             </cellValueFactory>

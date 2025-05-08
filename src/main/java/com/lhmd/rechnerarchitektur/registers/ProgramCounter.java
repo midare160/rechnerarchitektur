@@ -2,38 +2,23 @@ package com.lhmd.rechnerarchitektur.registers;
 
 import com.lhmd.rechnerarchitektur.changes.*;
 import com.lhmd.rechnerarchitektur.common.IntUtils;
-import com.lhmd.rechnerarchitektur.events.ChangedEvent;
 import com.lhmd.rechnerarchitektur.memory.ProgramMemory;
 import com.lhmd.rechnerarchitektur.values.IntBox;
 
 import java.util.*;
 
-public class ProgramCounter {
+public class ProgramCounter extends IntBox {
     private final IntBox pclRegister;
     private final IntBox pclathRegister;
     private final ChangeManager changeManager;
-    private final ChangedEvent<Integer> changedEvent;
-
-    private int highOrderBits;
 
     public ProgramCounter(IntBox pclRegister, IntBox pclathRegister) {
         this.pclRegister = Objects.requireNonNull(pclRegister);
         this.pclathRegister = Objects.requireNonNull(pclathRegister);
         this.changeManager = new ChangeManager();
-        this.changedEvent = new ChangedEvent<>();
 
+        onChanged().addListener(this::onPcChanged);
         pclRegister.onChanged().addListener(this::onPclChanged);
-    }
-
-    public ChangedEvent<Integer> changedEvent() {
-        return changedEvent;
-    }
-
-    /**
-     * Concats the 5 upper bits with PCL bits <7:0>.
-     */
-    public int get() {
-        return IntUtils.concatBits(highOrderBits, pclRegister.get(), 8);
     }
 
     /**
@@ -42,7 +27,7 @@ public class ProgramCounter {
      */
     public void increment() {
         var result = (get() + 1) % ProgramMemory.MAX_SIZE;
-        override(result);
+        set(result);
     }
 
     /**
@@ -53,24 +38,20 @@ public class ProgramCounter {
      */
     public void fromJump(int value) {
         var pclathPart = IntUtils.bitRange(pclathRegister.get(), 3, 4);
-        var jumpPart = IntUtils.bitRange(value, 8, 10);
+        var jumpPart = IntUtils.bitRange(value, 0, 10);
+        var combined = IntUtils.concatBits(pclathPart, jumpPart, 11);
 
-        changedEvent.fire(this::get, () -> {
-            highOrderBits = IntUtils.concatBits(pclathPart, jumpPart, 3);
-            setPclInternal(IntUtils.bitRange(value, 0, 7));
-        });
+        set(combined);
     }
 
-    /**
-     * The thirteen bit immediate value is loaded into PC.
-     *
-     * @param value the thirteen bit address
-     */
-    public void override(int value) {
-        changedEvent.fire(this::get, () -> {
-            highOrderBits = IntUtils.bitRange(value, 8, 12);
-            setPclInternal(IntUtils.bitRange(value, 0, 7));
-        });
+    private void onPcChanged(Integer oldValue, Integer newValue) {
+        if (changeManager.isChanging()) {
+            return;
+        }
+
+        try (var ignored = changeManager.beginChange()) {
+            pclRegister.set(IntUtils.bitRange(newValue, 0, 7));
+        }
     }
 
     private void onPclChanged(Integer oldValue, Integer newValue) {
@@ -78,14 +59,10 @@ public class ProgramCounter {
             return;
         }
 
-        changedEvent.fire(this::get, () -> {
-            highOrderBits = IntUtils.bitRange(pclathRegister.get(), 0, 4);
-        });
-    }
+        var pclathPart = IntUtils.bitRange(pclathRegister.get(), 0, 4);
+        var pclPart = IntUtils.bitRange(newValue, 0, 7);
+        var combined = IntUtils.concatBits(pclathPart, pclPart, 8);
 
-    private void setPclInternal(int value) {
-        try (var ignored = changeManager.beginChange()) {
-            pclRegister.set(value);
-        }
+        set(combined);
     }
 }

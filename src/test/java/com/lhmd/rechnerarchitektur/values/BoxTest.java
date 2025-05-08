@@ -64,16 +64,19 @@ public class BoxTest {
         var box = new Box<Double>();
 
         box.onChanged().addListener((o, n) -> {
+            assertTrue(firstCalled.get());
+            secondCalled.set(true);
+        });
+
+        box.onChanged().addListener((o, n) -> {
             assertFalse(secondCalled.get());
             firstCalled.set(true);
         });
 
-        box.onChanged().addListener((o, n) -> secondCalled.set(true));
-
         box.setValue(6.9);
 
-        assertTrue(firstCalled.get());
         assertTrue(secondCalled.get());
+        assertTrue(firstCalled.get());
     }
 
     @Test

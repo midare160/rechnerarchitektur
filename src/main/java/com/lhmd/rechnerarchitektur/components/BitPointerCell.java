@@ -2,48 +2,74 @@ package com.lhmd.rechnerarchitektur.components;
 
 import com.lhmd.rechnerarchitektur.PseudoClasses;
 import com.lhmd.rechnerarchitektur.common.IntUtils;
+import com.lhmd.rechnerarchitektur.events.ChangeListener;
 import com.lhmd.rechnerarchitektur.values.IntBox;
 import javafx.application.Platform;
+import javafx.beans.NamedArg;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.*;
 
 public class BitPointerCell extends Label {
-    private final IntBox intBox;
     private final int bitIndex;
+    private final ChangeListener<Integer> changeListener;
 
-    public BitPointerCell(IntBox intBox, int bitIndex) {
-        this.intBox = intBox;
+    private IntBox intBox;
+    private boolean previousValue;
+
+    public BitPointerCell(@NamedArg("bitIndex") int bitIndex) {
         this.bitIndex = IntUtils.requireValidBitIndex(bitIndex);
-
-        setOnMouseClicked(this::onMouseClicked);
-        intBox.onChanged().addListener(this::onIntBoxChanged);
+        this.changeListener = this::onIntBoxChanged;
 
         setAlignment(Pos.CENTER);
+        setMaxWidth(Double.MAX_VALUE);
+        HBox.setHgrow(this, Priority.ALWAYS);
+
+        setOnMouseClicked(this::onMouseClicked);
+
         updateText();
     }
 
-    public void setChanged(boolean changed) {
-        pseudoClassStateChanged(PseudoClasses.CHANGED, changed);
+    public void setData(IntBox intBox) {
+        if (this.intBox != null) {
+            this.intBox.onChanged().removeListener(changeListener);
+        }
+
+        this.intBox = intBox;
+        this.intBox.onChanged().addListener(changeListener);
+
+        resetChanged();
+    }
+
+    public void resetChanged() {
+        previousValue = isBitSet();
+        setChanged(false);
     }
 
     private void onMouseClicked(MouseEvent e) {
-        intBox.set(IntUtils.changeBit(intBox.get(), bitIndex, !isBitSet()));
+        if (intBox != null) {
+            intBox.set(IntUtils.changeBit(intBox.get(), bitIndex, !isBitSet()));
+        }
     }
 
     private void onIntBoxChanged(Integer oldValue, Integer newValue) {
         updateText();
 
-        if (IntUtils.isBitSet(oldValue, bitIndex) != IntUtils.isBitSet(newValue, bitIndex)) {
-            setChanged(true);
-        }
+        var isChanged = previousValue != IntUtils.isBitSet(newValue, bitIndex);
+        setChanged(isChanged);
+    }
+
+    private void setChanged(boolean changed) {
+        pseudoClassStateChanged(PseudoClasses.CHANGED, changed);
     }
 
     private boolean isBitSet() {
-        return IntUtils.isBitSet(intBox.get(), bitIndex);
+        return intBox != null && IntUtils.isBitSet(intBox.get(), bitIndex);
     }
 
     private void updateText() {
-        Platform.runLater(() -> setText(isBitSet() ? "1" : "0"));
+        var text = isBitSet() ? "1" : "0";
+        Platform.runLater(() -> setText(text));
     }
 }

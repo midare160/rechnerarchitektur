@@ -1,44 +1,31 @@
 package com.lhmd.rechnerarchitektur.common;
 
-import java.util.function.Supplier;
-
 public class Runner {
     private Runner() {
     }
 
-    public static void runUnchecked(ThrowingRunnable runnable) {
-        runnable.run();
+    public static void unchecked(ThrowingRunnable runnable) {
+        unchecked(() -> {
+            runnable.run();
+            return (Void) null;
+        });
     }
 
-    public static <T> T getUnchecked(ThrowingSupplier<T> supplier) {
-        return supplier.get();
+    public static <T> T unchecked(ThrowingSupplier<T> supplier) {
+        try {
+            return supplier.get();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @FunctionalInterface
-    public interface ThrowingRunnable extends Runnable {
-        @Override
-        default void run() {
-            try {
-                runThrows();
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-        void runThrows() throws Exception;
+    public interface ThrowingRunnable {
+        void run() throws Exception;
     }
 
     @FunctionalInterface
-    public interface ThrowingSupplier<T> extends Supplier<T> {
-        @Override
-        default T get() {
-            try {
-                return getThrows();
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-        T getThrows() throws Exception;
+    public interface ThrowingSupplier<T> {
+        T get() throws Exception;
     }
 }

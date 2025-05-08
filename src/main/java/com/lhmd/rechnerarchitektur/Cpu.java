@@ -2,32 +2,30 @@ package com.lhmd.rechnerarchitektur;
 
 import com.lhmd.rechnerarchitektur.common.Runner;
 import com.lhmd.rechnerarchitektur.events.ActionEvent;
-import com.lhmd.rechnerarchitektur.instructions.ExecutionParams;
+import com.lhmd.rechnerarchitektur.instructions.ExecutionContext;
 import com.lhmd.rechnerarchitektur.memory.*;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class Cpu extends Thread {
-    private final ProgramMemory programMemory;
     private final DataMemory dataMemory;
     private final ProgramStack programStack;
-    private final ExecutionParams executionParams;
+    private final ExecutionContext executionContext;
     private final Set<Integer> breakpointAddresses;
 
     private final ActionEvent onBreakpointReached;
     private final ActionEvent onNextInstruction;
 
+    private ProgramMemory programMemory;
     private int lastBreakpointAddress;
 
     private volatile boolean isRunning;
     private volatile boolean isPaused;
 
-    public Cpu(ProgramMemory programMemory, DataMemory dataMemory, ProgramStack programStack) {
-        this.programMemory = programMemory;
+    public Cpu(DataMemory dataMemory, ProgramStack programStack) {
         this.dataMemory = dataMemory;
         this.programStack = programStack;
-        this.executionParams = new ExecutionParams(dataMemory, programStack);
+        this.executionContext = new ExecutionContext(dataMemory, programStack);
         this.breakpointAddresses = new HashSet<>();
 
         this.onBreakpointReached = new ActionEvent();
@@ -36,56 +34,8 @@ public class Cpu extends Thread {
         this.lastBreakpointAddress = -1;
     }
 
-    public boolean isPaused() {
-        return isPaused;
-    }
-
-    public void setPaused(boolean value) {
-        isPaused = value;
-    }
-
-    @Override
-    public void start() {
-        isRunning = true;
-        super.start();
-    }
-
-    @Override
-    public void run() {
-        while (isRunning) {
-            while (!isPaused) {
-                // TODO calculate speed from MHz
-                Runner.runUnchecked(() -> Thread.sleep(200));
-
-                if (pauseOnBreakpoint()) {
-                    break;
-                }
-
-                nextInstruction();
-            }
-        }
-    }
-
-    public void nextInstruction() {
-        onNextInstruction.fire();
-
-        var address = dataMemory.programCounter().get();
-        dataMemory.programCounter().increment();
-
-        var currentInstruction = programMemory.get(address);
-        currentInstruction.execute(executionParams);
-
-        if (currentInstruction.isTwoCycle()) {
-            // TODO add additional 4 cycles
-        }
-    }
-
-    public void addBreakpoint(int address) {
-        breakpointAddresses.add(address);
-    }
-
-    public void removeBreakpoint(int address) {
-        breakpointAddresses.remove(address);
+    public void setProgramMemory(ProgramMemory programMemory) {
+        this.programMemory = programMemory;
     }
 
     public ActionEvent onBreakpointReached() {
@@ -96,9 +46,65 @@ public class Cpu extends Thread {
         return onNextInstruction;
     }
 
-    public void shutdown() {
-        isPaused = true;
+    public void addBreakpoint(int address) {
+        breakpointAddresses.add(address);
+    }
+
+    public void removeBreakpoint(int address) {
+        breakpointAddresses.remove(address);
+    }
+
+    @Override
+    public void start() {
+        isRunning = true;
+        super.start();
+    }
+
+    // Implementation as described in https://docs.oracle.com/javase/7/docs/technotes/guides/concurrency/threadPrimitiveDeprecation.html
+    @Override
+    public void run() {
+        while (isRunning) {
+            // TODO calculate speed from MHz
+            Runner.unchecked(() -> Thread.sleep(200));
+            pauseOnBreakpoint();
+
+            synchronized (this) {
+                while (isPaused && isRunning) {
+                    Runner.unchecked(() -> wait());
+                }
+            }
+
+            nextInstruction();
+        }
+    }
+
+    public synchronized void setPaused(boolean value) {
+        isPaused = value;
+
+        if (!isPaused) {
+            notify();
+        }
+    }
+
+    public synchronized void shutdown() {
         isRunning = false;
+        notify();
+    }
+
+    public void nextInstruction() {
+        if (!isRunning) return;
+
+        onNextInstruction.fire();
+
+        var address = dataMemory.programCounter().get();
+        dataMemory.programCounter().increment();
+
+        var currentInstruction = programMemory.get(address);
+        currentInstruction.execute(executionContext);
+
+        if (currentInstruction.isTwoCycle()) {
+            // TODO add additional 4 cycles
+        }
     }
 
     public void reset() {
@@ -108,17 +114,15 @@ public class Cpu extends Thread {
         programStack.reset();
     }
 
-    private boolean pauseOnBreakpoint() {
+    private void pauseOnBreakpoint() {
         var currentAddress = dataMemory.programCounter().get();
 
         if (currentAddress == lastBreakpointAddress || !breakpointAddresses.contains(currentAddress)) {
-            return false;
+            return;
         }
 
         isPaused = true;
         lastBreakpointAddress = currentAddress;
         onBreakpointReached.fire();
-
-        return true;
     }
 }

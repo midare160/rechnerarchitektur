@@ -18,8 +18,8 @@ public class Goto extends InstructionBase {
     }
 
     @Override
-    public void execute(ExecutionParams params) {
-        params.dataMemory().programCounter().fromJump(address);
+    public void execute(ExecutionContext context) {
+        context.dataMemory().programCounter().fromJump(address);
     }
 
     @Override

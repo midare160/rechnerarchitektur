@@ -11,7 +11,7 @@ public class Nop extends InstructionBase {
     }
 
     @Override
-    public void execute(ExecutionParams params) {
+    public void execute(ExecutionContext context) {
         // Does nothing
     }
 }

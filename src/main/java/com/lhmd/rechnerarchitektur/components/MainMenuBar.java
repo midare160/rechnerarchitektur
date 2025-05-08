@@ -7,6 +7,8 @@ import com.lhmd.rechnerarchitektur.common.FxUtils;
 import com.lhmd.rechnerarchitektur.events.MainMenuBarEvent;
 import com.lhmd.rechnerarchitektur.themes.ThemeManager;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.HBox;
 import javafx.stage.*;
 import javafx.fxml.FXML;
@@ -17,11 +19,16 @@ import org.girod.javafx.svgimage.SVGLoader;
 import java.io.File;
 
 public class MainMenuBar extends HBox {
+    private static final KeyCombination REOPEN_COMBINATION = KeyCombination.valueOf("SHORTCUT+SHIFT+T");
+
     @FXML
     private MenuItem openMenuItem;
 
     @FXML
     private Menu openRecentMenu;
+
+    @FXML
+    private MenuItem closeMenuItem;
 
     @FXML
     private MenuItem quitMenuItem;
@@ -53,10 +60,11 @@ public class MainMenuBar extends HBox {
 
     public void setRunnable(boolean runnable) {
         runMenu.setDisable(!runnable);
-    }
 
-    public boolean isRunnable() {
-        return !runMenu.isDisable();
+        if (!runnable) {
+            pauseMenu.setDisable(true);
+            nextMenu.setDisable(true);
+        }
     }
 
     public void pause() {
@@ -77,6 +85,7 @@ public class MainMenuBar extends HBox {
 
     private void initializeEvents() {
         openMenuItem.setOnAction(this::onOpenMenuItemAction);
+        closeMenuItem.setOnAction(this::onCloseMenuItemAction);
         quitMenuItem.setOnAction(this::onQuitMenuItemAction);
         aboutMenuItem.setOnAction(this::onAboutMenuItemAction);
 
@@ -95,14 +104,17 @@ public class MainMenuBar extends HBox {
 
             openRecentMenu.getItems().add(menuItem);
         }
+
+        setReopenAccelerator();
     }
 
     private void initializeThemeMenu() {
-        themeMenu.getItems().clear();
+        var shortcutIndex = 1;
 
         for (var themeName : ThemeManager.allThemes().keySet()) {
             var menuItem = new CheckMenuItem(themeName);
             menuItem.setOnAction(this::onThemeMenuItemAction);
+            menuItem.setAccelerator(KeyCombination.valueOf("SHORTCUT+" + shortcutIndex++));
 
             var isCurrentTheme = themeName.equals(ThemeManager.getCurrentThemeName());
             menuItem.setSelected(isCurrentTheme);
@@ -119,8 +131,35 @@ public class MainMenuBar extends HBox {
 
         for (var menu : actionsMenuBar.getMenus()) {
             FxUtils.asMenuItem(menu);
-            menu.setDisable(true);
         }
+    }
+
+    private void setReopenAccelerator() {
+        if (getScene() != null) {
+            getScene().getAccelerators().remove(REOPEN_COMBINATION);
+        }
+
+        if (openRecentMenu.getItems().isEmpty()) {
+            return;
+        }
+
+        var firstItem = openRecentMenu.getItems().getFirst();
+        firstItem.setAccelerator(REOPEN_COMBINATION);
+
+        if (getScene() != null) {
+            getScene().getAccelerators().put(REOPEN_COMBINATION, firstItem::fire);
+        }
+    }
+
+    private void openFile(File file) {
+        if (!file.exists()) {
+            return;
+        }
+
+        Configuration.addRecentFile(file.getPath());
+        initializeOpenRecentMenu();
+
+        fireEvent(new MainMenuBarEvent<>(MainMenuBarEvent.ON_FILE_OPENED, file.getPath()));
     }
 
     private void onOpenMenuItemAction(ActionEvent e) {
@@ -136,9 +175,13 @@ public class MainMenuBar extends HBox {
         openFile(selectedFile);
     }
 
+    private void onCloseMenuItemAction(ActionEvent e) {
+        fireEvent(new MainMenuBarEvent<>(MainMenuBarEvent.ON_FILE_CLOSED));
+    }
+
     private void onQuitMenuItemAction(ActionEvent e) {
-        var eventArgs = new WindowEvent(getScene().getWindow(), WindowEvent.WINDOW_CLOSE_REQUEST);
-        getScene().getWindow().fireEvent(eventArgs);
+        var event = new WindowEvent(getScene().getWindow(), WindowEvent.WINDOW_CLOSE_REQUEST);
+        getScene().getWindow().fireEvent(event);
     }
 
     private void onAboutMenuItemAction(ActionEvent e) {
@@ -169,37 +212,24 @@ public class MainMenuBar extends HBox {
         }
     }
 
-    private void openFile(File file) {
-        if (!file.exists()) {
-            return;
-        }
-
-        fireEvent(new MainMenuBarEvent<>(MainMenuBarEvent.ON_FILE_OPENED, file.getPath()));
-
-        Configuration.addRecentFile(file.getPath());
-        initializeOpenRecentMenu();
-    }
-
     private void onRunMenuAction(ActionEvent e) {
-        runMenu.setText("Continue");
         runMenu.setDisable(true);
         nextMenu.setDisable(true);
         pauseMenu.setDisable(false);
-        resetMenu.setDisable(false);
 
-        fireEvent(new MainMenuBarEvent<>(MainMenuBarEvent.ON_RUN, null));
+        fireEvent(new MainMenuBarEvent<>(MainMenuBarEvent.ON_RUN));
     }
 
     private void onResetMenuAction(ActionEvent e) {
-        fireEvent(new MainMenuBarEvent<>(MainMenuBarEvent.ON_RESET, null));
+        fireEvent(new MainMenuBarEvent<>(MainMenuBarEvent.ON_RESET));
     }
 
     private void onPauseMenuAction(ActionEvent e) {
         pause();
-        fireEvent(new MainMenuBarEvent<>(MainMenuBarEvent.ON_PAUSE, null));
+        fireEvent(new MainMenuBarEvent<>(MainMenuBarEvent.ON_PAUSE));
     }
 
     private void onNextMenuAction(ActionEvent e) {
-        fireEvent(new MainMenuBarEvent<>(MainMenuBarEvent.ON_NEXT, null));
+        fireEvent(new MainMenuBarEvent<>(MainMenuBarEvent.ON_NEXT));
     }
 }
