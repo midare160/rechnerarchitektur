@@ -55,6 +55,10 @@ public class Cpu extends Thread {
         breakpointAddresses.remove(address);
     }
 
+    public void clearBreakpoints() {
+        breakpointAddresses.clear();
+    }
+
     @Override
     public void start() {
         isRunning = true;
