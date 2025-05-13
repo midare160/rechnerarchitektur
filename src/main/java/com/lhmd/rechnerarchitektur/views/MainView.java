@@ -7,7 +7,6 @@ import com.lhmd.rechnerarchitektur.events.*;
 import com.lhmd.rechnerarchitektur.instructions.InstructionRowModel;
 import com.lhmd.rechnerarchitektur.memory.*;
 import com.lhmd.rechnerarchitektur.parsing.*;
-import javafx.application.Platform;
 import javafx.beans.Observable;
 import javafx.collections.*;
 import javafx.fxml.FXML;
@@ -17,7 +16,10 @@ import org.springframework.stereotype.Component;
 import java.util.stream.Collectors;
 
 @Component
-public class MainView extends VBox {
+public class MainView {
+    @FXML
+    private VBox root;
+
     @FXML
     private MainMenuBar mainMenuBar;
 
@@ -37,20 +39,10 @@ public class MainView extends VBox {
     private final ProgramStack programStack;
     private final Cpu cpu;
 
-    public MainView() {
-        this.dataMemory = new DataMemory();
-        this.programStack = new ProgramStack();
-        this.cpu = new Cpu(dataMemory, programStack);
-
-        Platform.runLater(() -> {
-            FxUtils.loadHierarchy(this, "views/main.fxml");
-        });
-    }
-
-    public void shutdownCpu() {
-        if (cpu != null) {
-            cpu.shutdown();
-        }
+    public MainView(Cpu cpu, DataMemory dataMemory, ProgramStack programStack) {
+        this.cpu = cpu;
+        this.dataMemory = dataMemory;
+        this.programStack = programStack;
     }
 
     @FXML
@@ -66,12 +58,12 @@ public class MainView extends VBox {
     }
 
     private void initializeEvents() {
-        addEventHandler(MainMenuBarEvent.ON_FILE_OPENED, this::onMainMenuBarFileOpened);
-        addEventHandler(MainMenuBarEvent.ON_FILE_CLOSED, e -> closeCurrentFile());
-        addEventHandler(MainMenuBarEvent.ON_RUN, this::onMainMenuBarRun);
-        addEventHandler(MainMenuBarEvent.ON_PAUSE, e -> cpu.setPaused(true));
-        addEventHandler(MainMenuBarEvent.ON_NEXT, e -> cpu.nextInstruction());
-        addEventHandler(MainMenuBarEvent.ON_RESET, this::onMainMenuBarReset);
+        root.addEventHandler(MainMenuBarEvent.ON_FILE_OPENED, this::onMainMenuBarFileOpened);
+        root.addEventHandler(MainMenuBarEvent.ON_FILE_CLOSED, e -> closeCurrentFile());
+        root.addEventHandler(MainMenuBarEvent.ON_RUN, this::onMainMenuBarRun);
+        root.addEventHandler(MainMenuBarEvent.ON_PAUSE, e -> cpu.setPaused(true));
+        root.addEventHandler(MainMenuBarEvent.ON_NEXT, e -> cpu.nextInstruction());
+        root.addEventHandler(MainMenuBarEvent.ON_RESET, this::onMainMenuBarReset);
 
         dataMemory.programCounter().onChanged().addListener((o, n) -> instructionsTableView.setNextRow(n));
 

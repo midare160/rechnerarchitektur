@@ -5,10 +5,12 @@ import com.lhmd.rechnerarchitektur.computing.Alu;
 import com.lhmd.rechnerarchitektur.events.ActionEvent;
 import com.lhmd.rechnerarchitektur.instructions.*;
 import com.lhmd.rechnerarchitektur.memory.*;
+import org.springframework.stereotype.Component;
 
 import java.util.*;
 
-public class Cpu extends Thread {
+@Component
+public class Cpu extends Thread implements AutoCloseable {
     private final DataMemory dataMemory;
     private final ProgramStack programStack;
     private final ExecutionContext executionContext;
@@ -83,17 +85,18 @@ public class Cpu extends Thread {
         }
     }
 
+    @Override
+    public synchronized void close() {
+        isRunning = false;
+        notify();
+    }
+
     public synchronized void setPaused(boolean value) {
         isPaused = value;
 
         if (!isPaused) {
             notify();
         }
-    }
-
-    public synchronized void shutdown() {
-        isRunning = false;
-        notify();
     }
 
     public void nextInstruction() {

@@ -3,10 +3,12 @@ package com.lhmd.rechnerarchitektur.memory;
 import com.lhmd.rechnerarchitektur.values.IntBox;
 import com.lhmd.rechnerarchitektur.common.IntUtils;
 import com.lhmd.rechnerarchitektur.registers.*;
+import org.springframework.stereotype.Component;
 
 import java.util.*;
 import java.util.stream.*;
 
+@Component
 public class DataMemory {
     public static final int MAX_SIZE = 256;
     public static final int BANK_SIZE = MAX_SIZE / 2;

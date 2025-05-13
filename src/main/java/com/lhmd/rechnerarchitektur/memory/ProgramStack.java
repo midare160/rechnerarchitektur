@@ -1,9 +1,11 @@
 package com.lhmd.rechnerarchitektur.memory;
 
 import com.lhmd.rechnerarchitektur.values.IntBox;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Component
 public class ProgramStack {
     public static final int MAX_SIZE = 8;
     public static final int ELEMENT_WIDTH = 13;
