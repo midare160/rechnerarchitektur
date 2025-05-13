@@ -7,13 +7,16 @@ import com.lhmd.rechnerarchitektur.events.*;
 import com.lhmd.rechnerarchitektur.instructions.InstructionRowModel;
 import com.lhmd.rechnerarchitektur.memory.*;
 import com.lhmd.rechnerarchitektur.parsing.*;
+import javafx.application.Platform;
 import javafx.beans.Observable;
 import javafx.collections.*;
 import javafx.fxml.FXML;
 import javafx.scene.layout.VBox;
+import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;
 
+@Component
 public class MainView extends VBox {
     @FXML
     private MainMenuBar mainMenuBar;
@@ -39,7 +42,9 @@ public class MainView extends VBox {
         this.programStack = new ProgramStack();
         this.cpu = new Cpu(dataMemory, programStack);
 
-        FxUtils.loadHierarchy(this, "views/main.fxml");
+        Platform.runLater(() -> {
+            FxUtils.loadHierarchy(this, "views/main.fxml");
+        });
     }
 
     public void shutdownCpu() {
