@@ -6,7 +6,10 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 
-public class FxUtils {
+public final class FxUtils {
+    private FxUtils() {
+    }
+
     public static <T> void loadHierarchy(T controller, String fxmlPath) {
         var loader = new FXMLLoader(Launcher.class.getResource(fxmlPath));
         loader.setRoot(controller);

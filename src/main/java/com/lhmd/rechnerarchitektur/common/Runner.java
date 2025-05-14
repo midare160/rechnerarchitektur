@@ -1,6 +1,6 @@
 package com.lhmd.rechnerarchitektur.common;
 
-public class Runner {
+public final class Runner {
     private Runner() {
     }
 

@@ -5,14 +5,13 @@ import com.lhmd.rechnerarchitektur.events.ActionEvent;
 import com.lhmd.rechnerarchitektur.events.ResetEvent;
 import com.lhmd.rechnerarchitektur.memory.*;
 import com.lhmd.rechnerarchitektur.registers.ProgramCounter;
-import org.springframework.context.ApplicationListener;
-import org.springframework.lang.NonNull;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
 
 @Component
-public class Cpu extends Thread implements ApplicationListener<ResetEvent>, AutoCloseable {
+public class Cpu extends Thread implements AutoCloseable {
     private final ProgramCounter programCounter;
     private final Set<Integer> breakpointAddresses;
 
@@ -70,7 +69,7 @@ public class Cpu extends Thread implements ApplicationListener<ResetEvent>, Auto
     public void run() {
         while (isRunning) {
             // TODO calculate speed from MHz
-            Runner.unchecked(() -> Thread.sleep(200));
+            Runner.unchecked(() -> sleep(200));
             pauseOnBreakpoint();
 
             synchronized (this) {
@@ -84,14 +83,14 @@ public class Cpu extends Thread implements ApplicationListener<ResetEvent>, Auto
     }
 
     @Override
-    public void onApplicationEvent(@NonNull ResetEvent event) {
-        lastBreakpointAddress = -1;
-    }
-
-    @Override
     public synchronized void close() {
         isRunning = false;
         notify();
+    }
+
+    @EventListener(ResetEvent.class)
+    public void handleReset() {
+        lastBreakpointAddress = -1;
     }
 
     public synchronized void setPaused(boolean value) {

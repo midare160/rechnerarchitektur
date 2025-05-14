@@ -2,14 +2,13 @@ package com.lhmd.rechnerarchitektur.memory;
 
 import com.lhmd.rechnerarchitektur.events.ResetEvent;
 import com.lhmd.rechnerarchitektur.values.IntBox;
-import org.springframework.context.ApplicationListener;
-import org.springframework.lang.NonNull;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
-public class ProgramStack implements ApplicationListener<ResetEvent> {
+public class ProgramStack {
     public static final int MAX_SIZE = 8;
     public static final int ELEMENT_WIDTH = 13;
 
@@ -27,8 +26,8 @@ public class ProgramStack implements ApplicationListener<ResetEvent> {
         }
     }
 
-    @Override
-    public void onApplicationEvent(@NonNull ResetEvent event) {
+    @EventListener(ResetEvent.class)
+    public void handleReset() {
         pointer.set(0);
 
         for (var element : elements) {

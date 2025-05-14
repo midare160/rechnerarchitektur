@@ -1,6 +1,6 @@
 package com.lhmd.rechnerarchitektur.common;
 
-public class IntUtils {
+public final class IntUtils {
     private IntUtils() {
     }
 

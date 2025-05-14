@@ -2,9 +2,9 @@ package com.lhmd.rechnerarchitektur.computing;
 
 import com.lhmd.rechnerarchitektur.memory.DataMemory;
 import com.lhmd.rechnerarchitektur.registers.StatusRegister;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
+@Service
 public class Alu {
     private final StatusRegister statusRegister;
 

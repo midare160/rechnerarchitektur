@@ -4,16 +4,14 @@ import com.lhmd.rechnerarchitektur.events.ResetEvent;
 import com.lhmd.rechnerarchitektur.values.IntBox;
 import com.lhmd.rechnerarchitektur.common.IntUtils;
 import com.lhmd.rechnerarchitektur.registers.*;
-import org.springframework.context.ApplicationListener;
-import org.springframework.context.event.GenericApplicationListener;
-import org.springframework.lang.NonNull;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
 import java.util.stream.*;
 
 @Component
-public class DataMemory implements ApplicationListener<ResetEvent> {
+public class DataMemory {
     public static final int MAX_SIZE = 256;
     public static final int BANK_SIZE = MAX_SIZE / 2;
     public static final int REGISTER_WIDTH = 8;
@@ -38,8 +36,8 @@ public class DataMemory implements ApplicationListener<ResetEvent> {
         statusRegister = new StatusRegister(registers[0x03]);
     }
 
-    @Override
-    public void onApplicationEvent(@NonNull ResetEvent event) {
+    @EventListener(ResetEvent.class)
+    public void handleReset() {
         for (var register : registers) {
             register.set(0);
         }

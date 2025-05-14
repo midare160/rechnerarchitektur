@@ -7,23 +7,19 @@ import com.lhmd.rechnerarchitektur.events.*;
 import com.lhmd.rechnerarchitektur.instructions.InstructionRowModel;
 import com.lhmd.rechnerarchitektur.memory.*;
 import com.lhmd.rechnerarchitektur.parsing.*;
-import com.lhmd.rechnerarchitektur.registers.ProgramCounter;
-import com.lhmd.rechnerarchitektur.registers.WRegister;
+import com.lhmd.rechnerarchitektur.registers.*;
 import javafx.beans.Observable;
 import javafx.collections.*;
 import javafx.fxml.FXML;
 import javafx.scene.layout.VBox;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.ApplicationListener;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
-import org.springframework.lang.NonNull;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;
 
 @Component
-public class MainView implements ApplicationListener<ResetEvent>, Ordered {
+public class MainView {
     @FXML
     private VBox root;
 
@@ -67,14 +63,9 @@ public class MainView implements ApplicationListener<ResetEvent>, Ordered {
         this.eventPublisher = eventPublisher;
     }
 
-    @Override
-    public void onApplicationEvent(@NonNull ResetEvent event) {
+    @EventListener(ResetEvent.class)
+    public void handleReset() {
         resetChanged();
-    }
-
-    @Override
-    public int getOrder() {
-        return 0;
     }
 
     @FXML
@@ -95,7 +86,7 @@ public class MainView implements ApplicationListener<ResetEvent>, Ordered {
         root.addEventHandler(MainMenuBarEvent.ON_RUN, this::onMainMenuBarRun);
         root.addEventHandler(MainMenuBarEvent.ON_PAUSE, e -> cpu.setPaused(true));
         root.addEventHandler(MainMenuBarEvent.ON_NEXT, e -> cpu.nextInstruction());
-        root.addEventHandler(MainMenuBarEvent.ON_RESET, e -> eventPublisher.publishEvent(new ResetEvent(e.getSource())));
+        root.addEventHandler(MainMenuBarEvent.ON_RESET, e -> eventPublisher.publishEvent(new ResetEvent(this)));
 
         programCounter.onChanged().addListener((o, n) -> instructionsTableView.setNextRow(n));
 
