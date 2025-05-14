@@ -7,16 +7,23 @@ import com.lhmd.rechnerarchitektur.events.*;
 import com.lhmd.rechnerarchitektur.instructions.InstructionRowModel;
 import com.lhmd.rechnerarchitektur.memory.*;
 import com.lhmd.rechnerarchitektur.parsing.*;
+import com.lhmd.rechnerarchitektur.registers.ProgramCounter;
+import com.lhmd.rechnerarchitektur.registers.WRegister;
 import javafx.beans.Observable;
 import javafx.collections.*;
 import javafx.fxml.FXML;
 import javafx.scene.layout.VBox;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationListener;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;
 
 @Component
-public class MainView {
+public class MainView implements ApplicationListener<ResetEvent>, Ordered {
     @FXML
     private VBox root;
 
@@ -35,14 +42,39 @@ public class MainView {
     @FXML
     private MainFooter mainFooter;
 
+    private final Cpu cpu;
     private final DataMemory dataMemory;
     private final ProgramStack programStack;
-    private final Cpu cpu;
+    private final ProgramCounter programCounter;
+    private final WRegister wRegister;
+    private final InstructionDecoder instructionDecoder;
+    private final ApplicationEventPublisher eventPublisher;
 
-    public MainView(Cpu cpu, DataMemory dataMemory, ProgramStack programStack) {
+    public MainView(
+            Cpu cpu,
+            DataMemory dataMemory,
+            ProgramStack programStack,
+            ProgramCounter programCounter,
+            WRegister wRegister,
+            InstructionDecoder instructionDecoder,
+            ApplicationEventPublisher eventPublisher) {
         this.cpu = cpu;
         this.dataMemory = dataMemory;
         this.programStack = programStack;
+        this.programCounter = programCounter;
+        this.wRegister = wRegister;
+        this.instructionDecoder = instructionDecoder;
+        this.eventPublisher = eventPublisher;
+    }
+
+    @Override
+    public void onApplicationEvent(@NonNull ResetEvent event) {
+        resetChanged();
+    }
+
+    @Override
+    public int getOrder() {
+        return 0;
     }
 
     @FXML
@@ -54,7 +86,7 @@ public class MainView {
     private void initializeData() {
         registerTable.setData(dataMemory);
         stackTable.setData(programStack);
-        mainFooter.setData(dataMemory.W(), dataMemory.programCounter());
+        mainFooter.setData(wRegister, programCounter);
     }
 
     private void initializeEvents() {
@@ -63,9 +95,9 @@ public class MainView {
         root.addEventHandler(MainMenuBarEvent.ON_RUN, this::onMainMenuBarRun);
         root.addEventHandler(MainMenuBarEvent.ON_PAUSE, e -> cpu.setPaused(true));
         root.addEventHandler(MainMenuBarEvent.ON_NEXT, e -> cpu.nextInstruction());
-        root.addEventHandler(MainMenuBarEvent.ON_RESET, this::onMainMenuBarReset);
+        root.addEventHandler(MainMenuBarEvent.ON_RESET, e -> eventPublisher.publishEvent(new ResetEvent(e.getSource())));
 
-        dataMemory.programCounter().onChanged().addListener((o, n) -> instructionsTableView.setNextRow(n));
+        programCounter.onChanged().addListener((o, n) -> instructionsTableView.setNextRow(n));
 
         cpu.onBreakpointReached().addListener(mainMenuBar::pause);
         cpu.onNextInstruction().addListener(this::resetChanged);
@@ -79,29 +111,24 @@ public class MainView {
 
         var decodedInstructions = parsedInstructions.stream()
                 .filter(InstructionRowModel::isExecutable)
-                .collect(Collectors.toMap(InstructionRowModel::getAddress, i -> InstructionDecoder.decode(i.getInstruction())));
+                .collect(Collectors.toMap(InstructionRowModel::getAddress, i -> instructionDecoder.decode(i.getInstruction())));
 
         closeCurrentFile();
         cpu.setProgramMemory(new ProgramMemory(decodedInstructions));
 
         instructionsTableView.setItems(observedInstructions);
-        instructionsTableView.setNextRow(dataMemory.programCounter().get());
+        instructionsTableView.setNextRow(programCounter.get());
         mainMenuBar.setRunnable(true);
     }
 
     private void onMainMenuBarRun(MainMenuBarEvent<Void> e) {
-        instructionsTableView.setNextRow(dataMemory.programCounter().get());
+        instructionsTableView.setNextRow(programCounter.get());
 
         if (!cpu.isAlive()) {
             cpu.start();
         }
 
         cpu.setPaused(false);
-    }
-
-    private void onMainMenuBarReset(MainMenuBarEvent<Void> e) {
-        cpu.reset();
-        resetChanged();
     }
 
     private void onBreakpointToggled(ListChangeListener.Change<? extends InstructionRowModel> c) {

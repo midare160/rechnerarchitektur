@@ -1,19 +1,19 @@
 package com.lhmd.rechnerarchitektur;
 
 import com.lhmd.rechnerarchitektur.common.Runner;
-import com.lhmd.rechnerarchitektur.computing.Alu;
 import com.lhmd.rechnerarchitektur.events.ActionEvent;
-import com.lhmd.rechnerarchitektur.instructions.*;
+import com.lhmd.rechnerarchitektur.events.ResetEvent;
 import com.lhmd.rechnerarchitektur.memory.*;
+import com.lhmd.rechnerarchitektur.registers.ProgramCounter;
+import org.springframework.context.ApplicationListener;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
 
 @Component
-public class Cpu extends Thread implements AutoCloseable {
-    private final DataMemory dataMemory;
-    private final ProgramStack programStack;
-    private final ExecutionContext executionContext;
+public class Cpu extends Thread implements ApplicationListener<ResetEvent>, AutoCloseable {
+    private final ProgramCounter programCounter;
     private final Set<Integer> breakpointAddresses;
 
     private final ActionEvent onBreakpointReached;
@@ -25,10 +25,8 @@ public class Cpu extends Thread implements AutoCloseable {
     private volatile boolean isRunning;
     private volatile boolean isPaused;
 
-    public Cpu(DataMemory dataMemory, ProgramStack programStack) {
-        this.dataMemory = dataMemory;
-        this.programStack = programStack;
-        this.executionContext = new ExecutionContext(dataMemory, programStack, new Alu(dataMemory.status()));
+    public Cpu(ProgramCounter programCounter) {
+        this.programCounter = programCounter;
         this.breakpointAddresses = new HashSet<>();
 
         this.onBreakpointReached = new ActionEvent();
@@ -86,6 +84,11 @@ public class Cpu extends Thread implements AutoCloseable {
     }
 
     @Override
+    public void onApplicationEvent(@NonNull ResetEvent event) {
+        lastBreakpointAddress = -1;
+    }
+
+    @Override
     public synchronized void close() {
         isRunning = false;
         notify();
@@ -104,26 +107,19 @@ public class Cpu extends Thread implements AutoCloseable {
 
         onNextInstruction.fire();
 
-        var address = dataMemory.programCounter().get();
-        dataMemory.programCounter().increment();
+        var address = programCounter.get();
+        programCounter.increment();
 
         var currentInstruction = programMemory.get(address);
-        currentInstruction.execute(executionContext);
+        currentInstruction.execute();
 
         if (currentInstruction.isTwoCycle()) {
             // TODO add additional 4 cycles
         }
     }
 
-    public void reset() {
-        lastBreakpointAddress = -1;
-
-        dataMemory.reset();
-        programStack.reset();
-    }
-
     private void pauseOnBreakpoint() {
-        var currentAddress = dataMemory.programCounter().get();
+        var currentAddress = programCounter.get();
 
         if (currentAddress == lastBreakpointAddress || !breakpointAddresses.contains(currentAddress)) {
             return;

@@ -1,41 +1,33 @@
 package com.lhmd.rechnerarchitektur.instructions;
 
-import com.lhmd.rechnerarchitektur.memory.ProgramMemory;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 
 public abstract class InstructionBase {
-    private final int instruction;
+    protected static final String SCOPE = ConfigurableBeanFactory.SCOPE_PROTOTYPE;
 
-    public InstructionBase(int instruction) {
-        if (instruction > ProgramMemory.INSTRUCTION_SIZE || instruction < 0) {
-            throw new IllegalArgumentException("Instruction may only be %d bits wide (%dd). Parameter was %d".formatted(
-                    ProgramMemory.INSTRUCTION_WIDTH,
-                    ProgramMemory.INSTRUCTION_SIZE,
-                    instruction));
-        }
+    private boolean isInitialized;
+    private int instruction;
 
-        this.instruction = instruction;
-    }
-
-    public int getInstruction() {
+    public final int getInstruction() {
         return instruction;
     }
 
-    public abstract void execute(ExecutionContext context);
+    public final void setInstruction(int instruction) {
+        if (this.isInitialized) {
+            throw new IllegalStateException("Instruction was already initialized");
+        }
+
+        this.instruction = instruction;
+        onInitialized();
+        this.isInitialized = true;
+    }
+
+    public abstract void execute();
 
     public boolean isTwoCycle() {
         return false;
     }
 
-    protected int getW(ExecutionContext context) {
-        return context.dataMemory().W().get();
-    }
-
-    protected void setW(ExecutionContext context, int w) {
-        context.dataMemory().W().set(w);
-    }
-
-    protected void popStack(ExecutionContext context) {
-        var stackAddress = context.programStack().pop();
-        context.dataMemory().programCounter().set(stackAddress);
+    protected void onInitialized() {
     }
 }

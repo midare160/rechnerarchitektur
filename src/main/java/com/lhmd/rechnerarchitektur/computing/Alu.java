@@ -2,14 +2,14 @@ package com.lhmd.rechnerarchitektur.computing;
 
 import com.lhmd.rechnerarchitektur.memory.DataMemory;
 import com.lhmd.rechnerarchitektur.registers.StatusRegister;
+import org.springframework.stereotype.Component;
 
-import java.util.Objects;
-
+@Component
 public class Alu {
     private final StatusRegister statusRegister;
 
-    public Alu(StatusRegister statusRegister) {
-        this.statusRegister = Objects.requireNonNull(statusRegister);
+    public Alu(DataMemory dataMemory) {
+        this.statusRegister = dataMemory.status();
     }
 
     public int add(int a, int b) {

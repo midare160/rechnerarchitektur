@@ -1,6 +1,5 @@
 package com.lhmd.rechnerarchitektur.registers;
 
-import com.lhmd.rechnerarchitektur.events.ChangedEvent;
 import com.lhmd.rechnerarchitektur.common.*;
 import com.lhmd.rechnerarchitektur.values.IntBox;
 
@@ -11,10 +10,6 @@ public abstract class Register {
 
     public Register(IntBox register) {
         this.register = Objects.requireNonNull(register);
-    }
-
-    public ChangedEvent<Integer> changedEvent() {
-        return register.onChanged();
     }
 
     protected boolean isBitSet(int index) {

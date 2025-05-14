@@ -1,7 +1,5 @@
 package com.lhmd.rechnerarchitektur.instructions;
 
-import com.lhmd.rechnerarchitektur.memory.DataMemory;
-import com.lhmd.rechnerarchitektur.memory.ProgramStack;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -13,7 +11,7 @@ public class AddlwTest extends InstructionTest {
         var params = getExecutionParams();
 
         params.dataMemory().W().set(0x10);
-        new Addlw(0x15).execute(params);
+        new Addlw(0x15).execute();
 
         assertEquals(0x25, params.dataMemory().W().get());
 
@@ -27,7 +25,7 @@ public class AddlwTest extends InstructionTest {
         var params = getExecutionParams();
 
         params.dataMemory().W().set(0xF0);
-        new Addlw(0x12).execute(params);
+        new Addlw(0x12).execute();
 
         assertEquals(0x02, params.dataMemory().W().get());
 
@@ -41,7 +39,7 @@ public class AddlwTest extends InstructionTest {
         var params = getExecutionParams();
 
         params.dataMemory().W().set(0xFF);
-        new Addlw(0x01).execute(params);
+        new Addlw(0x01).execute();
 
         assertEquals(0x00, params.dataMemory().W().get());
 

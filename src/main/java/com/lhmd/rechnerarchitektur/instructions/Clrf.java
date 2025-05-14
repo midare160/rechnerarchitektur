@@ -1,24 +1,34 @@
 package com.lhmd.rechnerarchitektur.instructions;
 
 import com.lhmd.rechnerarchitektur.common.IntUtils;
+import com.lhmd.rechnerarchitektur.memory.DataMemory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 /**
  * The contents of register ’f’ are cleared and the Z bit is set.
  */
+@Component
+@Scope(InstructionBase.SCOPE)
 public class Clrf extends InstructionBase {
-    private final int address;
+    private final DataMemory dataMemory;
 
-    public Clrf(int instruction) {
-        super(instruction);
+    private int address;
 
-        address = IntUtils.bitRange(instruction, 0, 6);
+    public Clrf(DataMemory dataMemory) {
+        this.dataMemory = dataMemory;
     }
 
     @Override
-    public void execute(ExecutionContext context) {
-        var register = context.dataMemory().getRegister(address);
+    public void execute() {
+        var register = dataMemory.getRegister(address);
 
         register.set(0);
-        context.dataMemory().status().setZ(true);
+        dataMemory.status().setZ(true);
+    }
+
+    @Override
+    protected void onInitialized() {
+        address = IntUtils.bitRange(getInstruction(), 0, 6);
     }
 }

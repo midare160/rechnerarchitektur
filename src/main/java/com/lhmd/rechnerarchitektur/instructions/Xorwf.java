@@ -1,29 +1,45 @@
 package com.lhmd.rechnerarchitektur.instructions;
 
 import com.lhmd.rechnerarchitektur.common.IntUtils;
+import com.lhmd.rechnerarchitektur.computing.Alu;
+import com.lhmd.rechnerarchitektur.memory.DataMemory;
+import com.lhmd.rechnerarchitektur.registers.WRegister;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 /**
  * Exclusive OR the contents of the W register with contents of register 'f'.
  * If 'd' is 0 the result is stored in the W register.
  * If 'd' is 1 the result is stored back in register 'f'.
  */
+@Component
+@Scope(InstructionBase.SCOPE)
 public class Xorwf extends InstructionBase {
-    private final int address;
-    private final boolean destination;
+    private final Alu alu;
+    private final DataMemory dataMemory;
+    private final WRegister wRegister;
 
-    public Xorwf(int instruction) {
-        super(instruction);
+    private int address;
+    private boolean destination;
 
-        address = IntUtils.bitRange(instruction, 0, 6);
-        destination = IntUtils.isBitSet(instruction, 7);
+    public Xorwf(Alu alu, DataMemory dataMemory, WRegister wRegister) {
+        this.alu = alu;
+        this.dataMemory = dataMemory;
+        this.wRegister = wRegister;
     }
 
     @Override
-    public void execute(ExecutionContext context) {
-        var register = context.dataMemory().getRegister(address);
-        var target = destination ? register : context.dataMemory().W();
+    public void execute() {
+        var register = dataMemory.getRegister(address);
+        var target = destination ? register : wRegister;
 
-        var result = context.alu().xor(getW(context), register.get());
+        var result = alu.xor(wRegister.get(), register.get());
         target.set(result);
+    }
+
+    @Override
+    protected void onInitialized() {
+        address = IntUtils.bitRange(getInstruction(), 0, 6);
+        destination = IntUtils.isBitSet(getInstruction(), 7);
     }
 }

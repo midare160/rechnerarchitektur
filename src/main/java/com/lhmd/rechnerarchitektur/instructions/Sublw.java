@@ -1,23 +1,36 @@
 package com.lhmd.rechnerarchitektur.instructions;
 
 import com.lhmd.rechnerarchitektur.common.IntUtils;
+import com.lhmd.rechnerarchitektur.computing.Alu;
+import com.lhmd.rechnerarchitektur.registers.WRegister;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 /**
  * The contents of W register is subtracted from the eight bit literal 'k'.
  * The result is placed in the W register.
  */
+@Component
+@Scope(InstructionBase.SCOPE)
 public class Sublw extends InstructionBase {
-    private final int literal;
+    private final Alu alu;
+    private final WRegister wRegister;
 
-    public Sublw(int instruction) {
-        super(instruction);
+    private int literal;
 
-        literal = IntUtils.bitRange(instruction, 0, 7);
+    public Sublw(Alu alu, WRegister wRegister) {
+        this.alu = alu;
+        this.wRegister = wRegister;
     }
 
     @Override
-    public void execute(ExecutionContext context) {
-        var result = context.alu().sub(literal, getW(context));
-        setW(context, result);
+    public void execute() {
+        var result = alu.sub(literal, wRegister.get());
+        wRegister.set(result);
+    }
+
+    @Override
+    protected void onInitialized() {
+        literal = IntUtils.bitRange(getInstruction(), 0, 7);
     }
 }

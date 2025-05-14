@@ -1,6 +1,9 @@
 package com.lhmd.rechnerarchitektur.instructions;
 
 import com.lhmd.rechnerarchitektur.common.IntUtils;
+import com.lhmd.rechnerarchitektur.registers.ProgramCounter;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 /**
  * GOTO is an unconditional branch.
@@ -8,22 +11,29 @@ import com.lhmd.rechnerarchitektur.common.IntUtils;
  * The upper bits of PC are loaded from PCLATH<4:3>.
  * GOTO is a two cycle instruction.
  */
+@Component
+@Scope(InstructionBase.SCOPE)
 public class Goto extends InstructionBase {
-    private final int address;
+    private final ProgramCounter programCounter;
 
-    public Goto(int instruction) {
-        super(instruction);
+    private int address;
 
-        address = IntUtils.bitRange(instruction, 0, 10);
+    public Goto(ProgramCounter programCounter) {
+        this.programCounter = programCounter;
     }
 
     @Override
-    public void execute(ExecutionContext context) {
-        context.dataMemory().programCounter().fromJump(address);
+    public void execute() {
+        programCounter.fromJump(address);
     }
 
     @Override
     public boolean isTwoCycle() {
         return true;
+    }
+
+    @Override
+    protected void onInitialized() {
+        address = IntUtils.bitRange(getInstruction(), 0, 10);
     }
 }
