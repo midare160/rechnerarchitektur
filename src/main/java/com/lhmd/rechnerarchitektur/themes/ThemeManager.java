@@ -1,58 +1,19 @@
 package com.lhmd.rechnerarchitektur.themes;
 
 import atlantafx.base.theme.*;
-import com.lhmd.rechnerarchitektur.Configuration;
-import com.lhmd.rechnerarchitektur.Launcher;
+import com.lhmd.rechnerarchitektur.JavaFxApplication;
+import com.lhmd.rechnerarchitektur.configuration.*;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import org.springframework.stereotype.Component;
 
 import java.util.*;
 
+@Component
 public class ThemeManager {
-    public static final String DEFAULT_THEME = "Primer Light";
+    private static final Map<String, Theme> themeMap;
 
-    private static Map<String, Theme> themeMap;
-
-    public static Map<String, Theme> allThemes() {
-        return themeMap;
-    }
-
-    public static String getCurrentThemeName() {
-        return Configuration.getTheme();
-    }
-
-    public static void setCurrentThemeName(String value) {
-        var theme = themeMap.get(value);
-
-        if (theme == null) {
-            value = DEFAULT_THEME;
-            theme = themeMap.get(value);
-        }
-
-        Application.setUserAgentStylesheet(theme.getUserAgentStylesheet());
-        Configuration.setTheme(value);
-    }
-
-    public static void applyCurrentStylesheet(Scene scene) {
-        final var lightStyleUrl = Launcher.class.getResource("styles/theme-light.css").toExternalForm();
-        final var darkStyleUrl = Launcher.class.getResource("styles/theme-dark.css").toExternalForm();
-
-        var currentTheme = themeMap.get(getCurrentThemeName());
-
-        var oldStyleUrl = currentTheme.isDarkMode() ? lightStyleUrl : darkStyleUrl;;
-        var newStyleUrl = currentTheme.isDarkMode() ? darkStyleUrl : lightStyleUrl;
-
-        scene.getStylesheets().remove(oldStyleUrl);
-        scene.getStylesheets().add(newStyleUrl);
-    }
-
-    public static void initialize() {
-        initializeThemes();
-
-        setCurrentThemeName(getCurrentThemeName());
-    }
-
-    private static void initializeThemes() {
+    static {
         var themes = new Theme[]{
                 new PrimerLight(),
                 new PrimerDark(),
@@ -63,12 +24,67 @@ public class ThemeManager {
                 new Dracula(),
         };
 
-        themeMap = new LinkedHashMap<>();
+        var map = new LinkedHashMap<String, Theme>();
 
         for (var theme : themes) {
-            themeMap.put(theme.getName(), theme);
+            map.put(theme.getName(), theme);
         }
 
-        themeMap = Collections.unmodifiableMap(themeMap);
+        themeMap = Collections.unmodifiableMap(map);
+    }
+
+    public static Map<String, Theme> allThemes() {
+        return themeMap;
+    }
+
+    private final UserConfig userConfig;
+    private final List<Scene> scenes;
+
+    public ThemeManager(UserConfigService userConfigService) {
+        userConfig = userConfigService.config();
+        scenes = new ArrayList<>();
+
+        setApplicationStylesheet();
+    }
+
+    public String getCurrentThemeName() {
+        return userConfig.getTheme();
+    }
+
+    public void setCurrentThemeName(String value) {
+        userConfig.setTheme(value);
+
+        setApplicationStylesheet();
+        onThemeChanged();
+    }
+
+    public void registerScene(Scene scene) {
+        scenes.add(scene);
+        applyCurrentStylesheet(scene);
+    }
+
+    private void setApplicationStylesheet() {
+        var theme = themeMap.get(getCurrentThemeName());
+        Application.setUserAgentStylesheet(theme.getUserAgentStylesheet());
+    }
+
+    private void applyCurrentStylesheet(Scene scene) {
+        // TODO maybe get injected from DI?
+        final var lightStyleUrl = JavaFxApplication.class.getResource("styles/theme-light.css").toExternalForm();
+        final var darkStyleUrl = JavaFxApplication.class.getResource("styles/theme-dark.css").toExternalForm();
+
+        var currentTheme = themeMap.get(getCurrentThemeName());
+
+        var oldStyleUrl = currentTheme.isDarkMode() ? lightStyleUrl : darkStyleUrl;
+        var newStyleUrl = currentTheme.isDarkMode() ? darkStyleUrl : lightStyleUrl;
+
+        scene.getStylesheets().remove(oldStyleUrl);
+        scene.getStylesheets().add(newStyleUrl);
+    }
+
+    private void onThemeChanged() {
+        for (var scene : scenes) {
+            applyCurrentStylesheet(scene);
+        }
     }
 }

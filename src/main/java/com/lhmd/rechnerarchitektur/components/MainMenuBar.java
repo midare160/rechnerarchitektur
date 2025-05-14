@@ -1,13 +1,11 @@
 package com.lhmd.rechnerarchitektur.components;
 
-import com.lhmd.rechnerarchitektur.Configuration;
-import com.lhmd.rechnerarchitektur.Launcher;
-import com.lhmd.rechnerarchitektur.ProgramInfo;
+import com.lhmd.rechnerarchitektur.*;
 import com.lhmd.rechnerarchitektur.common.FxUtils;
+import com.lhmd.rechnerarchitektur.configuration.*;
 import com.lhmd.rechnerarchitektur.events.MainMenuBarEvent;
 import com.lhmd.rechnerarchitektur.themes.ThemeManager;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.HBox;
 import javafx.stage.*;
@@ -15,6 +13,7 @@ import javafx.fxml.FXML;
 import javafx.event.ActionEvent;
 import javafx.stage.WindowEvent;
 import org.girod.javafx.svgimage.SVGLoader;
+import org.springframework.beans.factory.BeanFactory;
 
 import java.io.File;
 
@@ -54,8 +53,23 @@ public class MainMenuBar extends HBox {
     @FXML
     private Menu resetMenu;
 
+    private UserConfig userConfig;
+    private ThemeManager themeManager;
+
     public MainMenuBar() {
         FxUtils.loadHierarchy(this, "components/mainMenuBar.fxml");
+    }
+
+    public void initialize(BeanFactory beanFactory) {
+        userConfig = beanFactory.getBean(UserConfigService.class).config();
+        themeManager = beanFactory.getBean(ThemeManager.class);
+
+        initializeEvents();
+        initializeOpenRecentMenu();
+        initializeThemeMenu();
+        initializeActionMenuBar();
+
+        aboutMenuItem.setText("About " + ProgramInfo.PROGRAM_NAME);
     }
 
     public void setRunnable(boolean runnable) {
@@ -73,16 +87,6 @@ public class MainMenuBar extends HBox {
         nextMenu.setDisable(false);
     }
 
-    @FXML
-    private void initialize() {
-        initializeEvents();
-        initializeOpenRecentMenu();
-        initializeThemeMenu();
-        initializeActionMenuBar();
-
-        aboutMenuItem.setText("About " + ProgramInfo.PROGRAM_NAME);
-    }
-
     private void initializeEvents() {
         openMenuItem.setOnAction(this::onOpenMenuItemAction);
         closeMenuItem.setOnAction(this::onCloseMenuItemAction);
@@ -98,7 +102,7 @@ public class MainMenuBar extends HBox {
     private void initializeOpenRecentMenu() {
         openRecentMenu.getItems().clear();
 
-        for (var filePath : Configuration.getRecentFiles()) {
+        for (var filePath : userConfig.getFileHistory()) {
             var menuItem = new MenuItem(filePath);
             menuItem.setOnAction(e -> openFile(new File(filePath)));
 
@@ -116,7 +120,7 @@ public class MainMenuBar extends HBox {
             menuItem.setOnAction(this::onThemeMenuItemAction);
             menuItem.setAccelerator(KeyCombination.valueOf("SHORTCUT+" + shortcutIndex++));
 
-            var isCurrentTheme = themeName.equals(ThemeManager.getCurrentThemeName());
+            var isCurrentTheme = themeName.equals(themeManager.getCurrentThemeName());
             menuItem.setSelected(isCurrentTheme);
 
             themeMenu.getItems().add(menuItem);
@@ -124,10 +128,10 @@ public class MainMenuBar extends HBox {
     }
 
     private void initializeActionMenuBar() {
-        runMenu.setGraphic(SVGLoader.load(Launcher.class.getResource("svgs/run.svg")));
-        pauseMenu.setGraphic(SVGLoader.load(Launcher.class.getResource("svgs/pause.svg")));
-        nextMenu.setGraphic(SVGLoader.load(Launcher.class.getResource("svgs/run.svg")));
-        resetMenu.setGraphic(SVGLoader.load(Launcher.class.getResource("svgs/reset.svg")));
+        runMenu.setGraphic(SVGLoader.load(JavaFxApplication.class.getResource("svgs/run.svg")));
+        pauseMenu.setGraphic(SVGLoader.load(JavaFxApplication.class.getResource("svgs/pause.svg")));
+        nextMenu.setGraphic(SVGLoader.load(JavaFxApplication.class.getResource("svgs/run.svg")));
+        resetMenu.setGraphic(SVGLoader.load(JavaFxApplication.class.getResource("svgs/reset.svg")));
 
         for (var menu : actionsMenuBar.getMenus()) {
             FxUtils.asMenuItem(menu);
@@ -156,10 +160,15 @@ public class MainMenuBar extends HBox {
             return;
         }
 
-        Configuration.addRecentFile(file.getPath());
+        var filePath = file.getPath();
+
+        // The most recent file should always be on top
+        userConfig.getFileHistory().removeIf(f -> f.equals(filePath));
+        userConfig.getFileHistory().addFirst(filePath);
+
         initializeOpenRecentMenu();
 
-        fireEvent(new MainMenuBarEvent<>(MainMenuBarEvent.ON_FILE_OPENED, file.getPath()));
+        fireEvent(new MainMenuBarEvent<>(MainMenuBarEvent.ON_FILE_OPENED, filePath));
     }
 
     private void onOpenMenuItemAction(ActionEvent e) {
@@ -203,8 +212,7 @@ public class MainMenuBar extends HBox {
     private void onThemeMenuItemAction(ActionEvent e) {
         var menuItem = (CheckMenuItem) e.getSource();
 
-        ThemeManager.setCurrentThemeName(menuItem.getText());
-        ThemeManager.applyCurrentStylesheet(getScene());
+        themeManager.setCurrentThemeName(menuItem.getText());
 
         for (var item : themeMenu.getItems()) {
             var checkMenuItem = (CheckMenuItem) item;

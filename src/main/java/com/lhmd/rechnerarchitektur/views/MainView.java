@@ -65,11 +65,12 @@ public class MainView {
 
     @FXML
     private void initialize() {
-        initializeData();
+        initializeComponents();
         initializeEvents();
     }
 
-    private void initializeData() {
+    private void initializeComponents() {
+        mainMenuBar.initialize(beanFactory);
         instructionsTableView.initialize(beanFactory);
         registerTable.initialize(beanFactory);
         stackTable.initialize(beanFactory);
