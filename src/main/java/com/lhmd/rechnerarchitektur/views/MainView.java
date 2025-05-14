@@ -12,6 +12,7 @@ import javafx.beans.Observable;
 import javafx.collections.*;
 import javafx.fxml.FXML;
 import javafx.scene.layout.VBox;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -39,27 +40,21 @@ public class MainView {
     private MainFooter mainFooter;
 
     private final Cpu cpu;
-    private final DataMemory dataMemory;
-    private final ProgramStack programStack;
     private final ProgramCounter programCounter;
-    private final WRegister wRegister;
     private final InstructionDecoder instructionDecoder;
+    private final BeanFactory beanFactory;
     private final ApplicationEventPublisher eventPublisher;
 
     public MainView(
             Cpu cpu,
-            DataMemory dataMemory,
-            ProgramStack programStack,
             ProgramCounter programCounter,
-            WRegister wRegister,
             InstructionDecoder instructionDecoder,
+            BeanFactory beanFactory,
             ApplicationEventPublisher eventPublisher) {
         this.cpu = cpu;
-        this.dataMemory = dataMemory;
-        this.programStack = programStack;
         this.programCounter = programCounter;
-        this.wRegister = wRegister;
         this.instructionDecoder = instructionDecoder;
+        this.beanFactory = beanFactory;
         this.eventPublisher = eventPublisher;
     }
 
@@ -75,9 +70,10 @@ public class MainView {
     }
 
     private void initializeData() {
-        registerTable.setData(dataMemory);
-        stackTable.setData(programStack);
-        mainFooter.setData(wRegister, programCounter);
+        instructionsTableView.initialize(beanFactory);
+        registerTable.initialize(beanFactory);
+        stackTable.initialize(beanFactory);
+        mainFooter.initialize(beanFactory);
     }
 
     private void initializeEvents() {
@@ -87,8 +83,6 @@ public class MainView {
         root.addEventHandler(MainMenuBarEvent.ON_PAUSE, e -> cpu.setPaused(true));
         root.addEventHandler(MainMenuBarEvent.ON_NEXT, e -> cpu.nextInstruction());
         root.addEventHandler(MainMenuBarEvent.ON_RESET, e -> eventPublisher.publishEvent(new ResetEvent(this)));
-
-        programCounter.onChanged().addListener((o, n) -> instructionsTableView.setNextRow(n));
 
         cpu.onBreakpointReached().addListener(mainMenuBar::pause);
         cpu.onNextInstruction().addListener(this::resetChanged);

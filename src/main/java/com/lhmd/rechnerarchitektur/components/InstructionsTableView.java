@@ -2,9 +2,11 @@ package com.lhmd.rechnerarchitektur.components;
 
 import com.lhmd.rechnerarchitektur.common.FxUtils;
 import com.lhmd.rechnerarchitektur.instructions.InstructionRowModel;
+import com.lhmd.rechnerarchitektur.registers.ProgramCounter;
 import com.lhmd.rechnerarchitektur.tableview.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import org.springframework.beans.factory.BeanFactory;
 
 import java.net.URL;
 import java.util.Objects;
@@ -24,6 +26,11 @@ public class InstructionsTableView extends TableView<InstructionRowModel> {
 
     public InstructionsTableView() {
         FxUtils.loadHierarchy(this, "components/instructionsTableView.fxml");
+    }
+
+    public void initialize(BeanFactory beanFactory) {
+        var programCounter = beanFactory.getBean(ProgramCounter.class);
+        programCounter.onChanged().addListener((o, n) -> setNextRow(n));
     }
 
     public void setNextRow(Integer address) {
