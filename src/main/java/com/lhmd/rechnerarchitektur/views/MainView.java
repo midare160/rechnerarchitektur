@@ -14,12 +14,14 @@ import javafx.fxml.FXML;
 import javafx.scene.layout.VBox;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;
 
 @Component
+@Lazy
 public class MainView {
     @FXML
     private VBox root;

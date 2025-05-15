@@ -1,29 +1,47 @@
 package com.lhmd.rechnerarchitektur.instructions;
 
+import com.lhmd.rechnerarchitektur.memory.DataMemory;
+import com.lhmd.rechnerarchitektur.registers.WRegister;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class AndlwTest extends InstructionTest {
+@SpringBootTest
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+public class AndlwTest {
+    private final DataMemory dataMemory;
+    private final WRegister wRegister;
+    private final Andlw andlw;
+
+    @Autowired
+    public AndlwTest(DataMemory dataMemory, WRegister wRegister, Andlw andlw) {
+        this.dataMemory = dataMemory;
+        this.wRegister = wRegister;
+        this.andlw = andlw;
+    }
+
     @Test
     public void execute() {
-        var params = getExecutionParams();
+        wRegister.set(0xA3);
+        andlw.setInstruction(0x5F);
 
-        params.dataMemory().W().set(0xA3);
-        new Andlw(0x5F).execute();
+        andlw.execute();
 
-        assertEquals(0x03, params.dataMemory().W().get());
-        assertFalse(params.dataMemory().status().getZ());
+        assertEquals(0x03, wRegister.get());
+        assertFalse(dataMemory.status().getZ());
     }
 
     @Test
     public void execute_equalsZero() {
-        var params = getExecutionParams();
+        wRegister.set(0xA0);
+        andlw.setInstruction(0x50);
 
-        params.dataMemory().W().set(0xA0);
-        new Andlw(0x50).execute();
+        andlw.execute();
 
-        assertEquals(0x00, params.dataMemory().W().get());
-        assertTrue(params.dataMemory().status().getZ());
+        assertEquals(0x00, wRegister.get());
+        assertTrue(dataMemory.status().getZ());
     }
 }

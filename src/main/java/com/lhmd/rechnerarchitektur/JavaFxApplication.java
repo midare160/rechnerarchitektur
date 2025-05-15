@@ -15,7 +15,7 @@ import java.io.IOException;
 
 @SpringBootApplication
 public class JavaFxApplication extends Application {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         Thread.setDefaultUncaughtExceptionHandler((t, e) -> ExceptionHandler.handle(e));
 
         launch(args);

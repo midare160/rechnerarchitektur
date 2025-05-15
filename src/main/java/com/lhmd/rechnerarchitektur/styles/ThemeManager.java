@@ -5,12 +5,15 @@ import com.lhmd.rechnerarchitektur.JavaFxApplication;
 import com.lhmd.rechnerarchitektur.configuration.*;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
 
 @Component
-public class ThemeManager {
+@Lazy
+public class ThemeManager implements InitializingBean {
     private static final String LIGHTSTYLE_URL = JavaFxApplication.class.getResource("styles/theme-light.css").toExternalForm();
     private static final String DARKSTYLE_URL = JavaFxApplication.class.getResource("styles/theme-dark.css").toExternalForm();
     private static final Map<String, Theme> themeMap;
@@ -45,7 +48,10 @@ public class ThemeManager {
     public ThemeManager(UserConfigService userConfigService) {
         userConfig = userConfigService.config();
         scenes = new ArrayList<>();
+    }
 
+    @Override
+    public void afterPropertiesSet() {
         setApplicationStylesheet();
     }
 

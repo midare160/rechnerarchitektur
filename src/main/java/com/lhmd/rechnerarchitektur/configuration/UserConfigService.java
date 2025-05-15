@@ -1,6 +1,7 @@
 package com.lhmd.rechnerarchitektur.configuration;
 
 import com.lhmd.rechnerarchitektur.common.Runner;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.yaml.snakeyaml.*;
 import org.yaml.snakeyaml.constructor.Constructor;
@@ -11,6 +12,7 @@ import java.nio.file.*;
 import java.util.ArrayList;
 
 @Component
+@Lazy
 public class UserConfigService implements AutoCloseable {
     private static final Path FILE_PATH = Path.of("user.yml");
 

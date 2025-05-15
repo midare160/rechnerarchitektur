@@ -2,12 +2,11 @@ package com.lhmd.rechnerarchitektur.parsing;
 
 import com.lhmd.rechnerarchitektur.instructions.*;
 import org.springframework.beans.factory.BeanFactory;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.function.Function;
 
-@Component
+@Service
 public class InstructionDecoder {
     private static final Map<Integer, Class<? extends InstructionBase>> OPCODES;
 

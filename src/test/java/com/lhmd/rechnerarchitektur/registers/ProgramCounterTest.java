@@ -1,21 +1,27 @@
 package com.lhmd.rechnerarchitektur.registers;
 
+import com.lhmd.rechnerarchitektur.memory.DataMemory;
 import com.lhmd.rechnerarchitektur.memory.ProgramMemory;
 import com.lhmd.rechnerarchitektur.values.IntBox;
 import org.junit.jupiter.api.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@SpringBootTest
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class ProgramCounterTest {
-    private IntBox pclRegister;
-    private IntBox pclathRegister;
-    private ProgramCounter programCounter;
+    private final IntBox pclRegister;
+    private final IntBox pclathRegister;
+    private final ProgramCounter programCounter;
 
-    @BeforeEach
-    public void setUp() {
-        pclRegister = new IntBox();
-        pclathRegister = new IntBox();
-        programCounter = new ProgramCounter(pclRegister, pclathRegister);
+    @Autowired
+    public ProgramCounterTest(DataMemory dataMemory, ProgramCounter programCounter) {
+        this.pclRegister = dataMemory.getRegister(0x02);
+        this.pclathRegister = dataMemory.getRegister(0x0A);
+        this.programCounter = programCounter;
     }
 
     @Test
