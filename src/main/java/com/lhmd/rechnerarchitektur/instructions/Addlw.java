@@ -1,28 +1,35 @@
 package com.lhmd.rechnerarchitektur.instructions;
 
 import com.lhmd.rechnerarchitektur.common.IntUtils;
+import com.lhmd.rechnerarchitektur.computing.Alu;
+import com.lhmd.rechnerarchitektur.registers.WRegister;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 /**
  * The contents of the W register are added to the eight bit literal ’k’ and the result is placed in the W register.
  */
+@Component
+@Scope(InstructionBase.SCOPE)
 public class Addlw extends InstructionBase {
-    private final int literal;
+    private final Alu alu;
+    private final WRegister wRegister;
 
-    public Addlw(int instruction) {
-        super(instruction);
+    private int literal;
 
-        literal = IntUtils.bitRange(instruction, 0, 7);
+    public Addlw(Alu alu, WRegister wRegister) {
+        this.alu = alu;
+        this.wRegister = wRegister;
     }
 
     @Override
-    public void execute(ExecutionContext context) {
-        var currentW = getW(context);
-        var result = (currentW + literal) % 256;
+    public void execute() {
+        var result = alu.add(wRegister.get(), literal);
+        wRegister.set(result);
+    }
 
-        setW(context, result);
-
-        updateC_Add(context, currentW, literal);
-        updateDC_Add(context, currentW, literal);
-        updateZ(context, result);
+    @Override
+    protected void onInitialized() {
+        literal = IntUtils.bitRange(getInstruction(), 0, 7);
     }
 }

@@ -2,23 +2,30 @@ package com.lhmd.rechnerarchitektur.registers;
 
 import com.lhmd.rechnerarchitektur.changes.*;
 import com.lhmd.rechnerarchitektur.common.IntUtils;
-import com.lhmd.rechnerarchitektur.memory.ProgramMemory;
+import com.lhmd.rechnerarchitektur.events.ResetEvent;
+import com.lhmd.rechnerarchitektur.memory.*;
 import com.lhmd.rechnerarchitektur.values.IntBox;
+import org.springframework.context.event.EventListener;
+import org.springframework.stereotype.Component;
 
-import java.util.*;
-
+@Component
 public class ProgramCounter extends IntBox {
     private final IntBox pclRegister;
     private final IntBox pclathRegister;
     private final ChangeManager changeManager;
 
-    public ProgramCounter(IntBox pclRegister, IntBox pclathRegister) {
-        this.pclRegister = Objects.requireNonNull(pclRegister);
-        this.pclathRegister = Objects.requireNonNull(pclathRegister);
+    public ProgramCounter(DataMemory dataMemory) {
+        this.pclRegister = dataMemory.getRegister(0x02);
+        this.pclathRegister = dataMemory.getRegister(0x0A);
         this.changeManager = new ChangeManager();
 
         onChanged().addListener(this::onPcChanged);
         pclRegister.onChanged().addListener(this::onPclChanged);
+    }
+
+    @EventListener(ResetEvent.class)
+    public void handleReset() {
+        set(0);
     }
 
     /**

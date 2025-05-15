@@ -1,5 +1,6 @@
 package com.lhmd.rechnerarchitektur.registers;
 
+import com.lhmd.rechnerarchitektur.memory.DataMemory;
 import com.lhmd.rechnerarchitektur.values.IntBox;
 
 public class StatusRegister extends Register {
@@ -42,5 +43,34 @@ public class StatusRegister extends Register {
 
     public void setRP0(boolean value) {
         setBit(RP0_INDEX, value);
+    }
+
+    public void updateC_Add(int a, int b) {
+        setC(a + b > DataMemory.REGISTER_SIZE);
+    }
+
+    public void updateC_Sub(int a, int b) {
+        setC(b >= a);
+    }
+
+    public void updateDC_Add(int a, int b) {
+        // Mask to get lower 4 bits (nibble)
+        var lowerNibbleSum = (a & 0x0F) + (b & 0x0F);
+        var carryOccured = lowerNibbleSum > 0x0F;
+
+        // DC = true if carry from bit 3
+        setDC(carryOccured);
+    }
+
+    public void updateDC_Sub(int a, int b) {
+        // For subtraction, polarity is reversed
+        var noBorrowOccured = (a & 0x0F) >= (b & 0x0F);
+
+        // DC = true if no borrow from bit 3
+        setDC(noBorrowOccured);
+    }
+
+    public void updateZ(int result) {
+        setZ(result == 0);
     }
 }

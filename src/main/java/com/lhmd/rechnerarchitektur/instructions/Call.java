@@ -1,6 +1,10 @@
 package com.lhmd.rechnerarchitektur.instructions;
 
 import com.lhmd.rechnerarchitektur.common.IntUtils;
+import com.lhmd.rechnerarchitektur.memory.ProgramStack;
+import com.lhmd.rechnerarchitektur.registers.ProgramCounter;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 /**
  * Call Subroutine. First, return address (PC+1) is pushed onto the stack.
@@ -8,26 +12,32 @@ import com.lhmd.rechnerarchitektur.common.IntUtils;
  * The upper bits of the PC are loaded from PCLATH.
  * CALL is a two cycle instruction.
  */
+@Component
+@Scope(InstructionBase.SCOPE)
 public class Call extends InstructionBase {
-    private final int address;
+    private final ProgramStack programStack;
+    private final ProgramCounter programCounter;
 
-    public Call(int instruction) {
-        super(instruction);
+    private int address;
 
-        address = IntUtils.bitRange(instruction, 0, 10);
+    public Call(ProgramStack programStack, ProgramCounter programCounter) {
+        this.programStack = programStack;
+        this.programCounter = programCounter;
     }
 
     @Override
-    public void execute(ExecutionContext context) {
-        // TODO check if +1 correct
-        var stackValue = context.dataMemory().programCounter().get();
-        context.programStack().push(stackValue);
-
-        context.dataMemory().programCounter().fromJump(address);
+    public void execute() {
+        programStack.push(programCounter.get());
+        programCounter.fromJump(address);
     }
 
     @Override
     public boolean isTwoCycle() {
         return true;
+    }
+
+    @Override
+    protected void onInitialized() {
+        address = IntUtils.bitRange(getInstruction(), 0, 10);
     }
 }

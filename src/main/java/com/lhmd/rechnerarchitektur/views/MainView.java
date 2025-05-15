@@ -1,20 +1,31 @@
 package com.lhmd.rechnerarchitektur.views;
 
-import com.lhmd.rechnerarchitektur.Cpu;
+import com.lhmd.rechnerarchitektur.computing.Cpu;
 import com.lhmd.rechnerarchitektur.common.*;
 import com.lhmd.rechnerarchitektur.components.*;
 import com.lhmd.rechnerarchitektur.events.*;
 import com.lhmd.rechnerarchitektur.instructions.InstructionRowModel;
 import com.lhmd.rechnerarchitektur.memory.*;
 import com.lhmd.rechnerarchitektur.parsing.*;
+import com.lhmd.rechnerarchitektur.registers.*;
 import javafx.beans.Observable;
 import javafx.collections.*;
 import javafx.fxml.FXML;
 import javafx.scene.layout.VBox;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.event.EventListener;
+import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;
 
-public class MainView extends VBox {
+@Component
+@Lazy
+public class MainView {
+    @FXML
+    private VBox root;
+
     @FXML
     private MainMenuBar mainMenuBar;
 
@@ -30,45 +41,51 @@ public class MainView extends VBox {
     @FXML
     private MainFooter mainFooter;
 
-    private final DataMemory dataMemory;
-    private final ProgramStack programStack;
     private final Cpu cpu;
+    private final ProgramCounter programCounter;
+    private final InstructionDecoder instructionDecoder;
+    private final BeanFactory beanFactory;
+    private final ApplicationEventPublisher eventPublisher;
 
-    public MainView() {
-        this.dataMemory = new DataMemory();
-        this.programStack = new ProgramStack();
-        this.cpu = new Cpu(dataMemory, programStack);
-
-        FxUtils.loadHierarchy(this, "views/main.fxml");
+    public MainView(
+            Cpu cpu,
+            ProgramCounter programCounter,
+            InstructionDecoder instructionDecoder,
+            BeanFactory beanFactory,
+            ApplicationEventPublisher eventPublisher) {
+        this.cpu = cpu;
+        this.programCounter = programCounter;
+        this.instructionDecoder = instructionDecoder;
+        this.beanFactory = beanFactory;
+        this.eventPublisher = eventPublisher;
     }
 
-    public void shutdownCpu() {
-        if (cpu != null) {
-            cpu.shutdown();
-        }
+    @EventListener(ResetEvent.class)
+    public void handleReset() {
+        resetChanged();
     }
 
     @FXML
     private void initialize() {
-        initializeData();
+        initializeComponents();
         initializeEvents();
     }
 
-    private void initializeData() {
-        registerTable.setData(dataMemory);
-        stackTable.setData(programStack);
-        mainFooter.setData(dataMemory.W(), dataMemory.programCounter());
+    private void initializeComponents() {
+        mainMenuBar.initialize(beanFactory);
+        instructionsTableView.initialize(beanFactory);
+        registerTable.initialize(beanFactory);
+        stackTable.initialize(beanFactory);
+        mainFooter.initialize(beanFactory);
     }
 
     private void initializeEvents() {
-        addEventHandler(MainMenuBarEvent.ON_FILE_OPENED, this::onMainMenuBarFileOpened);
-        addEventHandler(MainMenuBarEvent.ON_FILE_CLOSED, this::onMainMenuBarFileClosed);
-        addEventHandler(MainMenuBarEvent.ON_RUN, this::onMainMenuBarRun);
-        addEventHandler(MainMenuBarEvent.ON_PAUSE, e -> cpu.setPaused(true));
-        addEventHandler(MainMenuBarEvent.ON_NEXT, e -> cpu.nextInstruction());
-        addEventHandler(MainMenuBarEvent.ON_RESET, this::onMainMenuBarReset);
-
-        dataMemory.programCounter().onChanged().addListener((o, n) -> instructionsTableView.setNextRow(n));
+        root.addEventHandler(MainMenuBarEvent.ON_FILE_OPENED, this::onMainMenuBarFileOpened);
+        root.addEventHandler(MainMenuBarEvent.ON_FILE_CLOSED, e -> closeCurrentFile());
+        root.addEventHandler(MainMenuBarEvent.ON_RUN, this::onMainMenuBarRun);
+        root.addEventHandler(MainMenuBarEvent.ON_PAUSE, e -> cpu.setPaused(true));
+        root.addEventHandler(MainMenuBarEvent.ON_NEXT, e -> cpu.nextInstruction());
+        root.addEventHandler(MainMenuBarEvent.ON_RESET, e -> eventPublisher.publishEvent(new ResetEvent(this)));
 
         cpu.onBreakpointReached().addListener(mainMenuBar::pause);
         cpu.onNextInstruction().addListener(this::resetChanged);
@@ -82,36 +99,24 @@ public class MainView extends VBox {
 
         var decodedInstructions = parsedInstructions.stream()
                 .filter(InstructionRowModel::isExecutable)
-                .collect(Collectors.toMap(InstructionRowModel::getAddress, i -> InstructionDecoder.decode(i.getInstruction())));
+                .collect(Collectors.toMap(InstructionRowModel::getAddress, i -> instructionDecoder.decode(i.getInstruction())));
 
+        closeCurrentFile();
         cpu.setProgramMemory(new ProgramMemory(decodedInstructions));
 
         instructionsTableView.setItems(observedInstructions);
-        instructionsTableView.setNextRow(dataMemory.programCounter().get());
+        instructionsTableView.setNextRow(programCounter.get());
         mainMenuBar.setRunnable(true);
     }
 
-    private void onMainMenuBarFileClosed(MainMenuBarEvent<Void> e) {
-        mainMenuBar.setRunnable(false);
-        instructionsTableView.setItems(FXCollections.emptyObservableList());
-
-        cpu.setPaused(true);
-        cpu.setProgramMemory(null);
-    }
-
     private void onMainMenuBarRun(MainMenuBarEvent<Void> e) {
-        instructionsTableView.setNextRow(dataMemory.programCounter().get());
+        instructionsTableView.setNextRow(programCounter.get());
 
         if (!cpu.isAlive()) {
             cpu.start();
         }
 
         cpu.setPaused(false);
-    }
-
-    private void onMainMenuBarReset(MainMenuBarEvent<Void> e) {
-        cpu.reset();
-        resetChanged();
     }
 
     private void onBreakpointToggled(ListChangeListener.Change<? extends InstructionRowModel> c) {
@@ -132,6 +137,15 @@ public class MainView extends VBox {
                 cpu.removeBreakpoint(address);
             }
         }
+    }
+
+    private void closeCurrentFile() {
+        mainMenuBar.setRunnable(false);
+        instructionsTableView.setItems(FXCollections.emptyObservableList());
+
+        cpu.setPaused(true);
+        cpu.setProgramMemory(null);
+        cpu.clearBreakpoints();
     }
 
     private void resetChanged() {

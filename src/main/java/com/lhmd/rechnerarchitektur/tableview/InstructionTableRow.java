@@ -1,6 +1,6 @@
 package com.lhmd.rechnerarchitektur.tableview;
 
-import com.lhmd.rechnerarchitektur.PseudoClasses;
+import com.lhmd.rechnerarchitektur.styles.PseudoClasses;
 import com.lhmd.rechnerarchitektur.instructions.InstructionRowModel;
 import javafx.scene.control.TableRow;
 

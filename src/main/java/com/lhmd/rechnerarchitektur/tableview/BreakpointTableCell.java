@@ -1,6 +1,6 @@
 package com.lhmd.rechnerarchitektur.tableview;
 
-import com.lhmd.rechnerarchitektur.Launcher;
+import com.lhmd.rechnerarchitektur.JavaFxApplication;
 import com.lhmd.rechnerarchitektur.instructions.InstructionRowModel;
 import javafx.scene.Cursor;
 import javafx.scene.input.MouseEvent;
@@ -8,9 +8,9 @@ import javafx.scene.input.MouseEvent;
 import java.net.URL;
 
 public class BreakpointTableCell extends SvgTableCell<InstructionRowModel> {
-    private static final URL BREAKPOINT_ENABLED_SVG_URL = Launcher.class.getResource("svgs/breakpoint-enabled.svg");
-    private static final URL BREAKPOINT_DISABLED_SVG_URL = Launcher.class.getResource("svgs/breakpoint-disabled.svg");
-    private static final URL DISABLE_BREAKPOINT_SVG_URL = Launcher.class.getResource("svgs/disable-breakpoint.svg");
+    private static final URL BREAKPOINT_ENABLED_SVG_URL = JavaFxApplication.class.getResource("svgs/breakpoint-enabled.svg");
+    private static final URL BREAKPOINT_DISABLED_SVG_URL = JavaFxApplication.class.getResource("svgs/breakpoint-disabled.svg");
+    private static final URL DISABLE_BREAKPOINT_SVG_URL = JavaFxApplication.class.getResource("svgs/disable-breakpoint.svg");
 
     public BreakpointTableCell() {
         setOnMouseClicked(this::onMouseClicked);

@@ -1,31 +1,31 @@
-package com.lhmd.rechnerarchitektur;
+package com.lhmd.rechnerarchitektur.computing;
 
 import com.lhmd.rechnerarchitektur.common.Runner;
 import com.lhmd.rechnerarchitektur.events.ActionEvent;
-import com.lhmd.rechnerarchitektur.instructions.ExecutionContext;
+import com.lhmd.rechnerarchitektur.events.ResetEvent;
 import com.lhmd.rechnerarchitektur.memory.*;
+import com.lhmd.rechnerarchitektur.registers.ProgramCounter;
+import org.springframework.context.event.EventListener;
+import org.springframework.stereotype.Component;
 
 import java.util.*;
 
-public class Cpu extends Thread {
-    private final DataMemory dataMemory;
-    private final ProgramStack programStack;
-    private final ExecutionContext executionContext;
+@Component
+public class Cpu extends Thread implements AutoCloseable {
+    private final ProgramCounter programCounter;
     private final Set<Integer> breakpointAddresses;
 
     private final ActionEvent onBreakpointReached;
     private final ActionEvent onNextInstruction;
 
-    private ProgramMemory programMemory;
-    private int lastBreakpointAddress;
+    private volatile ProgramMemory programMemory;
+    private volatile int lastBreakpointAddress;
 
     private volatile boolean isRunning;
     private volatile boolean isPaused;
 
-    public Cpu(DataMemory dataMemory, ProgramStack programStack) {
-        this.dataMemory = dataMemory;
-        this.programStack = programStack;
-        this.executionContext = new ExecutionContext(dataMemory, programStack);
+    public Cpu(ProgramCounter programCounter) {
+        this.programCounter = programCounter;
         this.breakpointAddresses = new HashSet<>();
 
         this.onBreakpointReached = new ActionEvent();
@@ -54,6 +54,10 @@ public class Cpu extends Thread {
         breakpointAddresses.remove(address);
     }
 
+    public void clearBreakpoints() {
+        breakpointAddresses.clear();
+    }
+
     @Override
     public void start() {
         isRunning = true;
@@ -65,7 +69,7 @@ public class Cpu extends Thread {
     public void run() {
         while (isRunning) {
             // TODO calculate speed from MHz
-            Runner.unchecked(() -> Thread.sleep(200));
+            Runner.unchecked(() -> sleep(200));
             pauseOnBreakpoint();
 
             synchronized (this) {
@@ -78,6 +82,17 @@ public class Cpu extends Thread {
         }
     }
 
+    @Override
+    public synchronized void close() {
+        isRunning = false;
+        notify();
+    }
+
+    @EventListener(ResetEvent.class)
+    public void handleReset() {
+        lastBreakpointAddress = -1;
+    }
+
     public synchronized void setPaused(boolean value) {
         isPaused = value;
 
@@ -86,36 +101,24 @@ public class Cpu extends Thread {
         }
     }
 
-    public synchronized void shutdown() {
-        isRunning = false;
-        notify();
-    }
-
     public void nextInstruction() {
         if (!isRunning) return;
 
         onNextInstruction.fire();
 
-        var address = dataMemory.programCounter().get();
-        dataMemory.programCounter().increment();
+        var address = programCounter.get();
+        programCounter.increment();
 
         var currentInstruction = programMemory.get(address);
-        currentInstruction.execute(executionContext);
+        currentInstruction.execute();
 
         if (currentInstruction.isTwoCycle()) {
             // TODO add additional 4 cycles
         }
     }
 
-    public void reset() {
-        lastBreakpointAddress = -1;
-
-        dataMemory.reset();
-        programStack.reset();
-    }
-
     private void pauseOnBreakpoint() {
-        var currentAddress = dataMemory.programCounter().get();
+        var currentAddress = programCounter.get();
 
         if (currentAddress == lastBreakpointAddress || !breakpointAddresses.contains(currentAddress)) {
             return;

@@ -1,14 +1,17 @@
 package com.lhmd.rechnerarchitektur.common;
 
-import com.lhmd.rechnerarchitektur.Launcher;
+import com.lhmd.rechnerarchitektur.JavaFxApplication;
 import javafx.fxml.*;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 
-public class FxUtils {
+public final class FxUtils {
+    private FxUtils() {
+    }
+
     public static <T> void loadHierarchy(T controller, String fxmlPath) {
-        var loader = new FXMLLoader(Launcher.class.getResource(fxmlPath));
+        var loader = new FXMLLoader(JavaFxApplication.class.getResource(fxmlPath));
         loader.setRoot(controller);
         loader.setController(controller);
 

@@ -1,6 +1,6 @@
 package com.lhmd.rechnerarchitektur.components;
 
-import com.lhmd.rechnerarchitektur.PseudoClasses;
+import com.lhmd.rechnerarchitektur.styles.PseudoClasses;
 import com.lhmd.rechnerarchitektur.common.IntUtils;
 import com.lhmd.rechnerarchitektur.events.ChangeListener;
 import com.lhmd.rechnerarchitektur.values.IntBox;

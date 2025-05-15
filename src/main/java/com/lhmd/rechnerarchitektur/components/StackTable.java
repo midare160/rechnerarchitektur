@@ -1,7 +1,8 @@
 package com.lhmd.rechnerarchitektur.components;
 
-import com.lhmd.rechnerarchitektur.PseudoClasses;
+import com.lhmd.rechnerarchitektur.styles.PseudoClasses;
 import com.lhmd.rechnerarchitektur.memory.ProgramStack;
+import org.springframework.beans.factory.BeanFactory;
 
 public class StackTable extends BitPointerTable {
     private ProgramStack stack;
@@ -10,8 +11,8 @@ public class StackTable extends BitPointerTable {
         super(13);
     }
 
-    public void setData(ProgramStack stack) {
-        this.stack = stack;
+    public void initialize(BeanFactory beanFactory) {
+        this.stack = beanFactory.getBean(ProgramStack.class);
 
         var elements = stack.elements();
 

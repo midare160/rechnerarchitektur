@@ -6,7 +6,7 @@
 <?import com.lhmd.rechnerarchitektur.components.*?>
 <?import com.lhmd.rechnerarchitektur.common.FxUtils?>
 
-<fx:root type="VBox" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
+<VBox fx:id="root" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.lhmd.rechnerarchitektur.views.MainView">
   <MainMenuBar fx:id="mainMenuBar" />
   <SplitPane dividerPositions="0.75" focusTraversable="true" VBox.vgrow="ALWAYS">
     <AnchorPane>
@@ -24,4 +24,4 @@
     </TabPane>
   </SplitPane>
   <MainFooter fx:id="mainFooter" />
-</fx:root>
+</VBox>

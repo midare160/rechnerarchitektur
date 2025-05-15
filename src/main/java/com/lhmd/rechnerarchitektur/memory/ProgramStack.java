@@ -1,9 +1,13 @@
 package com.lhmd.rechnerarchitektur.memory;
 
+import com.lhmd.rechnerarchitektur.events.ResetEvent;
 import com.lhmd.rechnerarchitektur.values.IntBox;
+import org.springframework.context.event.EventListener;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Component
 public class ProgramStack {
     public static final int MAX_SIZE = 8;
     public static final int ELEMENT_WIDTH = 13;
@@ -19,6 +23,15 @@ public class ProgramStack {
 
         for (var i = 0; i < elements.length; i++) {
             elements[i] = new IntBox();
+        }
+    }
+
+    @EventListener(ResetEvent.class)
+    public void handleReset() {
+        pointer.set(0);
+
+        for (var element : elements) {
+            element.set(0);
         }
     }
 
@@ -43,14 +56,6 @@ public class ProgramStack {
 
     public int peek() {
         return elements[getPointer(-1)].get();
-    }
-
-    public void reset() {
-        pointer.set(0);
-
-        for (var element : elements) {
-            element.set(0);
-        }
     }
 
     private void onPointerChanged(Integer oldValue, Integer newValue) {

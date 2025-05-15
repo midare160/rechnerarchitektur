@@ -1,17 +1,15 @@
 package com.lhmd.rechnerarchitektur.components;
 
 import com.lhmd.rechnerarchitektur.memory.DataMemory;
+import org.springframework.beans.factory.BeanFactory;
 
 public class RegisterTable extends BitPointerTable {
-    private DataMemory dataMemory;
-
     public RegisterTable() {
         super(8);
     }
 
-    public void setData(DataMemory dataMemory){
-        this.dataMemory = dataMemory;
-
+    public void initialize(BeanFactory beanFactory){
+        var dataMemory = beanFactory.getBean(DataMemory.class);
         var registers = dataMemory.registers();
 
         for (var i = 0; i < registers.size(); i++) {

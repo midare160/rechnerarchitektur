@@ -8,7 +8,8 @@ public class ExceptionHandler {
     }
 
     public static void handle(Throwable e) {
-        e.printStackTrace();
+        // TODO necessary?
+        // e.printStackTrace();
         handleInternal(e);
     }
 

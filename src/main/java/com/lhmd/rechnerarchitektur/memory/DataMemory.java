@@ -1,16 +1,21 @@
 package com.lhmd.rechnerarchitektur.memory;
 
+import com.lhmd.rechnerarchitektur.events.ResetEvent;
 import com.lhmd.rechnerarchitektur.values.IntBox;
 import com.lhmd.rechnerarchitektur.common.IntUtils;
 import com.lhmd.rechnerarchitektur.registers.*;
+import org.springframework.context.event.EventListener;
+import org.springframework.stereotype.Component;
 
 import java.util.*;
 import java.util.stream.*;
 
+@Component
 public class DataMemory {
     public static final int MAX_SIZE = 256;
     public static final int BANK_SIZE = MAX_SIZE / 2;
     public static final int REGISTER_WIDTH = 8;
+    public static final int REGISTER_SIZE = (int) Math.pow(2, REGISTER_WIDTH) - 1;
 
     private static final Set<Integer> MIRRORED_ADDRESSES;
 
@@ -24,27 +29,22 @@ public class DataMemory {
     }
 
     private final IntBox[] registers;
-    private final IntBox wRegister;
-    private final ProgramCounter programCounter;
     private final StatusRegister statusRegister;
 
     public DataMemory() {
         registers = getInitialRegisters();
-        wRegister = new IntBox();
-        programCounter = new ProgramCounter(registers[0x02], registers[0x0A]);
         statusRegister = new StatusRegister(registers[0x03]);
     }
 
-    public IntBox W() {
-        return wRegister;
+    @EventListener(ResetEvent.class)
+    public void handleReset() {
+        for (var register : registers) {
+            register.set(0);
+        }
     }
 
     public StatusRegister status() {
         return statusRegister;
-    }
-
-    public ProgramCounter programCounter() {
-        return programCounter;
     }
 
     public IntBox getRegister(int address) {
@@ -56,15 +56,6 @@ public class DataMemory {
 
     public List<IntBox> registers() {
         return List.of(registers);
-    }
-
-    public void reset() {
-        wRegister.set(0);
-        programCounter.set(0);
-
-        for (var register : registers) {
-            register.set(0);
-        }
     }
 
     private IntBox[] getInitialRegisters() {
