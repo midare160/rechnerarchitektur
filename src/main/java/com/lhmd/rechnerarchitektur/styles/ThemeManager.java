@@ -1,4 +1,4 @@
-package com.lhmd.rechnerarchitektur.themes;
+package com.lhmd.rechnerarchitektur.styles;
 
 import atlantafx.base.theme.*;
 import com.lhmd.rechnerarchitektur.JavaFxApplication;
@@ -11,6 +11,8 @@ import java.util.*;
 
 @Component
 public class ThemeManager {
+    private static final String LIGHTSTYLE_URL = JavaFxApplication.class.getResource("styles/theme-light.css").toExternalForm();
+    private static final String DARKSTYLE_URL = JavaFxApplication.class.getResource("styles/theme-dark.css").toExternalForm();
     private static final Map<String, Theme> themeMap;
 
     static {
@@ -69,14 +71,10 @@ public class ThemeManager {
     }
 
     private void applyCurrentStylesheet(Scene scene) {
-        // TODO maybe get injected from DI?
-        final var lightStyleUrl = JavaFxApplication.class.getResource("styles/theme-light.css").toExternalForm();
-        final var darkStyleUrl = JavaFxApplication.class.getResource("styles/theme-dark.css").toExternalForm();
-
         var currentTheme = themeMap.get(getCurrentThemeName());
 
-        var oldStyleUrl = currentTheme.isDarkMode() ? lightStyleUrl : darkStyleUrl;
-        var newStyleUrl = currentTheme.isDarkMode() ? darkStyleUrl : lightStyleUrl;
+        var oldStyleUrl = currentTheme.isDarkMode() ? LIGHTSTYLE_URL : DARKSTYLE_URL;
+        var newStyleUrl = currentTheme.isDarkMode() ? DARKSTYLE_URL : LIGHTSTYLE_URL;
 
         scene.getStylesheets().remove(oldStyleUrl);
         scene.getStylesheets().add(newStyleUrl);

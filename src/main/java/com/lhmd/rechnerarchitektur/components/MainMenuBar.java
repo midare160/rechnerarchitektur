@@ -4,7 +4,7 @@ import com.lhmd.rechnerarchitektur.*;
 import com.lhmd.rechnerarchitektur.common.FxUtils;
 import com.lhmd.rechnerarchitektur.configuration.*;
 import com.lhmd.rechnerarchitektur.events.MainMenuBarEvent;
-import com.lhmd.rechnerarchitektur.themes.ThemeManager;
+import com.lhmd.rechnerarchitektur.styles.ThemeManager;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.HBox;

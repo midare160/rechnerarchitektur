@@ -1,4 +1,4 @@
-package com.lhmd.rechnerarchitektur;
+package com.lhmd.rechnerarchitektur.computing;
 
 import com.lhmd.rechnerarchitektur.common.Runner;
 import com.lhmd.rechnerarchitektur.events.ActionEvent;

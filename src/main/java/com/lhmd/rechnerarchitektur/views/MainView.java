@@ -1,6 +1,6 @@
 package com.lhmd.rechnerarchitektur.views;
 
-import com.lhmd.rechnerarchitektur.Cpu;
+import com.lhmd.rechnerarchitektur.computing.Cpu;
 import com.lhmd.rechnerarchitektur.common.*;
 import com.lhmd.rechnerarchitektur.components.*;
 import com.lhmd.rechnerarchitektur.events.*;

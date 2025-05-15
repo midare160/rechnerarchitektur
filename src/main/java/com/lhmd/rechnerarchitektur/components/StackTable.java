@@ -1,6 +1,6 @@
 package com.lhmd.rechnerarchitektur.components;
 
-import com.lhmd.rechnerarchitektur.PseudoClasses;
+import com.lhmd.rechnerarchitektur.styles.PseudoClasses;
 import com.lhmd.rechnerarchitektur.memory.ProgramStack;
 import org.springframework.beans.factory.BeanFactory;
 

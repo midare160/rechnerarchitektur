@@ -1,4 +1,4 @@
-package com.lhmd.rechnerarchitektur;
+package com.lhmd.rechnerarchitektur.styles;
 
 import javafx.css.PseudoClass;
 
