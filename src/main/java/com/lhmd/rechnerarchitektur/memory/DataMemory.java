@@ -15,7 +15,7 @@ public class DataMemory {
     public static final int MAX_SIZE = 256;
     public static final int BANK_SIZE = MAX_SIZE / 2;
     public static final int REGISTER_WIDTH = 8;
-    public static final int REGISTER_SIZE = (int) Math.pow(2, REGISTER_WIDTH) - 1;
+    public static final int REGISTER_SIZE = (int) Math.pow(2, REGISTER_WIDTH);
 
     private static final Set<Integer> MIRRORED_ADDRESSES;
 

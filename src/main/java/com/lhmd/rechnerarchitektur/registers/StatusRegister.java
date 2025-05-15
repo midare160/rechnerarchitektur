@@ -46,11 +46,11 @@ public class StatusRegister extends Register {
     }
 
     public void updateC_Add(int a, int b) {
-        setC(a + b > DataMemory.REGISTER_SIZE);
+        setC(a + b >= DataMemory.REGISTER_SIZE);
     }
 
     public void updateC_Sub(int a, int b) {
-        setC(b >= a);
+        setC(b > a);
     }
 
     public void updateDC_Add(int a, int b) {

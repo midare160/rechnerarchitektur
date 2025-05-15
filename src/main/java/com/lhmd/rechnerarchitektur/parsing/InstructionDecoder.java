@@ -22,7 +22,11 @@ public class InstructionDecoder {
         OPCODES.put(0b10_1000_0000_0000, Goto.class);
         OPCODES.put(0b10_0000_0000_0000, Call.class);
         OPCODES.put(0b00_1110_0000_0000, Swapf.class);
+        OPCODES.put(0b00_1111_0000_0000, Incfsz.class);
+        OPCODES.put(0b00_1101_0000_0000, Rlf.class);
+        OPCODES.put(0b00_1100_0000_0000, Rrf.class);
         OPCODES.put(0b00_1010_0000_0000, Incf.class);
+        OPCODES.put(0b00_1011_0000_0000, Decfsz.class);
         OPCODES.put(0b00_1001_0000_0000, Comf.class);
         OPCODES.put(0b00_1000_0000_0000, Movf.class);
         OPCODES.put(0b00_0111_0000_0000, Addwf.class);

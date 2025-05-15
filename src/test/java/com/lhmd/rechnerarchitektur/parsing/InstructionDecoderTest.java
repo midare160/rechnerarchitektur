@@ -4,7 +4,6 @@ import com.lhmd.rechnerarchitektur.instructions.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -88,10 +87,38 @@ public class InstructionDecoderTest {
     }
 
     @Test
+    public void decode_incfsz() {
+        var instruction = instructionDecoder.decode(0x0F8C);
+
+        assertInstanceOf(Incfsz.class, instruction);
+    }
+
+    @Test
+    public void decode_rlf() {
+        var instruction = instructionDecoder.decode(0x0D8C);
+
+        assertInstanceOf(Rlf.class, instruction);
+    }
+
+    @Test
+    public void decode_rrf() {
+        var instruction = instructionDecoder.decode(0x0C8D);
+
+        assertInstanceOf(Rrf.class, instruction);
+    }
+
+    @Test
     public void decode_incf() {
         var instruction = instructionDecoder.decode(0x0A8D);
 
         assertInstanceOf(Incf.class, instruction);
+    }
+
+    @Test
+    public void decode_decfsz() {
+        var instruction = instructionDecoder.decode(0x0B8C);
+
+        assertInstanceOf(Decfsz.class, instruction);
     }
 
     @Test
