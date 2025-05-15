@@ -74,10 +74,10 @@ public class MainMenuBar extends HBox {
 
     public void setRunnable(boolean runnable) {
         runMenu.setDisable(!runnable);
+        nextMenu.setDisable(!runnable);
 
         if (!runnable) {
             pauseMenu.setDisable(true);
-            nextMenu.setDisable(true);
         }
     }
 

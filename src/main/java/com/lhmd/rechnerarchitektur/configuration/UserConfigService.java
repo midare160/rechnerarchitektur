@@ -1,5 +1,6 @@
 package com.lhmd.rechnerarchitektur.configuration;
 
+import atlantafx.base.theme.PrimerLight;
 import com.lhmd.rechnerarchitektur.common.Runner;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
@@ -62,15 +63,19 @@ public class UserConfigService implements AutoCloseable {
 
     private UserConfig load() throws IOException {
         if (!Files.exists(FILE_PATH)) {
-            var config = new UserConfig();
-            config.setTheme("Primer Light");
-            config.setFileHistory(new ArrayList<>());
-
-            return config;
+            return createInitialUserConfig();
         }
 
         try (var reader = Files.newBufferedReader(FILE_PATH)) {
             return yaml.load(reader);
         }
+    }
+
+    private UserConfig createInitialUserConfig() {
+        var config = new UserConfig();
+        config.setTheme(new PrimerLight().getName());
+        config.setFileHistory(new ArrayList<>());
+
+        return config;
     }
 }

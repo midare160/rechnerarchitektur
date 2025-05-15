@@ -53,11 +53,11 @@ public class ProgramCounterTest {
         assertEquals(256, programCounter.get());
         assertEquals(0, pclRegister.get());
 
-        for (var i = 257; i < ProgramMemory.MAX_SIZE; i++) {
+        for (var i = 257; i < ProgramCounter.MAX_SIZE; i++) {
             programCounter.increment();
         }
 
-        assertEquals(ProgramMemory.MAX_SIZE - 1, programCounter.get());
+        assertEquals(ProgramCounter.MAX_SIZE - 1, programCounter.get());
         assertEquals(255, pclRegister.get());
 
         programCounter.increment();
