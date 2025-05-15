@@ -8,6 +8,8 @@ import com.lhmd.rechnerarchitektur.tableview.*;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.skin.TableViewSkin;
+import javafx.scene.control.skin.VirtualFlow;
 import org.springframework.beans.factory.BeanFactory;
 
 import java.net.URL;
@@ -25,6 +27,8 @@ public class InstructionsTableView extends TableView<InstructionRowModel> {
 
     @FXML
     private TableColumn<InstructionRowModel, Integer> lineNumberColumn;
+
+    private VirtualFlow<?> virtualFlow;
 
     public InstructionsTableView() {
         FxUtils.loadHierarchy(this, "components/instructionsTableView.fxml");
@@ -48,8 +52,35 @@ public class InstructionsTableView extends TableView<InstructionRowModel> {
             rowModel.isNextProperty().set(isNext);
 
             if (isNext) {
-                Platform.runLater(() -> scrollTo(rowModel));
+                Platform.runLater(() -> scrollToCenter(rowModel));
             }
         }
+    }
+
+    private VirtualFlow<?> getVirtualFlow() {
+        var skin = (TableViewSkin<?>) getSkin();
+
+        return skin.getChildren()
+                .stream()
+                .filter(VirtualFlow.class::isInstance)
+                .map(VirtualFlow.class::cast)
+                .findFirst()
+                .orElseThrow();
+    }
+
+    private void scrollToCenter(InstructionRowModel rowModel) {
+        if (virtualFlow == null) {
+            virtualFlow = getVirtualFlow();
+        }
+
+        var index = getItems().indexOf(rowModel);
+        var cell = virtualFlow.getCell(index);
+
+        scrollTo(index);
+        virtualFlow.layout();
+
+        // Important: Retrieve y AFTER scrolling
+        var y = cell.getBoundsInParent().getCenterY();
+        virtualFlow.scrollPixels(y - virtualFlow.getHeight() / 2);
     }
 }
