@@ -31,7 +31,7 @@ public class ProgramCounter extends IntBox {
      */
     @Override
     public void setValue(Integer value) {
-        super.setValue(value % MAX_SIZE);
+        super.setValue(Math.floorMod(value, MAX_SIZE));
     }
 
     @EventListener(ResetEvent.class)

@@ -114,7 +114,7 @@ public class Cpu extends Thread implements AutoCloseable {
     }
 
     private void pauseOnBreakpoint() {
-        var currentAddress = programCounter.get() % ProgramMemory.MAX_SIZE;
+        var currentAddress = Math.floorMod(programCounter.get(), ProgramMemory.MAX_SIZE);
 
         if (currentAddress == lastBreakpointAddress || !breakpointAddresses.contains(currentAddress)) {
             return;

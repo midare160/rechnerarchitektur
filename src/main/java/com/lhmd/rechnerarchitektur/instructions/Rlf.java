@@ -1,7 +1,6 @@
 package com.lhmd.rechnerarchitektur.instructions;
 
 import com.lhmd.rechnerarchitektur.common.IntUtils;
-import com.lhmd.rechnerarchitektur.computing.Alu;
 import com.lhmd.rechnerarchitektur.memory.DataMemory;
 import com.lhmd.rechnerarchitektur.registers.WRegister;
 import org.springframework.context.annotation.Scope;
@@ -15,15 +14,13 @@ import org.springframework.stereotype.Component;
 @Component
 @Scope(InstructionBase.SCOPE)
 public class Rlf extends InstructionBase {
-    private final Alu alu;
     private final DataMemory dataMemory;
     private final WRegister wRegister;
 
     private int address;
     private boolean destination;
 
-    public Rlf(Alu alu, DataMemory dataMemory, WRegister wRegister) {
-        this.alu = alu;
+    public Rlf(DataMemory dataMemory, WRegister wRegister) {
         this.dataMemory = dataMemory;
         this.wRegister = wRegister;
     }
@@ -33,7 +30,10 @@ public class Rlf extends InstructionBase {
         var register = dataMemory.getRegister(address);
         var target = destination ? register : wRegister;
 
-        var result = alu.rlf(register.get());
+        var result = IntUtils.changeBit(register.get() << 1, 0, dataMemory.status().getC());
+        result = IntUtils.clearBit(result, 8);
+
+        dataMemory.status().setC(IntUtils.isBitSet(register.get(), 7));
         target.set(result);
     }
 

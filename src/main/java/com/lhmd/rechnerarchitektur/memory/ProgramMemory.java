@@ -32,7 +32,7 @@ public class ProgramMemory {
         // Accessing a location above the physically implemented address will cause a wrap-around.
         // For example, for the locations 20h, 420h, 820h, C20h, 1020h, 1420h, 1820h, and 1C20h
         // will be the same instruction.
-        return instructions[address % MAX_SIZE];
+        return instructions[Math.floorMod(address, MAX_SIZE)];
     }
 
     public List<InstructionBase> instructions() {

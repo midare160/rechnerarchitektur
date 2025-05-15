@@ -1,6 +1,5 @@
 package com.lhmd.rechnerarchitektur.computing;
 
-import com.lhmd.rechnerarchitektur.common.IntUtils;
 import com.lhmd.rechnerarchitektur.memory.DataMemory;
 import com.lhmd.rechnerarchitektur.registers.StatusRegister;
 import org.springframework.stereotype.Service;
@@ -61,39 +60,6 @@ public class Alu {
         var result = a ^ DataMemory.REGISTER_MAX_SIZE - 1;
 
         statusRegister.updateZ(result);
-
-        return result;
-    }
-
-    public int dec(int a) {
-        var result = Math.floorMod(a - 1, DataMemory.REGISTER_MAX_SIZE);
-
-        statusRegister.updateZ(result);
-
-        return result;
-    }
-
-    public int inc(int a) {
-        var result = Math.floorMod(a + 1, DataMemory.REGISTER_MAX_SIZE);
-
-        statusRegister.updateZ(result);
-
-        return result;
-    }
-
-    public int rlf(int a) {
-        var result = IntUtils.changeBit(a << 1, 0, statusRegister.getC());
-        result = IntUtils.clearBit(result, 8);
-
-        statusRegister.setC(IntUtils.isBitSet(a, 7));
-
-        return result;
-    }
-
-    public int rrf(int a) {
-        var result = IntUtils.changeBit(a >> 1, 7, statusRegister.getC());
-
-        statusRegister.setC(IntUtils.isBitSet(a, 0));
 
         return result;
     }

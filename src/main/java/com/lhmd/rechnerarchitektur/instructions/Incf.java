@@ -15,15 +15,13 @@ import org.springframework.stereotype.Component;
 @Component
 @Scope(InstructionBase.SCOPE)
 public class Incf extends InstructionBase {
-    private final Alu alu;
     private final DataMemory dataMemory;
     private final WRegister wRegister;
 
     private int address;
     private boolean destination;
 
-    public Incf(Alu alu, DataMemory dataMemory, WRegister wRegister) {
-        this.alu = alu;
+    public Incf(DataMemory dataMemory, WRegister wRegister) {
         this.dataMemory = dataMemory;
         this.wRegister = wRegister;
     }
@@ -33,7 +31,9 @@ public class Incf extends InstructionBase {
         var register = dataMemory.getRegister(address);
         var target = destination ? register : wRegister;
 
-        var result = alu.inc(register.get());
+        var result = Math.floorMod(register.get() + 1, DataMemory.REGISTER_MAX_SIZE);
+
+        dataMemory.status().updateZ(result);
         target.set(result);
     }
 
