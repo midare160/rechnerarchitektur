@@ -8,6 +8,7 @@ import com.lhmd.rechnerarchitektur.values.IntBox;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
+// TODO changing bit 13, 12, 11 does nothing
 @Component
 public class ProgramCounter extends IntBox {
     private final IntBox pclRegister;
