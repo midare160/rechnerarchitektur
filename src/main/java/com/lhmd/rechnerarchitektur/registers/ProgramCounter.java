@@ -8,9 +8,11 @@ import com.lhmd.rechnerarchitektur.values.IntBox;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
-// TODO changing bit 13, 12, 11 does nothing
 @Component
 public class ProgramCounter extends IntBox {
+    public static final int WIDTH = 13;
+    public static final int MAX_SIZE = (int) Math.pow(2, WIDTH);
+
     private final IntBox pclRegister;
     private final IntBox pclathRegister;
     private final ChangeManager changeManager;
@@ -24,6 +26,14 @@ public class ProgramCounter extends IntBox {
         pclRegister.onChanged().addListener(this::onPclChanged);
     }
 
+    /**
+     * If {@code value} exceeds {@code MAX_SIZE}, it is wrapped around.
+     */
+    @Override
+    public void setValue(Integer value) {
+        super.setValue(value % MAX_SIZE);
+    }
+
     @EventListener(ResetEvent.class)
     public void handleReset() {
         set(0);
@@ -31,11 +41,9 @@ public class ProgramCounter extends IntBox {
 
     /**
      * Increments PC by one.
-     * If the result exceeds {@code ProgramMemory.MAX_SIZE}, PC is wrapped around.
      */
     public void increment() {
-        var result = (get() + 1) % ProgramMemory.MAX_SIZE;
-        set(result);
+        set(get() + 1);
     }
 
     /**
@@ -71,6 +79,8 @@ public class ProgramCounter extends IntBox {
         var pclPart = IntUtils.bitRange(newValue, 0, 7);
         var combined = IntUtils.concatBits(pclathPart, pclPart, 8);
 
-        set(combined);
+        try (var ignored = changeManager.beginChange()) {
+            set(combined);
+        }
     }
 }

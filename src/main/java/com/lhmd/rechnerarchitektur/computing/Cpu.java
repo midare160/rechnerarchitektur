@@ -32,6 +32,8 @@ public class Cpu extends Thread implements AutoCloseable {
         this.onNextInstruction = new ActionEvent();
 
         this.lastBreakpointAddress = -1;
+        this.isRunning = true;
+        this.isPaused = true;
     }
 
     public void setProgramMemory(ProgramMemory programMemory) {
@@ -56,12 +58,6 @@ public class Cpu extends Thread implements AutoCloseable {
 
     public void clearBreakpoints() {
         breakpointAddresses.clear();
-    }
-
-    @Override
-    public void start() {
-        isRunning = true;
-        super.start();
     }
 
     // Implementation as described in https://docs.oracle.com/javase/7/docs/technotes/guides/concurrency/threadPrimitiveDeprecation.html
@@ -118,7 +114,7 @@ public class Cpu extends Thread implements AutoCloseable {
     }
 
     private void pauseOnBreakpoint() {
-        var currentAddress = programCounter.get();
+        var currentAddress = programCounter.get() % ProgramMemory.MAX_SIZE;
 
         if (currentAddress == lastBreakpointAddress || !breakpointAddresses.contains(currentAddress)) {
             return;

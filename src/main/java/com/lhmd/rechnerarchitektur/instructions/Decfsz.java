@@ -35,7 +35,7 @@ public class Decfsz extends InstructionBase {
         var register = dataMemory.getRegister(address);
         var target = destination ? register : wRegister;
 
-        var result = Math.floorMod(register.get() - 1, DataMemory.REGISTER_SIZE);
+        var result = Math.floorMod(register.get() - 1, DataMemory.REGISTER_MAX_SIZE);
         target.set(result);
 
         isTwoCycle = result == 0;

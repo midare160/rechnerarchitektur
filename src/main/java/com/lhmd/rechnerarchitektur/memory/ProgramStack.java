@@ -67,7 +67,6 @@ public class ProgramStack {
     }
 
     private int getPointer(int offset) {
-        // Negative numbers behave incorrectly with %
         return Math.floorMod(pointer.get() + offset, MAX_SIZE);
     }
 }

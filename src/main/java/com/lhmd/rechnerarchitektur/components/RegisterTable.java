@@ -5,7 +5,7 @@ import org.springframework.beans.factory.BeanFactory;
 
 public class RegisterTable extends BitPointerTable {
     public RegisterTable() {
-        super(8);
+        super(DataMemory.REGISTER_WIDTH);
     }
 
     public void initialize(BeanFactory beanFactory){
