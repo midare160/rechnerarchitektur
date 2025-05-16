@@ -6,6 +6,7 @@ import com.lhmd.rechnerarchitektur.common.IntUtils;
 import com.lhmd.rechnerarchitektur.registers.*;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
+import org.springframework.util.*;
 
 import java.util.*;
 import java.util.stream.*;
@@ -17,15 +18,20 @@ public class DataMemory {
     public static final int REGISTER_WIDTH = 8;
     public static final int REGISTER_MAX_SIZE = (int) Math.pow(2, REGISTER_WIDTH);
 
-    private static final Set<Integer> MIRRORED_ADDRESSES;
+    private static final MultiValueMap<Integer, Integer> ADDRESS_MIRRORS;
 
     static {
-        var sfrMirrors = IntStream.of(0x02, 0x03, 0x04, 0x0A, 0x0B);
+        var mirrors = new LinkedMultiValueMap<Integer, Integer>();
+        mirrors.addAll(0x00, List.of(0x04, 0x80, 0x84));
+
+        var sfrMirrors = IntStream.of(0x02, 0x03, 0x0A, 0x0B);
         var gprMirrors = IntStream.range(0x0C, 0x50);
 
-        MIRRORED_ADDRESSES = IntStream.concat(sfrMirrors, gprMirrors)
-                .boxed()
-                .collect(Collectors.toUnmodifiableSet());
+        IntStream.concat(sfrMirrors, gprMirrors).forEachOrdered(a -> {
+            mirrors.add(a, a + BANK_SIZE);
+        });
+
+        ADDRESS_MIRRORS = CollectionUtils.unmodifiableMultiValueMap(mirrors);
     }
 
     private final IntBox[] registers;
@@ -69,11 +75,12 @@ public class DataMemory {
             }
 
             var register = new IntBox();
-
             registerArray[i] = register;
 
-            if (MIRRORED_ADDRESSES.contains(i)) {
-                registerArray[i + BANK_SIZE] = register;
+            var mirrors = ADDRESS_MIRRORS.get(i);
+
+            if (mirrors != null) {
+                mirrors.forEach(m -> registerArray[m] = register);
             }
         }
 
