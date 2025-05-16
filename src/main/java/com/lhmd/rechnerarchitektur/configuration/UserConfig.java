@@ -1,10 +1,10 @@
 package com.lhmd.rechnerarchitektur.configuration;
 
-import java.util.ArrayList;
+import java.util.*;
 
 public class UserConfig {
     private String theme;
-    private ArrayList<String> fileHistory;
+    private List<String> fileHistory;
 
     public String getTheme() {
         return theme;
@@ -14,11 +14,11 @@ public class UserConfig {
         this.theme = theme;
     }
 
-    public ArrayList<String> getFileHistory() {
+    public List<String> getFileHistory() {
         return fileHistory;
     }
 
-    public void setFileHistory(ArrayList<String> fileHistory) {
+    public void setFileHistory(List<String> fileHistory) {
         this.fileHistory = fileHistory;
     }
 }

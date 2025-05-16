@@ -5,6 +5,7 @@ import javafx.fxml.*;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.*;
 
 public final class FxUtils {
     private FxUtils() {
@@ -51,5 +52,12 @@ public final class FxUtils {
         menu.getItems().add(dummyItem);
         menu.setOnShowing(e -> dummyItem.fire());
         menu.setOnShown(e -> menu.hide());
+    }
+
+    public static void centerStage(Stage stage) {
+        var screenBounds = Screen.getPrimary().getVisualBounds();
+
+        stage.setX((screenBounds.getWidth() - stage.getWidth()) / 2);
+        stage.setY((screenBounds.getHeight() - stage.getHeight()) / 2);
     }
 }
