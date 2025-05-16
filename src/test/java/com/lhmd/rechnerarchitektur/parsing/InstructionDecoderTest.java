@@ -80,6 +80,34 @@ public class InstructionDecoderTest {
     }
 
     @Test
+    public void decode_btfss() {
+        var instruction = instructionDecoder.decode(0x1D0C);
+
+        assertInstanceOf(Btfss.class, instruction);
+    }
+
+    @Test
+    public void decode_btfsc() {
+        var instruction = instructionDecoder.decode(0x180C);
+
+        assertInstanceOf(Btfsc.class, instruction);
+    }
+
+    @Test
+    public void decode_bsf() {
+        var instruction = instructionDecoder.decode(0x178C);
+
+        assertInstanceOf(Bsf.class, instruction);
+    }
+
+    @Test
+    public void decode_bcf() {
+        var instruction = instructionDecoder.decode(0x120C);
+
+        assertInstanceOf(Bcf.class, instruction);
+    }
+
+    @Test
     public void decode_swapf() {
         var instruction = instructionDecoder.decode(0x0E8D);
 
