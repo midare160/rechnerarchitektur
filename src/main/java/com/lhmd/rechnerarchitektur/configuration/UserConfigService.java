@@ -9,7 +9,6 @@ import org.yaml.snakeyaml.representer.Representer;
 
 import java.io.IOException;
 import java.nio.file.*;
-import java.util.ArrayList;
 
 @Component
 @Lazy
@@ -62,19 +61,11 @@ public class UserConfigService implements AutoCloseable {
 
     private UserConfig load() throws IOException {
         if (!Files.exists(FILE_PATH)) {
-            return createInitialUserConfig();
+            return new UserConfig();
         }
 
         try (var reader = Files.newBufferedReader(FILE_PATH)) {
             return yaml.load(reader);
         }
-    }
-
-    private UserConfig createInitialUserConfig() {
-        var config = new UserConfig();
-        config.setTheme("Primer Light");
-        config.setFileHistory(new ArrayList<>());
-
-        return config;
     }
 }

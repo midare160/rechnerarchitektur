@@ -1,8 +1,8 @@
 package com.lhmd.rechnerarchitektur.computing;
 
 import com.lhmd.rechnerarchitektur.common.Runner;
-import com.lhmd.rechnerarchitektur.events.ActionEvent;
-import com.lhmd.rechnerarchitektur.events.ResetEvent;
+import com.lhmd.rechnerarchitektur.configuration.*;
+import com.lhmd.rechnerarchitektur.events.*;
 import com.lhmd.rechnerarchitektur.memory.*;
 import com.lhmd.rechnerarchitektur.registers.ProgramCounter;
 import org.springframework.context.event.EventListener;
@@ -12,6 +12,7 @@ import java.util.*;
 
 @Component
 public class Cpu extends Thread implements AutoCloseable {
+    private final UserConfig userConfig;
     private final ProgramCounter programCounter;
     private final Set<Integer> breakpointAddresses;
 
@@ -24,7 +25,8 @@ public class Cpu extends Thread implements AutoCloseable {
     private volatile boolean isRunning;
     private volatile boolean isPaused;
 
-    public Cpu(ProgramCounter programCounter) {
+    public Cpu(UserConfigService userConfigService, ProgramCounter programCounter) {
+        this.userConfig = userConfigService.config();
         this.programCounter = programCounter;
         this.breakpointAddresses = new HashSet<>();
 
@@ -64,8 +66,7 @@ public class Cpu extends Thread implements AutoCloseable {
     @Override
     public void run() {
         while (isRunning) {
-            // TODO calculate speed from MHz
-            Runner.unchecked(() -> sleep(200));
+            Runner.unchecked(() -> sleep(userConfig.getExecutionInterval()));
             pauseOnBreakpoint();
 
             synchronized (this) {
