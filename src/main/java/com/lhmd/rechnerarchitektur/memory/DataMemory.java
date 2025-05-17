@@ -29,11 +29,13 @@ public class DataMemory {
 
     private final IntBox[] registers;
     private final StatusRegister statusRegister;
+    private final OptionRegister optionRegister;
     private final IndfRegister indfRegister;
 
     public DataMemory() {
         registers = createInitialRegisters();
         statusRegister = new StatusRegister(registers[SpecialAdresses.STATUS]);
+        optionRegister = new OptionRegister(registers[SpecialAdresses.OPTION]);
         indfRegister = new IndfRegister(this);
     }
 
@@ -46,6 +48,10 @@ public class DataMemory {
 
     public StatusRegister status() {
         return statusRegister;
+    }
+
+    public OptionRegister option() {
+        return optionRegister;
     }
 
     public IndfRegister indf() {

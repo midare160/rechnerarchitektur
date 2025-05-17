@@ -14,4 +14,7 @@ public final class SpecialAdresses {
     public static final int INTCON = 0x0B;
 
     public static final List<Integer> MIRRORED = List.of(INDF, PCL, STATUS, FSR, PCLATH, INTCON);
+
+    public static final int TMR0 = 0x01;
+    public static final int OPTION = 0x81;
 }

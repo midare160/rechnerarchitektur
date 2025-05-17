@@ -4,6 +4,7 @@ import java.util.*;
 
 public class UserConfig {
     private long executionInterval = 200;
+    private double clock = 4;
     private String theme = "Primer Light";
     private List<String> fileHistory;
 
@@ -13,6 +14,14 @@ public class UserConfig {
 
     public void setExecutionInterval(long executionInterval) {
         this.executionInterval = executionInterval;
+    }
+
+    public double getClock() {
+        return clock;
+    }
+
+    public void setClock(double clock) {
+        this.clock = clock;
     }
 
     public String getTheme() {

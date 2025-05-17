@@ -6,10 +6,14 @@ import com.lhmd.rechnerarchitektur.values.IntBox;
 import java.util.Objects;
 
 public abstract class Register {
-    protected final IntBox register;
+    private final IntBox register;
 
     public Register(IntBox register) {
         this.register = Objects.requireNonNull(register);
+    }
+
+    protected IntBox getRegister() {
+        return register;
     }
 
     protected boolean isBitSet(int index) {
