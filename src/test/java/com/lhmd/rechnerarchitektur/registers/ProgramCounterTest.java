@@ -19,8 +19,8 @@ public class ProgramCounterTest {
 
     @Autowired
     public ProgramCounterTest(DataMemory dataMemory, ProgramCounter programCounter) {
-        this.pclRegister = dataMemory.getRegister(0x02);
-        this.pclathRegister = dataMemory.getRegister(0x0A);
+        this.pclRegister = dataMemory.getRegister(SpecialAdresses.PCL);
+        this.pclathRegister = dataMemory.getRegister(SpecialAdresses.PCLATH);
         this.programCounter = programCounter;
     }
 

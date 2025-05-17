@@ -20,20 +20,21 @@ public class DataMemory {
     private static final Set<Integer> MIRRORED_ADDRESSES;
 
     static {
-        var sfrMirrors = IntStream.of(0x02, 0x03, 0x04, 0x0A, 0x0B);
-        var gprMirrors = IntStream.range(0x0C, 0x50);
+        var sfrMirrors = SpecialAdresses.MIRRORED.stream();
+        var gprMirrors = IntStream.range(0x0C, 0x50).boxed();
 
-        MIRRORED_ADDRESSES = IntStream.concat(sfrMirrors, gprMirrors)
-                .boxed()
+        MIRRORED_ADDRESSES = Stream.concat(sfrMirrors, gprMirrors)
                 .collect(Collectors.toUnmodifiableSet());
     }
 
     private final IntBox[] registers;
     private final StatusRegister statusRegister;
+    private final IndfRegister indfRegister;
 
     public DataMemory() {
-        registers = getInitialRegisters();
-        statusRegister = new StatusRegister(registers[0x03]);
+        registers = createInitialRegisters();
+        statusRegister = new StatusRegister(registers[SpecialAdresses.STATUS]);
+        indfRegister = new IndfRegister(this);
     }
 
     @EventListener(ResetEvent.class)
@@ -47,29 +48,35 @@ public class DataMemory {
         return statusRegister;
     }
 
-    public IntBox getRegister(int address) {
-        // Used for selecting bank 0/1
-        var absoluteAddress = IntUtils.changeBit(address, 7, statusRegister.getRP0());
+    public IndfRegister indf() {
+        return indfRegister;
+    }
 
-        return registers[absoluteAddress];
+    public IntBox getRegister(int address) {
+        // Indirect addressing
+        if (Math.floorMod(address, BANK_SIZE) != SpecialAdresses.INDF) {
+            // Used for selecting bank 0/1
+            address = IntUtils.changeBit(address, 7, statusRegister.getRP0());
+        }
+
+        return registers[address];
     }
 
     public List<IntBox> registers() {
         return List.of(registers);
     }
 
-    private IntBox[] getInitialRegisters() {
+    private IntBox[] createInitialRegisters() {
         // PIC16FX is partitioned into 2 banks
         var registerArray = new IntBox[MAX_SIZE];
 
-        for (var i = 0x00; i < registerArray.length; i++) {
+        for (var i = 0; i < registerArray.length; i++) {
             // Address was already mirrored
             if (registerArray[i] != null) {
                 continue;
             }
 
             var register = new IntBox();
-
             registerArray[i] = register;
 
             if (MIRRORED_ADDRESSES.contains(i)) {

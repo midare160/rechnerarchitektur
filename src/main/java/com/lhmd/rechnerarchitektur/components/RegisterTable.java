@@ -13,7 +13,7 @@ public class RegisterTable extends BitPointerTable {
         var registers = dataMemory.registers();
 
         for (var i = 0; i < registers.size(); i++) {
-            addRow(registers.get(i), "0x%04X".formatted(i));
+            addRow(registers.get(i), "0x%02X".formatted(i));
         }
     }
 }

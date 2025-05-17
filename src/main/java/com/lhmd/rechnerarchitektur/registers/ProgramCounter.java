@@ -18,8 +18,8 @@ public class ProgramCounter extends IntBox {
     private final ChangeManager changeManager;
 
     public ProgramCounter(DataMemory dataMemory) {
-        this.pclRegister = dataMemory.getRegister(0x02);
-        this.pclathRegister = dataMemory.getRegister(0x0A);
+        this.pclRegister = dataMemory.getRegister(SpecialAdresses.PCL);
+        this.pclathRegister = dataMemory.getRegister(SpecialAdresses.PCLATH);
         this.changeManager = new ChangeManager();
 
         onChanged().addListener(this::onPcChanged);
