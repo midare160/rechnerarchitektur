@@ -2,6 +2,7 @@ package com.lhmd.rechnerarchitektur.instructions;
 
 import com.lhmd.rechnerarchitektur.common.IntUtils;
 import com.lhmd.rechnerarchitektur.memory.DataMemory;
+import com.lhmd.rechnerarchitektur.registers.StatusRegister;
 import com.lhmd.rechnerarchitektur.registers.WRegister;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -15,13 +16,15 @@ import org.springframework.stereotype.Component;
 @Scope(InstructionBase.SCOPE)
 public class Decf extends InstructionBase {
     private final DataMemory dataMemory;
+    private final StatusRegister statusRegister;
     private final WRegister wRegister;
 
     private int address;
     private boolean destination;
 
-    public Decf(DataMemory dataMemory, WRegister wRegister) {
+    public Decf(DataMemory dataMemory, StatusRegister statusRegister, WRegister wRegister) {
         this.dataMemory = dataMemory;
+        this.statusRegister = statusRegister;
         this.wRegister = wRegister;
     }
 
@@ -32,7 +35,7 @@ public class Decf extends InstructionBase {
 
         var result = Math.floorMod(register.get() - 1, DataMemory.REGISTER_MAX_SIZE);
 
-        dataMemory.status().updateZ(result);
+        statusRegister.updateZ(result);
         target.set(result);
     }
 

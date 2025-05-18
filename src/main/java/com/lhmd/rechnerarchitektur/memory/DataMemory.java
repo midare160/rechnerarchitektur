@@ -17,26 +17,12 @@ public class DataMemory {
     public static final int REGISTER_WIDTH = 8;
     public static final int REGISTER_MAX_SIZE = (int) Math.pow(2, REGISTER_WIDTH);
 
-    private static final Set<Integer> MIRRORED_ADDRESSES;
-
-    static {
-        var sfrMirrors = SpecialAdresses.MIRRORED.stream();
-        var gprMirrors = IntStream.range(0x0C, 0x50).boxed();
-
-        MIRRORED_ADDRESSES = Stream.concat(sfrMirrors, gprMirrors)
-                .collect(Collectors.toUnmodifiableSet());
-    }
-
-    private final IntBox[] registers;
     private final StatusRegister statusRegister;
-    private final OptionRegister optionRegister;
-    private final IndfRegister indfRegister;
+    private final IntBox[] registers;
 
-    public DataMemory() {
-        registers = createInitialRegisters();
-        statusRegister = new StatusRegister(registers[SpecialAdresses.STATUS]);
-        optionRegister = new OptionRegister(registers[SpecialAdresses.OPTION]);
-        indfRegister = new IndfRegister(this);
+    public DataMemory(List<SpecialRegister> specialRegisters, StatusRegister statusRegister) {
+        this.statusRegister = statusRegister;
+        this.registers = createInitialRegisters(specialRegisters);
     }
 
     @EventListener(ResetEvent.class)
@@ -46,21 +32,9 @@ public class DataMemory {
         }
     }
 
-    public StatusRegister status() {
-        return statusRegister;
-    }
-
-    public OptionRegister option() {
-        return optionRegister;
-    }
-
-    public IndfRegister indf() {
-        return indfRegister;
-    }
-
     public IntBox getRegister(int address) {
         // Indirect addressing
-        if (Math.floorMod(address, BANK_SIZE) != SpecialAdresses.INDF) {
+        if (Math.floorMod(address, BANK_SIZE) != 0) {
             // Used for selecting bank 0/1
             address = IntUtils.changeBit(address, 7, statusRegister.getRP0());
         }
@@ -72,8 +46,9 @@ public class DataMemory {
         return List.of(registers);
     }
 
-    private IntBox[] createInitialRegisters() {
-        // PIC16FX is partitioned into 2 banks
+    private IntBox[] createInitialRegisters(List<SpecialRegister> specialRegisters) {
+        var specialRegistersMap = getSpecialRegistersMap(specialRegisters);
+        var mirroredAddresses = getMirroredAddresses(specialRegistersMap);
         var registerArray = new IntBox[MAX_SIZE];
 
         for (var i = 0; i < registerArray.length; i++) {
@@ -82,14 +57,39 @@ public class DataMemory {
                 continue;
             }
 
-            var register = new IntBox();
+            IntBox register = specialRegistersMap.get(i);
+
+            if (register == null) {
+                register = new IntBox();
+            }
+
             registerArray[i] = register;
 
-            if (MIRRORED_ADDRESSES.contains(i)) {
+            if (mirroredAddresses.contains(i)) {
                 registerArray[i + BANK_SIZE] = register;
             }
         }
 
         return registerArray;
+    }
+
+    private Map<Integer, SpecialRegister> getSpecialRegistersMap(List<SpecialRegister> specialRegisters) {
+        return specialRegisters.stream()
+                .collect(Collectors.toUnmodifiableMap(SpecialRegister::getAddress, r -> r));
+    }
+
+    /**
+     * Returns all addresses that map to the same registers in both banks (0/1).
+     */
+    private Set<Integer> getMirroredAddresses(Map<Integer, SpecialRegister> specialRegisters) {
+        var sfrMirrors = specialRegisters.entrySet()
+                .stream()
+                .filter(e -> e.getValue().isMirrored())
+                .map(Map.Entry::getKey);
+
+        var gprMirrors = IntStream.range(0x0C, 0x50).boxed();
+
+        return Stream.concat(sfrMirrors, gprMirrors)
+                .collect(Collectors.toUnmodifiableSet());
     }
 }

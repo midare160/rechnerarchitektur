@@ -13,13 +13,13 @@ public class ProgramCounter extends IntBox {
     public static final int WIDTH = 13;
     public static final int MAX_SIZE = (int) Math.pow(2, WIDTH);
 
-    private final IntBox pclRegister;
-    private final IntBox pclathRegister;
+    private final PclRegister pclRegister;
+    private final PclathRegister pclathRegister;
     private final ChangeManager changeManager;
 
-    public ProgramCounter(DataMemory dataMemory) {
-        this.pclRegister = dataMemory.getRegister(SpecialAdresses.PCL);
-        this.pclathRegister = dataMemory.getRegister(SpecialAdresses.PCLATH);
+    public ProgramCounter(PclRegister pclRegister, PclathRegister pclathRegister) {
+        this.pclRegister = pclRegister;
+        this.pclathRegister = pclathRegister;
         this.changeManager = new ChangeManager();
 
         onChanged().addListener(this::onPcChanged);

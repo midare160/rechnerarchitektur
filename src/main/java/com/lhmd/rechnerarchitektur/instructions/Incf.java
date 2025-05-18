@@ -3,6 +3,7 @@ package com.lhmd.rechnerarchitektur.instructions;
 import com.lhmd.rechnerarchitektur.common.IntUtils;
 import com.lhmd.rechnerarchitektur.computing.Alu;
 import com.lhmd.rechnerarchitektur.memory.DataMemory;
+import com.lhmd.rechnerarchitektur.registers.StatusRegister;
 import com.lhmd.rechnerarchitektur.registers.WRegister;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -16,13 +17,15 @@ import org.springframework.stereotype.Component;
 @Scope(InstructionBase.SCOPE)
 public class Incf extends InstructionBase {
     private final DataMemory dataMemory;
+    private final StatusRegister statusRegister;
     private final WRegister wRegister;
 
     private int address;
     private boolean destination;
 
-    public Incf(DataMemory dataMemory, WRegister wRegister) {
+    public Incf(DataMemory dataMemory, StatusRegister statusRegister, WRegister wRegister) {
         this.dataMemory = dataMemory;
+        this.statusRegister = statusRegister;
         this.wRegister = wRegister;
     }
 
@@ -33,7 +36,7 @@ public class Incf extends InstructionBase {
 
         var result = Math.floorMod(register.get() + 1, DataMemory.REGISTER_MAX_SIZE);
 
-        dataMemory.status().updateZ(result);
+        statusRegister.updateZ(result);
         target.set(result);
     }
 

@@ -17,10 +17,10 @@ public class RuntimeManager {
 
     private int cycles;
 
-    public RuntimeManager(UserConfigService userConfigService, DataMemory dataMemory) {
+    public RuntimeManager(UserConfigService userConfigService, Tmr0Register tmr0Register, OptionRegister optionRegister) {
         this.userConfig = userConfigService.config();
-        this.tmr0 = dataMemory.getRegister(SpecialAdresses.TMR0);
-        this.option = dataMemory.option();
+        this.tmr0 = tmr0Register;
+        this.option = optionRegister;
         this.runtime = new DoubleBox();
     }
 

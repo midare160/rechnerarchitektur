@@ -1,16 +1,23 @@
 package com.lhmd.rechnerarchitektur.registers;
 
 import com.lhmd.rechnerarchitektur.memory.DataMemory;
-import com.lhmd.rechnerarchitektur.values.IntBox;
+import org.springframework.stereotype.Component;
 
-public class StatusRegister extends Register {
+@Component
+public class StatusRegister extends SpecialRegister {
     private static final int C_INDEX = 0;
     private static final int DC_INDEX = 1;
     private static final int Z_INDEX = 2;
     private static final int RP0_INDEX = 5;
 
-    public StatusRegister(IntBox register) {
-        super(register);
+    @Override
+    public int getAddress() {
+        return 0x03;
+    }
+
+    @Override
+    public boolean isMirrored() {
+        return true;
     }
 
     public boolean getC() {

@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 public class Alu {
     private final StatusRegister statusRegister;
 
-    public Alu(DataMemory dataMemory) {
-        this.statusRegister = dataMemory.status();
+    public Alu(StatusRegister statusRegister) {
+        this.statusRegister = statusRegister;
     }
 
     public int add(int a, int b) {

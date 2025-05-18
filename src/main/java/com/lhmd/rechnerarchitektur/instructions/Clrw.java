@@ -1,6 +1,6 @@
 package com.lhmd.rechnerarchitektur.instructions;
 
-import com.lhmd.rechnerarchitektur.memory.DataMemory;
+import com.lhmd.rechnerarchitektur.registers.StatusRegister;
 import com.lhmd.rechnerarchitektur.registers.WRegister;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -11,17 +11,17 @@ import org.springframework.stereotype.Component;
 @Component
 @Scope(InstructionBase.SCOPE)
 public class Clrw extends InstructionBase {
-    private final DataMemory dataMemory;
     private final WRegister wRegister;
+    private final StatusRegister statusRegister;
 
-    public Clrw(DataMemory dataMemory, WRegister wRegister) {
-        this.dataMemory = dataMemory;
+    public Clrw(StatusRegister statusRegister, WRegister wRegister) {
+        this.statusRegister = statusRegister;
         this.wRegister = wRegister;
     }
 
     @Override
     public void execute() {
         wRegister.set(0);
-        dataMemory.status().setZ(true);
+        statusRegister.setZ(true);
     }
 }
