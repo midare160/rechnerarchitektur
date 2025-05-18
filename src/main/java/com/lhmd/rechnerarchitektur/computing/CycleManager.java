@@ -4,7 +4,7 @@ import com.lhmd.rechnerarchitektur.configuration.*;
 import com.lhmd.rechnerarchitektur.events.*;
 import com.lhmd.rechnerarchitektur.memory.DataMemory;
 import com.lhmd.rechnerarchitektur.registers.*;
-import com.lhmd.rechnerarchitektur.values.IntBox;
+import com.lhmd.rechnerarchitektur.values.*;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
@@ -13,27 +13,32 @@ public class CycleManager {
     private final UserConfig userConfig;
     private final IntBox tmr0;
     private final OptionRegister option;
+    private final Box<Double> runtime;
 
     private int cycles;
-    private double runtime;
 
     public CycleManager(UserConfigService userConfigService, DataMemory dataMemory) {
         this.userConfig = userConfigService.config();
         this.tmr0 = dataMemory.getRegister(SpecialAdresses.TMR0);
         this.option = dataMemory.option();
+        this.runtime = new Box<>(0d);
     }
 
     @EventListener(ResetEvent.class)
     public synchronized void handleReset() {
         cycles = 0;
-        runtime = 0;
+        runtime.setValue(0d);
     }
 
     /**
      * Returns the simulated runtime in microseconds (µs).
      */
     public synchronized double getRuntime() {
-        return runtime;
+        return runtime.getValue();
+    }
+
+    public ChangedEvent<Double> onRuntimeChanged() {
+        return runtime.onChanged();
     }
 
     // TODO suspend incrementing for 2 cycles when tmr0 is written to
@@ -52,7 +57,8 @@ public class CycleManager {
      */
     private void addTickTime() {
         // TODO check if assigned to tmr0 or wdt
-        runtime += getPrescalerValue() / (userConfig.getClock() / 4);
+        var micros = getPrescalerValue() / (userConfig.getClock() / 4);
+        runtime.setValue(runtime.getValue() + micros);
     }
 
     // TODO read actual value
