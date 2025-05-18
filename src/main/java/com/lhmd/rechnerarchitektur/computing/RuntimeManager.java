@@ -9,19 +9,19 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CycleManager {
+public class RuntimeManager {
     private final UserConfig userConfig;
     private final IntBox tmr0;
     private final OptionRegister option;
-    private final Box<Double> runtime;
+    private final DoubleBox runtime;
 
     private int cycles;
 
-    public CycleManager(UserConfigService userConfigService, DataMemory dataMemory) {
+    public RuntimeManager(UserConfigService userConfigService, DataMemory dataMemory) {
         this.userConfig = userConfigService.config();
         this.tmr0 = dataMemory.getRegister(SpecialAdresses.TMR0);
         this.option = dataMemory.option();
-        this.runtime = new Box<>(0d);
+        this.runtime = new DoubleBox();
     }
 
     @EventListener(ResetEvent.class)
@@ -33,12 +33,8 @@ public class CycleManager {
     /**
      * Returns the simulated runtime in microseconds (µs).
      */
-    public synchronized double getRuntime() {
-        return runtime.getValue();
-    }
-
-    public ChangedEvent<Double> onRuntimeChanged() {
-        return runtime.onChanged();
+    public Box<Double> runtime() {
+        return runtime;
     }
 
     // TODO suspend incrementing for 2 cycles when tmr0 is written to
@@ -58,7 +54,7 @@ public class CycleManager {
     private void addTickTime() {
         // TODO check if assigned to tmr0 or wdt
         var micros = getPrescalerValue() / (userConfig.getClock() / 4);
-        runtime.setValue(runtime.getValue() + micros);
+        runtime.set(runtime.get() + micros);
     }
 
     // TODO read actual value

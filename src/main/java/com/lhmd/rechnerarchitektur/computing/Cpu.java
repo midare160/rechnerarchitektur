@@ -9,12 +9,11 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Component
 public class Cpu extends Thread implements AutoCloseable {
     private final UserConfig userConfig;
-    private final CycleManager cycleManager;
+    private final RuntimeManager runtimeManager;
     private final ProgramCounter programCounter;
     private final Set<Integer> breakpointAddresses;
 
@@ -27,9 +26,9 @@ public class Cpu extends Thread implements AutoCloseable {
     private volatile boolean isRunning;
     private volatile boolean isPaused;
 
-    public Cpu(UserConfigService userConfigService, CycleManager cycleManager, ProgramCounter programCounter) {
+    public Cpu(UserConfigService userConfigService, RuntimeManager runtimeManager, ProgramCounter programCounter) {
         this.userConfig = userConfigService.config();
-        this.cycleManager = cycleManager;
+        this.runtimeManager = runtimeManager;
         this.programCounter = programCounter;
         this.breakpointAddresses = new HashSet<>();
 
@@ -111,10 +110,10 @@ public class Cpu extends Thread implements AutoCloseable {
 
         var currentInstruction = programMemory.get(address);
         currentInstruction.execute();
-        cycleManager.addCycle();
+        runtimeManager.addCycle();
 
         if (currentInstruction.isTwoCycle()) {
-            cycleManager.addCycle();
+            runtimeManager.addCycle();
         }
     }
 

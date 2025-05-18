@@ -52,7 +52,7 @@ public class InstructionsTableView extends TableView<InstructionRowModel> {
             rowModel.isNextProperty().set(isNext);
 
             if (isNext) {
-                Platform.runLater(() -> scrollToCenter(rowModel));
+                Platform.runLater(() -> scrollIntoView(rowModel));
             }
         }
     }
@@ -68,19 +68,21 @@ public class InstructionsTableView extends TableView<InstructionRowModel> {
                 .orElseThrow();
     }
 
-    private void scrollToCenter(InstructionRowModel rowModel) {
+    /**
+     * Scrolls the table if the index of the given rowModel is not visible.
+     */
+    private void scrollIntoView(InstructionRowModel rowModel) {
         if (virtualFlow == null) {
             virtualFlow = getVirtualFlow();
         }
 
         var index = getItems().indexOf(rowModel);
-        var cell = virtualFlow.getCell(index);
 
-        scrollTo(index);
-        virtualFlow.layout();
+        var first = virtualFlow.getFirstVisibleCell().getIndex();
+        var last = virtualFlow.getLastVisibleCell().getIndex();
 
-        // Important: Retrieve y AFTER scrolling
-        var y = cell.getBoundsInParent().getCenterY();
-        virtualFlow.scrollPixels(y - virtualFlow.getHeight() / 2);
+        if (index < first || index > last) {
+            scrollTo(index);
+        }
     }
 }

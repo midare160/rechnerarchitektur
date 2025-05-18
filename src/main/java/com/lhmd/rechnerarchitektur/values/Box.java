@@ -5,17 +5,25 @@ import com.lhmd.rechnerarchitektur.events.ChangedEvent;
 import java.util.*;
 
 public class Box<T extends Comparable<T>> implements Comparable<Box<T>> {
+    private final boolean nullable;
     private final ChangedEvent<T> onChanged;
 
     private T value;
 
-    public Box(T value) {
-        this.onChanged = new ChangedEvent<>();
-        this.value = value;
-    }
-
     public Box() {
         this(null);
+    }
+
+    public Box(T value) {
+        this(value, true);
+    }
+
+    public Box(T value, boolean nullable) {
+        this.value = value;
+        this.nullable = nullable;
+        this.onChanged = new ChangedEvent<>();
+
+        throwWhenNotNullable();
     }
 
     public T getValue() {
@@ -23,6 +31,7 @@ public class Box<T extends Comparable<T>> implements Comparable<Box<T>> {
     }
 
     public void setValue(T value) {
+        throwWhenNotNullable();
         onChanged.fire(() -> this.value, () -> this.value = value);
     }
 
@@ -52,5 +61,11 @@ public class Box<T extends Comparable<T>> implements Comparable<Box<T>> {
         if (other.value == null) return 1;
 
         return value.compareTo(other.value);
+    }
+
+    private void throwWhenNotNullable(){
+        if (value == null && !nullable) {
+            throw new NullPointerException("Value cannot be null");
+        }
     }
 }

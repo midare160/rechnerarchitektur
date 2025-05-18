@@ -1,9 +1,8 @@
 package com.lhmd.rechnerarchitektur.components;
 
 import com.lhmd.rechnerarchitektur.common.FxUtils;
-import com.lhmd.rechnerarchitektur.computing.CycleManager;
-import com.lhmd.rechnerarchitektur.registers.ProgramCounter;
-import com.lhmd.rechnerarchitektur.registers.WRegister;
+import com.lhmd.rechnerarchitektur.computing.RuntimeManager;
+import com.lhmd.rechnerarchitektur.registers.*;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -20,7 +19,7 @@ public class MainFooter extends GridPane {
     @FXML
     private BitPointerRow programCounterRow;
 
-    private CycleManager cycleManager;
+    private RuntimeManager runtimeManager;
 
     public MainFooter() {
         FxUtils.loadHierarchy(this, "components/mainFooter.fxml");
@@ -29,10 +28,10 @@ public class MainFooter extends GridPane {
     public void initialize(BeanFactory beanFactory) {
         wRegisterRow.setData(beanFactory.getBean(WRegister.class));
         programCounterRow.setData(beanFactory.getBean(ProgramCounter.class));
-        cycleManager = beanFactory.getBean(CycleManager.class);
+        runtimeManager = beanFactory.getBean(RuntimeManager.class);
 
         updateRuntimeLabel();
-        cycleManager.onRuntimeChanged().addListener((o, n) -> updateRuntimeLabel());
+        runtimeManager.runtime().onChanged().addListener((o, n) -> updateRuntimeLabel());
     }
 
     public void resetChanged() {
@@ -40,8 +39,8 @@ public class MainFooter extends GridPane {
         programCounterRow.resetChanged();
     }
 
-    private void updateRuntimeLabel(){
-        var text = "Elapsed: %.2f µs".formatted(cycleManager.getRuntime());
+    private void updateRuntimeLabel() {
+        var text = "Elapsed: %.2f µs".formatted(runtimeManager.runtime().getValue());
 
         Platform.runLater(() -> runtimeLabel.setText(text));
     }
