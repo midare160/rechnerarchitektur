@@ -1,6 +1,7 @@
 package com.lhmd.rechnerarchitektur;
 
 import com.lhmd.rechnerarchitektur.common.FxUtils;
+import com.lhmd.rechnerarchitektur.events.*;
 import com.lhmd.rechnerarchitektur.styles.ThemeManager;
 import javafx.application.*;
 import javafx.fxml.FXMLLoader;
@@ -39,6 +40,8 @@ public class JavaFxApplication extends Application {
         var loader = new FXMLLoader(JavaFxApplication.class.getResource("views/main.fxml"));
         loader.setControllerFactory(context::getBean);
         var scene = new Scene(loader.load());
+
+        context.publishEvent(new ResetEvent(this, ResetType.POWERON));
 
         var themeManager = context.getBean(ThemeManager.class);
         themeManager.registerScene(scene);
