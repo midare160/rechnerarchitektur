@@ -1,11 +1,8 @@
 package com.lhmd.rechnerarchitektur.computing;
 
 import com.lhmd.rechnerarchitektur.configuration.*;
-import com.lhmd.rechnerarchitektur.events.*;
-import com.lhmd.rechnerarchitektur.memory.DataMemory;
 import com.lhmd.rechnerarchitektur.registers.*;
 import com.lhmd.rechnerarchitektur.values.*;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -24,12 +21,6 @@ public class RuntimeManager {
         this.runtime = new DoubleBox();
     }
 
-    @EventListener(ResetEvent.class)
-    public synchronized void handleReset() {
-        cycles = 0;
-        runtime.setValue(0d);
-    }
-
     /**
      * Returns the simulated runtime in microseconds (µs).
      */
@@ -46,6 +37,11 @@ public class RuntimeManager {
             tmr0.set(tmr0.get() + 1);
             addTickTime();
         }
+    }
+
+    public synchronized void reset() {
+        cycles = 0;
+        runtime.setValue(0d);
     }
 
     /**

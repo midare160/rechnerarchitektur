@@ -1,12 +1,14 @@
 package com.lhmd.rechnerarchitektur.components;
 
+import com.lhmd.rechnerarchitektur.JavaFxApplication;
 import com.lhmd.rechnerarchitektur.common.FxUtils;
 import com.lhmd.rechnerarchitektur.computing.RuntimeManager;
 import com.lhmd.rechnerarchitektur.registers.*;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import org.girod.javafx.svgimage.SVGLoader;
 import org.springframework.beans.factory.BeanFactory;
 
 public class MainFooter extends GridPane {
@@ -15,6 +17,9 @@ public class MainFooter extends GridPane {
 
     @FXML
     private Label runtimeLabel;
+
+    @FXML
+    private Button resetRuntimeButton;
 
     @FXML
     private BitPointerRow programCounterRow;
@@ -32,6 +37,9 @@ public class MainFooter extends GridPane {
 
         updateRuntimeLabel();
         runtimeManager.runtime().onChanged().addListener((o, n) -> updateRuntimeLabel());
+
+        resetRuntimeButton.setGraphic(SVGLoader.load(JavaFxApplication.class.getResource("svgs/reset.svg")));
+        resetRuntimeButton.setOnAction(e -> runtimeManager.reset());
     }
 
     public void resetChanged() {

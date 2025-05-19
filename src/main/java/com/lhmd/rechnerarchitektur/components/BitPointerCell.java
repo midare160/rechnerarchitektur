@@ -24,6 +24,7 @@ public class BitPointerCell extends Label {
 
         setAlignment(Pos.CENTER);
         setMaxWidth(Double.MAX_VALUE);
+        setMaxHeight(Double.MAX_VALUE);
         HBox.setHgrow(this, Priority.ALWAYS);
 
         setOnMouseClicked(this::onMouseClicked);
