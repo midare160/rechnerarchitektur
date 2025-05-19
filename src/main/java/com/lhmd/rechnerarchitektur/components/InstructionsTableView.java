@@ -69,7 +69,7 @@ public class InstructionsTableView extends TableView<InstructionRowModel> {
     }
 
     /**
-     * Scrolls the table if the index of the given rowModel is not visible.
+     * Scrolls the table if the index of the passed {@code rowModel} is not visible.
      */
     private void scrollIntoView(InstructionRowModel rowModel) {
         if (virtualFlow == null) {
@@ -78,8 +78,8 @@ public class InstructionsTableView extends TableView<InstructionRowModel> {
 
         var index = getItems().indexOf(rowModel);
 
-        var first = virtualFlow.getFirstVisibleCell().getIndex();
-        var last = virtualFlow.getLastVisibleCell().getIndex();
+        var first = virtualFlow.getFirstVisibleCell() == null ? Double.POSITIVE_INFINITY : virtualFlow.getFirstVisibleCell().getIndex();
+        var last = virtualFlow.getLastVisibleCell() == null ? Double.NEGATIVE_INFINITY : virtualFlow.getLastVisibleCell().getIndex();
 
         if (index < first || index > last) {
             scrollTo(index);
