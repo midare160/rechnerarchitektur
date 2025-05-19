@@ -23,7 +23,7 @@ public class Box<T extends Comparable<T>> implements Comparable<Box<T>> {
         this.nullable = nullable;
         this.onChanged = new ChangedEvent<>();
 
-        throwWhenNotNullable();
+        throwWhenNotNullable(value);
     }
 
     public T getValue() {
@@ -31,7 +31,7 @@ public class Box<T extends Comparable<T>> implements Comparable<Box<T>> {
     }
 
     public void setValue(T value) {
-        throwWhenNotNullable();
+        throwWhenNotNullable(value);
         onChanged.fire(() -> this.value, () -> this.value = value);
     }
 
@@ -63,7 +63,7 @@ public class Box<T extends Comparable<T>> implements Comparable<Box<T>> {
         return value.compareTo(other.value);
     }
 
-    private void throwWhenNotNullable(){
+    private void throwWhenNotNullable(T value){
         if (value == null && !nullable) {
             throw new NullPointerException("Value cannot be null");
         }

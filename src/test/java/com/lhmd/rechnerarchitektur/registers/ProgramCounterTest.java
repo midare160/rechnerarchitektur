@@ -13,15 +13,15 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class ProgramCounterTest {
+    private final ProgramCounter programCounter;
     private final IntBox pclRegister;
     private final IntBox pclathRegister;
-    private final ProgramCounter programCounter;
 
     @Autowired
-    public ProgramCounterTest(DataMemory dataMemory, ProgramCounter programCounter) {
-        this.pclRegister = dataMemory.getRegister(SpecialAdresses.PCL);
-        this.pclathRegister = dataMemory.getRegister(SpecialAdresses.PCLATH);
+    public ProgramCounterTest(ProgramCounter programCounter, PclRegister pclRegister, PclathRegister pclathRegister) {
         this.programCounter = programCounter;
+        this.pclRegister = pclRegister;
+        this.pclathRegister = pclathRegister;
     }
 
     @Test
