@@ -6,7 +6,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TrisbRegister extends SpecialRegister {
+public class TrisARegister extends SpecialRegister {
     @Override
     public int getAddress() {
         return 0x85;
@@ -15,8 +15,8 @@ public class TrisbRegister extends SpecialRegister {
     @EventListener
     public void handleReset(ResetEvent event) {
         var pattern = switch (event.getResetType()) {
-            case POWERON, WATCHDOG -> "11111111";
-            case WAKEUP -> "uuuuuuuu";
+            case POWERON, WATCHDOG -> "---11111";
+            case WAKEUP -> "---uuuuu";
         };
 
         set(IntUtils.changeBits(get(), pattern));
