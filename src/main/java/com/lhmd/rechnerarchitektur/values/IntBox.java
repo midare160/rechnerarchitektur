@@ -19,4 +19,12 @@ public class IntBox extends Box<Integer> {
     public void set(int value) {
         setValue(value);
     }
+
+    public void increment() {
+        set(get() + 1);
+    }
+
+    public void decrement() {
+        set(get() - 1);
+    }
 }

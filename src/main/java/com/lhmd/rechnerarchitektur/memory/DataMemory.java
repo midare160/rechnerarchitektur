@@ -25,13 +25,6 @@ public class DataMemory {
         this.registers = createInitialRegisters(specialRegisters);
     }
 
-    @EventListener(ResetEvent.class)
-    public void handleReset() {
-        for (var register : registers) {
-            register.set(0);
-        }
-    }
-
     public IntBox getRegister(int address) {
         // Indirect addressing
         if (Math.floorMod(address, BANK_SIZE) != 0) {

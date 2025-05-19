@@ -79,4 +79,17 @@ public class IntUtilsTest {
 
         assertEquals(expected, actual);
     }
+
+    @Test
+    public void changeBits_allPossibleChars_setsCorrectly() {
+        var expected = 0b0111_0010;
+        var actual = IntUtils.changeBits(0b1011_0010, "01xx--uu");
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void changeBits_invalidChar_throwsIllegalArgumentException() {
+        assertThrows(IllegalArgumentException.class, () -> IntUtils.changeBits(69, "01xx-iuu"));
+    }
 }

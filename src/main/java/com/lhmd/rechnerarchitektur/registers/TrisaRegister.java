@@ -6,21 +6,16 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 @Component
-public class IntconRegister extends SpecialRegister {
+public class TrisaRegister extends SpecialRegister {
     @Override
     public int getAddress() {
-        return 0x0B;
-    }
-
-    @Override
-    public boolean isMirrored() {
-        return true;
+        return 0x85;
     }
 
     @EventListener
     public void handleReset(ResetEvent event) {
         var pattern = switch (event.getResetType()) {
-            case POWERON, WATCHDOG -> "0000000x";
+            case POWERON, WATCHDOG -> "---11111";
             case WAKEUP -> "---uuuuu";
         };
 

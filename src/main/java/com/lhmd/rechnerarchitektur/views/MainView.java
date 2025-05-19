@@ -85,7 +85,7 @@ public class MainView {
         root.addEventHandler(MainMenuBarEvent.ON_RUN, this::onMainMenuBarRun);
         root.addEventHandler(MainMenuBarEvent.ON_PAUSE, e -> cpu.setPaused(true));
         root.addEventHandler(MainMenuBarEvent.ON_NEXT, e -> cpu.nextInstruction());
-        root.addEventHandler(MainMenuBarEvent.ON_RESET, e -> eventPublisher.publishEvent(new ResetEvent(this)));
+        root.addEventHandler(MainMenuBarEvent.ON_RESET, e -> eventPublisher.publishEvent(new ResetEvent(this, ResetType.POWERON)));
 
         cpu.onBreakpointReached().addListener(mainMenuBar::pause);
         cpu.onNextInstruction().addListener(this::resetChanged);

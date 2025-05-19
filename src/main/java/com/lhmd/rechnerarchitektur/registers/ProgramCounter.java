@@ -3,7 +3,6 @@ package com.lhmd.rechnerarchitektur.registers;
 import com.lhmd.rechnerarchitektur.changes.*;
 import com.lhmd.rechnerarchitektur.common.IntUtils;
 import com.lhmd.rechnerarchitektur.events.ResetEvent;
-import com.lhmd.rechnerarchitektur.memory.*;
 import com.lhmd.rechnerarchitektur.values.IntBox;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -27,23 +26,22 @@ public class ProgramCounter extends IntBox {
     }
 
     /**
-     * If {@code value} exceeds {@code MAX_SIZE}, it is wrapped around.
+     * If {@code value} exceeds {@code MAX_SIZE}, PC is wrapped around.
      */
     @Override
     public void setValue(Integer value) {
         super.setValue(Math.floorMod(value, MAX_SIZE));
     }
 
-    @EventListener(ResetEvent.class)
-    public void handleReset() {
-        set(0);
-    }
+    @EventListener
+    public void handleReset(ResetEvent event) {
+        var newValue = switch (event.getResetType()) {
+            case POWERON, WATCHDOG -> 0;
+            case WAKEUP -> get() + 1;
+            // TODO interrupt wakeup
+        };
 
-    /**
-     * Increments PC by one.
-     */
-    public void increment() {
-        set(get() + 1);
+        set(newValue);
     }
 
     /**

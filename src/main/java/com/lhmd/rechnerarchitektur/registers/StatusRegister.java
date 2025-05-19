@@ -1,6 +1,9 @@
 package com.lhmd.rechnerarchitektur.registers;
 
+import com.lhmd.rechnerarchitektur.common.IntUtils;
+import com.lhmd.rechnerarchitektur.events.ResetEvent;
 import com.lhmd.rechnerarchitektur.memory.DataMemory;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -18,6 +21,17 @@ public class StatusRegister extends SpecialRegister {
     @Override
     public boolean isMirrored() {
         return true;
+    }
+
+    @EventListener
+    public void handleReset(ResetEvent event) {
+        var pattern = switch (event.getResetType()) {
+            case POWERON -> "00011xxx";
+            case WATCHDOG -> "00001uuu";
+            case WAKEUP -> "uuu00uuu"; // TODO interrupt wakeup
+        };
+
+        set(IntUtils.changeBits(get(), pattern));
     }
 
     public boolean getC() {
