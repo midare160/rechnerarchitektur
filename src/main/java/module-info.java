@@ -8,6 +8,7 @@ open module com.lhmd.rechnerarchitektur {
     requires spring.boot;
     requires spring.core;
     requires spring.beans;
+    requires spring.aop;
     requires org.yaml.snakeyaml;
     requires org.slf4j;
 }
