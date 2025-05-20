@@ -16,7 +16,7 @@ import java.util.*;
 public class ThemeManager implements InitializingBean {
     private static final String LIGHTSTYLE_URL = JavaFxApplication.class.getResource("styles/theme-light.css").toExternalForm();
     private static final String DARKSTYLE_URL = JavaFxApplication.class.getResource("styles/theme-dark.css").toExternalForm();
-    private static final Map<String, Theme> themeMap;
+    private static final Map<String, Theme> ALL_THEMES;
 
     static {
         var themes = new Theme[]{
@@ -35,11 +35,11 @@ public class ThemeManager implements InitializingBean {
             map.put(theme.getName(), theme);
         }
 
-        themeMap = Collections.unmodifiableMap(map);
+        ALL_THEMES = Collections.unmodifiableMap(map);
     }
 
     public static Map<String, Theme> allThemes() {
-        return themeMap;
+        return ALL_THEMES;
     }
 
     private final UserConfig userConfig;
@@ -72,12 +72,12 @@ public class ThemeManager implements InitializingBean {
     }
 
     private void setApplicationStylesheet() {
-        var theme = themeMap.get(getCurrentThemeName());
+        var theme = ALL_THEMES.get(getCurrentThemeName());
         Application.setUserAgentStylesheet(theme.getUserAgentStylesheet());
     }
 
     private void applyCurrentStylesheet(Scene scene) {
-        var currentTheme = themeMap.get(getCurrentThemeName());
+        var currentTheme = ALL_THEMES.get(getCurrentThemeName());
 
         var oldStyleUrl = currentTheme.isDarkMode() ? LIGHTSTYLE_URL : DARKSTYLE_URL;
         var newStyleUrl = currentTheme.isDarkMode() ? DARKSTYLE_URL : LIGHTSTYLE_URL;

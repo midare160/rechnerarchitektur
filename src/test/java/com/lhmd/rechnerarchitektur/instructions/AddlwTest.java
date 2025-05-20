@@ -1,6 +1,7 @@
 package com.lhmd.rechnerarchitektur.instructions;
 
 import com.lhmd.rechnerarchitektur.memory.DataMemory;
+import com.lhmd.rechnerarchitektur.registers.StatusRegister;
 import com.lhmd.rechnerarchitektur.registers.WRegister;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,13 +13,13 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class AddlwTest {
-    private final DataMemory dataMemory;
     private final WRegister wRegister;
     private final Addlw addlw;
+    private final StatusRegister statusRegister;
 
     @Autowired
-    public AddlwTest(DataMemory dataMemory, WRegister wRegister, Addlw addlw) {
-        this.dataMemory = dataMemory;
+    public AddlwTest(StatusRegister statusRegister, WRegister wRegister, Addlw addlw) {
+        this.statusRegister = statusRegister;
         this.wRegister = wRegister;
         this.addlw = addlw;
     }
@@ -32,9 +33,9 @@ public class AddlwTest {
 
         assertEquals(0x25, wRegister.get());
 
-        assertFalse(dataMemory.status().getC());
-        assertFalse(dataMemory.status().getDC());
-        assertFalse(dataMemory.status().getZ());
+        assertFalse(statusRegister.getC());
+        assertFalse(statusRegister.getDC());
+        assertFalse(statusRegister.getZ());
     }
 
     @Test
@@ -46,9 +47,9 @@ public class AddlwTest {
 
         assertEquals(0x02, wRegister.get());
 
-        assertTrue(dataMemory.status().getC());
-        assertFalse(dataMemory.status().getDC());
-        assertFalse(dataMemory.status().getZ());
+        assertTrue(statusRegister.getC());
+        assertFalse(statusRegister.getDC());
+        assertFalse(statusRegister.getZ());
     }
 
     @Test
@@ -60,8 +61,8 @@ public class AddlwTest {
 
         assertEquals(0x00, wRegister.get());
 
-        assertTrue(dataMemory.status().getC());
-        assertTrue(dataMemory.status().getDC());
-        assertTrue(dataMemory.status().getZ());
+        assertTrue(statusRegister.getC());
+        assertTrue(statusRegister.getDC());
+        assertTrue(statusRegister.getZ());
     }
 }

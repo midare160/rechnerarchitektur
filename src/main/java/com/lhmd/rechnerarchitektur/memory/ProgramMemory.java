@@ -7,7 +7,7 @@ import java.util.*;
 public class ProgramMemory {
     public static final int MAX_SIZE = 1024;
     public static final int INSTRUCTION_WIDTH = 14;
-    public static final int INSTRUCTION_SIZE = (int) Math.pow(2, INSTRUCTION_WIDTH) - 1;
+    public static final int INSTRUCTION_MAX_SIZE = (int) Math.pow(2, INSTRUCTION_WIDTH);
 
     private final InstructionBase[] instructions;
 
@@ -32,7 +32,7 @@ public class ProgramMemory {
         // Accessing a location above the physically implemented address will cause a wrap-around.
         // For example, for the locations 20h, 420h, 820h, C20h, 1020h, 1420h, 1820h, and 1C20h
         // will be the same instruction.
-        return instructions[address % MAX_SIZE];
+        return instructions[Math.floorMod(address, MAX_SIZE)];
     }
 
     public List<InstructionBase> instructions() {

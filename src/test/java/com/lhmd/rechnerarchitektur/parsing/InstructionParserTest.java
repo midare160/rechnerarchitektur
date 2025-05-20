@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class InstructionParserTest {
     @Test
-    public void parseLine_MixedLines_parsesCorrectly() throws IOException {
+    public void parseLine_mixedLines_parsesCorrectly() throws IOException {
         final var rawLines = """
                                     00016           org 0
                                     00017  start

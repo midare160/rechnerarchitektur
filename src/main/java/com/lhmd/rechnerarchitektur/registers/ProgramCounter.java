@@ -3,38 +3,45 @@ package com.lhmd.rechnerarchitektur.registers;
 import com.lhmd.rechnerarchitektur.changes.*;
 import com.lhmd.rechnerarchitektur.common.IntUtils;
 import com.lhmd.rechnerarchitektur.events.ResetEvent;
-import com.lhmd.rechnerarchitektur.memory.*;
 import com.lhmd.rechnerarchitektur.values.IntBox;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ProgramCounter extends IntBox {
-    private final IntBox pclRegister;
-    private final IntBox pclathRegister;
+    public static final int WIDTH = 13;
+    public static final int MAX_SIZE = (int) Math.pow(2, WIDTH);
+
+    private final PclRegister pclRegister;
+    private final PclathRegister pclathRegister;
     private final ChangeManager changeManager;
 
-    public ProgramCounter(DataMemory dataMemory) {
-        this.pclRegister = dataMemory.getRegister(0x02);
-        this.pclathRegister = dataMemory.getRegister(0x0A);
+    public ProgramCounter(PclRegister pclRegister, PclathRegister pclathRegister) {
+        this.pclRegister = pclRegister;
+        this.pclathRegister = pclathRegister;
         this.changeManager = new ChangeManager();
 
         onChanged().addListener(this::onPcChanged);
         pclRegister.onChanged().addListener(this::onPclChanged);
     }
 
-    @EventListener(ResetEvent.class)
-    public void handleReset() {
-        set(0);
+    /**
+     * If {@code value} exceeds {@code MAX_SIZE}, PC is wrapped around.
+     */
+    @Override
+    public void setValue(Integer value) {
+        super.setValue(Math.floorMod(value, MAX_SIZE));
     }
 
-    /**
-     * Increments PC by one.
-     * If the result exceeds {@code ProgramMemory.MAX_SIZE}, PC is wrapped around.
-     */
-    public void increment() {
-        var result = (get() + 1) % ProgramMemory.MAX_SIZE;
-        set(result);
+    @EventListener
+    public void handleReset(ResetEvent event) {
+        var newValue = switch (event.getResetType()) {
+            case POWERON, WATCHDOG -> 0;
+            case WAKEUP -> get() + 1;
+            // TODO interrupt wakeup
+        };
+
+        set(newValue);
     }
 
     /**
@@ -70,6 +77,8 @@ public class ProgramCounter extends IntBox {
         var pclPart = IntUtils.bitRange(newValue, 0, 7);
         var combined = IntUtils.concatBits(pclathPart, pclPart, 8);
 
-        set(combined);
+        try (var ignored = changeManager.beginChange()) {
+            set(combined);
+        }
     }
 }

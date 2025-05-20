@@ -1,16 +1,37 @@
 package com.lhmd.rechnerarchitektur.registers;
 
+import com.lhmd.rechnerarchitektur.common.IntUtils;
+import com.lhmd.rechnerarchitektur.events.ResetEvent;
 import com.lhmd.rechnerarchitektur.memory.DataMemory;
-import com.lhmd.rechnerarchitektur.values.IntBox;
+import org.springframework.context.event.EventListener;
+import org.springframework.stereotype.Component;
 
-public class StatusRegister extends Register {
+@Component
+public class StatusRegister extends SpecialRegister {
     private static final int C_INDEX = 0;
     private static final int DC_INDEX = 1;
     private static final int Z_INDEX = 2;
     private static final int RP0_INDEX = 5;
 
-    public StatusRegister(IntBox register) {
-        super(register);
+    @Override
+    public int getAddress() {
+        return 0x03;
+    }
+
+    @Override
+    public boolean isMirrored() {
+        return true;
+    }
+
+    @EventListener
+    public void handleReset(ResetEvent event) {
+        var pattern = switch (event.getResetType()) {
+            case POWERON -> "00011xxx";
+            case WATCHDOG -> "00001uuu";
+            case WAKEUP -> "uuu00uuu"; // TODO interrupt wakeup
+        };
+
+        set(IntUtils.changeBits(get(), pattern));
     }
 
     public boolean getC() {
@@ -46,11 +67,11 @@ public class StatusRegister extends Register {
     }
 
     public void updateC_Add(int a, int b) {
-        setC(a + b > DataMemory.REGISTER_SIZE);
+        setC(a + b >= DataMemory.REGISTER_MAX_SIZE);
     }
 
     public void updateC_Sub(int a, int b) {
-        setC(b >= a);
+        setC(b > a);
     }
 
     public void updateDC_Add(int a, int b) {

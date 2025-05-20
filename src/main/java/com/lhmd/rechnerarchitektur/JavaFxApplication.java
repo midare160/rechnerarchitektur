@@ -1,10 +1,12 @@
 package com.lhmd.rechnerarchitektur;
 
+import com.lhmd.rechnerarchitektur.common.FxUtils;
+import com.lhmd.rechnerarchitektur.events.*;
 import com.lhmd.rechnerarchitektur.styles.ThemeManager;
 import javafx.application.*;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.stage.Stage;
+import javafx.stage.*;
 import org.springframework.boot.Banner;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -39,14 +41,16 @@ public class JavaFxApplication extends Application {
         loader.setControllerFactory(context::getBean);
         var scene = new Scene(loader.load());
 
+        context.publishEvent(new ResetEvent(this, ResetType.POWERON));
+
         var themeManager = context.getBean(ThemeManager.class);
         themeManager.registerScene(scene);
 
         primaryStage.setScene(scene);
         primaryStage.setTitle(ProgramInfo.PROGRAM_NAME);
-        primaryStage.centerOnScreen();
-
         primaryStage.show();
+
+        FxUtils.centerStage(primaryStage);
     }
 
     @Override

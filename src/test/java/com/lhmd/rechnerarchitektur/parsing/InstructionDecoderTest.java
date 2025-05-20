@@ -4,7 +4,6 @@ import com.lhmd.rechnerarchitektur.instructions.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -81,6 +80,34 @@ public class InstructionDecoderTest {
     }
 
     @Test
+    public void decode_btfss() {
+        var instruction = instructionDecoder.decode(0x1D0C);
+
+        assertInstanceOf(Btfss.class, instruction);
+    }
+
+    @Test
+    public void decode_btfsc() {
+        var instruction = instructionDecoder.decode(0x180C);
+
+        assertInstanceOf(Btfsc.class, instruction);
+    }
+
+    @Test
+    public void decode_bsf() {
+        var instruction = instructionDecoder.decode(0x178C);
+
+        assertInstanceOf(Bsf.class, instruction);
+    }
+
+    @Test
+    public void decode_bcf() {
+        var instruction = instructionDecoder.decode(0x120C);
+
+        assertInstanceOf(Bcf.class, instruction);
+    }
+
+    @Test
     public void decode_swapf() {
         var instruction = instructionDecoder.decode(0x0E8D);
 
@@ -88,10 +115,38 @@ public class InstructionDecoderTest {
     }
 
     @Test
+    public void decode_incfsz() {
+        var instruction = instructionDecoder.decode(0x0F8C);
+
+        assertInstanceOf(Incfsz.class, instruction);
+    }
+
+    @Test
+    public void decode_rlf() {
+        var instruction = instructionDecoder.decode(0x0D8C);
+
+        assertInstanceOf(Rlf.class, instruction);
+    }
+
+    @Test
+    public void decode_rrf() {
+        var instruction = instructionDecoder.decode(0x0C8D);
+
+        assertInstanceOf(Rrf.class, instruction);
+    }
+
+    @Test
     public void decode_incf() {
         var instruction = instructionDecoder.decode(0x0A8D);
 
         assertInstanceOf(Incf.class, instruction);
+    }
+
+    @Test
+    public void decode_decfsz() {
+        var instruction = instructionDecoder.decode(0x0B8C);
+
+        assertInstanceOf(Decfsz.class, instruction);
     }
 
     @Test

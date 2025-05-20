@@ -8,12 +8,12 @@ import org.springframework.stereotype.Service;
 public class Alu {
     private final StatusRegister statusRegister;
 
-    public Alu(DataMemory dataMemory) {
-        this.statusRegister = dataMemory.status();
+    public Alu(StatusRegister statusRegister) {
+        this.statusRegister = statusRegister;
     }
 
     public int add(int a, int b) {
-        var result = Math.floorMod(a + b, DataMemory.REGISTER_SIZE + 1);
+        var result = Math.floorMod(a + b, DataMemory.REGISTER_MAX_SIZE);
 
         statusRegister.updateC_Add(a, b);
         statusRegister.updateDC_Add(a, b);
@@ -23,7 +23,7 @@ public class Alu {
     }
 
     public int sub(int a, int b) {
-        var result = Math.floorMod(a - b, DataMemory.REGISTER_SIZE + 1);
+        var result = Math.floorMod(a - b, DataMemory.REGISTER_MAX_SIZE);
 
         statusRegister.updateC_Sub(a, b);
         statusRegister.updateDC_Sub(a, b);
@@ -57,23 +57,7 @@ public class Alu {
     }
 
     public int not(int a) {
-        var result = a ^ DataMemory.REGISTER_SIZE;
-
-        statusRegister.updateZ(result);
-
-        return result;
-    }
-
-    public int dec(int a) {
-        var result = Math.floorMod(a - 1, DataMemory.REGISTER_SIZE + 1);
-
-        statusRegister.updateZ(result);
-
-        return result;
-    }
-
-    public int inc(int a) {
-        var result = Math.floorMod(a + 1, DataMemory.REGISTER_SIZE + 1);
+        var result = a ^ DataMemory.REGISTER_MAX_SIZE - 1;
 
         statusRegister.updateZ(result);
 

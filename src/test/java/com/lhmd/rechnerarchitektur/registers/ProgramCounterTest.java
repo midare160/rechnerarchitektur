@@ -13,15 +13,15 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class ProgramCounterTest {
+    private final ProgramCounter programCounter;
     private final IntBox pclRegister;
     private final IntBox pclathRegister;
-    private final ProgramCounter programCounter;
 
     @Autowired
-    public ProgramCounterTest(DataMemory dataMemory, ProgramCounter programCounter) {
-        this.pclRegister = dataMemory.getRegister(0x02);
-        this.pclathRegister = dataMemory.getRegister(0x0A);
+    public ProgramCounterTest(ProgramCounter programCounter, PclRegister pclRegister, PclathRegister pclathRegister) {
         this.programCounter = programCounter;
+        this.pclRegister = pclRegister;
+        this.pclathRegister = pclathRegister;
     }
 
     @Test
@@ -53,11 +53,11 @@ public class ProgramCounterTest {
         assertEquals(256, programCounter.get());
         assertEquals(0, pclRegister.get());
 
-        for (var i = 257; i < ProgramMemory.MAX_SIZE; i++) {
+        for (var i = 257; i < ProgramCounter.MAX_SIZE; i++) {
             programCounter.increment();
         }
 
-        assertEquals(ProgramMemory.MAX_SIZE - 1, programCounter.get());
+        assertEquals(ProgramCounter.MAX_SIZE - 1, programCounter.get());
         assertEquals(255, pclRegister.get());
 
         programCounter.increment();

@@ -69,6 +69,7 @@ public class BitPointerRow extends HBox {
         tooltip.setGraphic(headerText);
         tooltip.setContentDisplay(ContentDisplay.TOP);
         tooltip.setTextAlignment(TextAlignment.RIGHT);
+        tooltip.setShowDelay(Duration.millis(200));
         tooltip.setShowDuration(Duration.INDEFINITE);
 
         Tooltip.install(this, tooltip);

@@ -95,6 +95,24 @@ public final class IntUtils {
         return (a << bLength) | b;
     }
 
+    /**
+     * Sets all bits using the passed {@code pattern}, e.g. {@code --uu1xx0}.
+     */
+    public static int changeBits(int value, String pattern) {
+        for (var i = pattern.length() - 1; i >= 0; i--) {
+            var bitIndex = pattern.length() - i - 1;
+
+            value = switch (pattern.charAt(i)) {
+                case 'u', 'x', '-' -> value;
+                case '1' -> setBit(value, bitIndex);
+                case '0' -> clearBit(value, bitIndex);
+                default -> throw new IllegalArgumentException("Unexpected value: " + pattern);
+            };
+        }
+
+        return value;
+    }
+
     public static int requireValidBitIndex(int index) {
         if (index < 0 || index > 31) {
             throw new IndexOutOfBoundsException("Index must be between 0 and 31. Index = " + index);

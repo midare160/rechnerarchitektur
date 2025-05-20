@@ -2,14 +2,16 @@ package com.lhmd.rechnerarchitektur;
 
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
+import org.slf4j.*;
 
 public class ExceptionHandler {
     private ExceptionHandler() {
     }
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExceptionHandler.class);
+
     public static void handle(Throwable e) {
-        // TODO necessary?
-        // e.printStackTrace();
+        LOGGER.warn(e.getMessage(), e);
         handleInternal(e);
     }
 

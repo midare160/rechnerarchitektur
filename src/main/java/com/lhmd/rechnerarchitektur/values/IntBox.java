@@ -1,17 +1,15 @@
 package com.lhmd.rechnerarchitektur.values;
 
-import java.util.Objects;
-
 /**
  * Represents a {@code Box<Integer>} that disallows {@code null} values.
  */
 public class IntBox extends Box<Integer> {
     public IntBox() {
-        super(0);
+        this(0);
     }
 
     public IntBox(int value) {
-        super(value);
+        super(value, false);
     }
 
     public int get() {
@@ -22,8 +20,11 @@ public class IntBox extends Box<Integer> {
         setValue(value);
     }
 
-    @Override
-    public void setValue(Integer value) {
-        super.setValue(Objects.requireNonNull(value));
+    public void increment() {
+        set(get() + 1);
+    }
+
+    public void decrement() {
+        set(get() - 1);
     }
 }

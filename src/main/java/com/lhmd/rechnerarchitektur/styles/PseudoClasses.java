@@ -2,7 +2,7 @@ package com.lhmd.rechnerarchitektur.styles;
 
 import javafx.css.PseudoClass;
 
-public class PseudoClasses {
+public final class PseudoClasses {
     private PseudoClasses() {
     }
 

@@ -1,10 +1,28 @@
 package com.lhmd.rechnerarchitektur.configuration;
 
-import java.util.ArrayList;
+import java.util.*;
 
 public class UserConfig {
-    private String theme;
-    private ArrayList<String> fileHistory;
+    private long executionInterval = 200;
+    private double clock = 4;
+    private String theme = "Primer Light";
+    private List<String> fileHistory;
+
+    public long getExecutionInterval() {
+        return executionInterval;
+    }
+
+    public void setExecutionInterval(long executionInterval) {
+        this.executionInterval = executionInterval;
+    }
+
+    public double getClock() {
+        return clock;
+    }
+
+    public void setClock(double clock) {
+        this.clock = clock;
+    }
 
     public String getTheme() {
         return theme;
@@ -14,11 +32,15 @@ public class UserConfig {
         this.theme = theme;
     }
 
-    public ArrayList<String> getFileHistory() {
+    public List<String> getFileHistory() {
+        if (fileHistory == null) {
+            fileHistory = new ArrayList<>();
+        }
+
         return fileHistory;
     }
 
-    public void setFileHistory(ArrayList<String> fileHistory) {
-        this.fileHistory = fileHistory;
+    public void setFileHistory(List<String> fileHistory) {
+        this.fileHistory = Objects.requireNonNull(fileHistory);
     }
 }

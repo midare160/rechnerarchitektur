@@ -1,8 +1,8 @@
 package com.lhmd.rechnerarchitektur.computing;
 
 import com.lhmd.rechnerarchitektur.common.Runner;
-import com.lhmd.rechnerarchitektur.events.ActionEvent;
-import com.lhmd.rechnerarchitektur.events.ResetEvent;
+import com.lhmd.rechnerarchitektur.configuration.*;
+import com.lhmd.rechnerarchitektur.events.*;
 import com.lhmd.rechnerarchitektur.memory.*;
 import com.lhmd.rechnerarchitektur.registers.ProgramCounter;
 import org.springframework.context.event.EventListener;
@@ -12,6 +12,8 @@ import java.util.*;
 
 @Component
 public class Cpu extends Thread implements AutoCloseable {
+    private final UserConfig userConfig;
+    private final RuntimeManager runtimeManager;
     private final ProgramCounter programCounter;
     private final Set<Integer> breakpointAddresses;
 
@@ -24,7 +26,9 @@ public class Cpu extends Thread implements AutoCloseable {
     private volatile boolean isRunning;
     private volatile boolean isPaused;
 
-    public Cpu(ProgramCounter programCounter) {
+    public Cpu(UserConfigService userConfigService, RuntimeManager runtimeManager, ProgramCounter programCounter) {
+        this.userConfig = userConfigService.config();
+        this.runtimeManager = runtimeManager;
         this.programCounter = programCounter;
         this.breakpointAddresses = new HashSet<>();
 
@@ -32,6 +36,8 @@ public class Cpu extends Thread implements AutoCloseable {
         this.onNextInstruction = new ActionEvent();
 
         this.lastBreakpointAddress = -1;
+        this.isRunning = true;
+        this.isPaused = true;
     }
 
     public void setProgramMemory(ProgramMemory programMemory) {
@@ -58,18 +64,11 @@ public class Cpu extends Thread implements AutoCloseable {
         breakpointAddresses.clear();
     }
 
-    @Override
-    public void start() {
-        isRunning = true;
-        super.start();
-    }
-
     // Implementation as described in https://docs.oracle.com/javase/7/docs/technotes/guides/concurrency/threadPrimitiveDeprecation.html
     @Override
     public void run() {
         while (isRunning) {
-            // TODO calculate speed from MHz
-            Runner.unchecked(() -> sleep(200));
+            Runner.unchecked(() -> sleep(userConfig.getExecutionInterval()));
             pauseOnBreakpoint();
 
             synchronized (this) {
@@ -111,14 +110,15 @@ public class Cpu extends Thread implements AutoCloseable {
 
         var currentInstruction = programMemory.get(address);
         currentInstruction.execute();
+        runtimeManager.addCycle();
 
         if (currentInstruction.isTwoCycle()) {
-            // TODO add additional 4 cycles
+            runtimeManager.addCycle();
         }
     }
 
     private void pauseOnBreakpoint() {
-        var currentAddress = programCounter.get();
+        var currentAddress = Math.floorMod(programCounter.get(), ProgramMemory.MAX_SIZE);
 
         if (currentAddress == lastBreakpointAddress || !breakpointAddresses.contains(currentAddress)) {
             return;

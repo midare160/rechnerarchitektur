@@ -8,7 +8,7 @@ public class StackTable extends BitPointerTable {
     private ProgramStack stack;
 
     public StackTable() {
-        super(13);
+        super(ProgramStack.ELEMENT_WIDTH);
     }
 
     public void initialize(BeanFactory beanFactory) {
