@@ -130,7 +130,7 @@ public class MainMenuBar extends HBox {
     private void initializeActionMenuBar() {
         runMenu.setGraphic(SVGLoader.load(JavaFxApplication.class.getResource("svgs/run.svg")));
         pauseMenu.setGraphic(SVGLoader.load(JavaFxApplication.class.getResource("svgs/pause.svg")));
-        nextMenu.setGraphic(SVGLoader.load(JavaFxApplication.class.getResource("svgs/run.svg")));
+        nextMenu.setGraphic(SVGLoader.load(JavaFxApplication.class.getResource("svgs/step.svg")));
         resetMenu.setGraphic(SVGLoader.load(JavaFxApplication.class.getResource("svgs/reset.svg")));
 
         for (var menu : actionsMenuBar.getMenus()) {
