@@ -99,7 +99,7 @@ public final class IntUtils {
      * Sets all bits using the passed {@code pattern}, e.g. {@code --uu1xx0}.
      */
     public static int changeBits(int value, String pattern) {
-        for (int i = pattern.length() - 1; i >= 0; i--) {
+        for (var i = pattern.length() - 1; i >= 0; i--) {
             var bitIndex = pattern.length() - i - 1;
 
             value = switch (pattern.charAt(i)) {
