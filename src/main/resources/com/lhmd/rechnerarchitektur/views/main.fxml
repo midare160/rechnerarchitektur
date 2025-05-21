@@ -10,16 +10,17 @@
   <MainMenuBar fx:id="mainMenuBar" />
   <SplitPane dividerPositions="0.75" focusTraversable="true" VBox.vgrow="ALWAYS">
     <AnchorPane>
-      <InstructionsTableView fx:id="instructionsTableView" FxUtils.allAnchors="0.0" />
+      <InstructionsTableView fx:id="instructionsTableView" FxUtils.allAnchors="0" />
     </AnchorPane>
     <TabPane tabClosingPolicy="UNAVAILABLE" minWidth="280">
       <Tab text="Registers">
-        <RegisterTable fx:id="registerTable" FxUtils.allAnchors="0.0" />
+        <RegisterTable fx:id="registerTable" FxUtils.allAnchors="0" />
       </Tab>
       <Tab text="Stack">
-        <StackTable fx:id="stackTable" FxUtils.allAnchors="0.0" />
+        <StackTable fx:id="stackTable" FxUtils.allAnchors="0" />
       </Tab>
       <Tab text="Pins">
+        <PinTable fx:id="pinTable" FxUtils.allAnchors="0" />
       </Tab>
     </TabPane>
   </SplitPane>

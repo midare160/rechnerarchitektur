@@ -1,4 +1,4 @@
-package com.lhmd.rechnerarchitektur.computing;
+package com.lhmd.rechnerarchitektur.time;
 
 import com.lhmd.rechnerarchitektur.configuration.*;
 import com.lhmd.rechnerarchitektur.registers.*;

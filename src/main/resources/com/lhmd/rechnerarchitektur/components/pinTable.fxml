@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import com.lhmd.rechnerarchitektur.components.PinRow?>
+
+<fx:root type="ScrollPane" fitToWidth="true" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
+    <VBox>
+        <VBox fx:id="raPinsVBox">
+            <PinRow name="RA0"/>
+            <PinRow name="RA1"/>
+            <PinRow name="RA2"/>
+            <PinRow name="RA3"/>
+            <PinRow name="RA4/T0CKI"/>
+        </VBox>
+        <Separator/>
+        <VBox fx:id="rbPinsVBox">
+            <PinRow name="RB0/INT"/>
+            <PinRow name="RB1"/>
+            <PinRow name="RB2"/>
+            <PinRow name="RB3"/>
+            <PinRow name="RB4"/>
+            <PinRow name="RB5"/>
+            <PinRow name="RB6"/>
+            <PinRow name="RB7"/>
+        </VBox>
+    </VBox>
+</fx:root>

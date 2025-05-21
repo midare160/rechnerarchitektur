@@ -2,7 +2,7 @@ package com.lhmd.rechnerarchitektur.components;
 
 import com.lhmd.rechnerarchitektur.JavaFxApplication;
 import com.lhmd.rechnerarchitektur.common.FxUtils;
-import com.lhmd.rechnerarchitektur.computing.RuntimeManager;
+import com.lhmd.rechnerarchitektur.time.RuntimeManager;
 import com.lhmd.rechnerarchitektur.registers.*;
 import javafx.application.Platform;
 import javafx.fxml.FXML;

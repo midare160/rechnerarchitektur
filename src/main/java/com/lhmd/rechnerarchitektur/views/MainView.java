@@ -39,6 +39,9 @@ public class MainView {
     private StackTable stackTable;
 
     @FXML
+    private PinTable pinTable;
+
+    @FXML
     private MainFooter mainFooter;
 
     private final Cpu cpu;
@@ -76,6 +79,7 @@ public class MainView {
         instructionsTableView.initialize(beanFactory);
         registerTable.initialize(beanFactory);
         stackTable.initialize(beanFactory);
+        pinTable.initialize(beanFactory);
         mainFooter.initialize(beanFactory);
     }
 
@@ -151,6 +155,7 @@ public class MainView {
     private void resetChanged() {
         registerTable.resetChanged();
         stackTable.resetChanged();
+        pinTable.resetChanged();
         mainFooter.resetChanged();
     }
 }

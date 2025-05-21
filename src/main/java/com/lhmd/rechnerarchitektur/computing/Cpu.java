@@ -5,6 +5,7 @@ import com.lhmd.rechnerarchitektur.configuration.*;
 import com.lhmd.rechnerarchitektur.events.*;
 import com.lhmd.rechnerarchitektur.memory.*;
 import com.lhmd.rechnerarchitektur.registers.ProgramCounter;
+import com.lhmd.rechnerarchitektur.time.RuntimeManager;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
