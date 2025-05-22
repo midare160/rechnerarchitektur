@@ -5,6 +5,7 @@
 <?import javafx.scene.layout.*?>
 
 <?import com.lhmd.rechnerarchitektur.components.common.NumberField?>
+
 <GridPane fx:id="root" fx:controller="com.lhmd.rechnerarchitektur.views.Preferences" hgap="10" vgap="12"
           xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
     <Label labelFor="$clockField" text="Clock" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
@@ -15,7 +16,10 @@
     <NumberField fx:id="executionIntervalField" type="INTEGER" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
     <Label text="ms" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
 
-    <HBox alignment="CENTER_RIGHT" spacing="5" GridPane.rowIndex="2" GridPane.columnIndex="0" GridPane.columnSpan="3">
+    <Label labelFor="$themeCombo" text="Theme" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+    <ComboBox fx:id="themeCombo" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+
+    <HBox alignment="CENTER_RIGHT" spacing="5" GridPane.rowIndex="3" GridPane.columnIndex="0" GridPane.columnSpan="3">
         <Button fx:id="saveButton" text="Save" defaultButton="true"/>
         <Button fx:id="closeButton" text="Close" cancelButton="true"/>
     </HBox>

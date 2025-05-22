@@ -3,6 +3,7 @@ package com.lhmd.rechnerarchitektur.components;
 import com.lhmd.rechnerarchitektur.common.FxUtils;
 import com.lhmd.rechnerarchitektur.pins.*;
 import com.lhmd.rechnerarchitektur.styles.PseudoClasses;
+import javafx.application.Platform;
 import javafx.beans.NamedArg;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -32,6 +33,7 @@ public class PinRow extends HBox {
         this.name = name;
 
         FxUtils.loadHierarchy(this, "components/pinRow.fxml");
+        nameLabel.setText(name);
     }
 
     public void setData(Pin pin) {
@@ -55,15 +57,15 @@ public class PinRow extends HBox {
     }
 
     private void updateLabels() {
-        nameLabel.setText(name);
+        Platform.runLater(() -> {
+            directionLabel.setText(pin.getDirection() == PinDirection.OUT ? "OUT" : "IN");
+            directionLabel.pseudoClassStateChanged(PseudoClasses.CHANGED, pin.getDirection() != previousDirection);
 
-        directionLabel.setText(pin.getDirection() == PinDirection.OUT ? "OUT" : "IN");
-        directionLabel.pseudoClassStateChanged(PseudoClasses.CHANGED, pin.getDirection() != previousDirection);
+            stateLabel.setText(pin.getState() ? "1" : "0");
+            stateLabel.pseudoClassStateChanged(PseudoClasses.CHANGED, pin.getState() != previousState);
 
-        stateLabel.setText(pin.getState() ? "1" : "0");
-        stateLabel.pseudoClassStateChanged(PseudoClasses.CHANGED, pin.getState() != previousState);
-
-        valueLabel.setText(pin.getValue() ? "1" : "0");
-        valueLabel.pseudoClassStateChanged(PseudoClasses.CHANGED, pin.getValue() != previousValue);
+            valueLabel.setText(pin.getValue() ? "1" : "0");
+            valueLabel.pseudoClassStateChanged(PseudoClasses.CHANGED, pin.getValue() != previousValue);
+        });
     }
 }

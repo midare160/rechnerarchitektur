@@ -1,6 +1,7 @@
 package com.lhmd.rechnerarchitektur.views;
 
-import com.lhmd.rechnerarchitektur.common.FxUtils;
+import atlantafx.base.theme.Theme;
+import com.lhmd.rechnerarchitektur.common.*;
 import com.lhmd.rechnerarchitektur.components.common.NumberField;
 import com.lhmd.rechnerarchitektur.configuration.*;
 import javafx.fxml.FXML;
@@ -24,6 +25,9 @@ public class Preferences {
     private NumberField executionIntervalField;
 
     @FXML
+    private ComboBox<Theme> themeComboBox;
+
+    @FXML
     private Button saveButton;
 
     @FXML
@@ -40,6 +44,9 @@ public class Preferences {
         clockField.setText(Double.toString(userConfig.getClock()));
         executionIntervalField.setText(Long.toString(userConfig.getExecutionInterval()));
 
+        clockField.textProperty().addListener((ob, o, n) -> setSaveButtonDisabled(n));
+        executionIntervalField.textProperty().addListener((ob, o, n) -> setSaveButtonDisabled(n));
+
         closeButton.setOnAction(e -> FxUtils.closeWindow(root.getScene().getWindow()));
         saveButton.setOnAction(e -> save());
     }
@@ -49,5 +56,10 @@ public class Preferences {
         userConfig.setExecutionInterval(Long.parseLong(executionIntervalField.getText()));
 
         FxUtils.closeWindow(root.getScene().getWindow());
+    }
+
+    private void setSaveButtonDisabled(String numberInput){
+        var invalid = StringUtils.isNullOrWhitespace(numberInput) || Double.parseDouble(numberInput) == 0d;
+        saveButton.setDisable(invalid);
     }
 }
