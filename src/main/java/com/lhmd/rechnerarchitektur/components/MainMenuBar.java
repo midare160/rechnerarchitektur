@@ -14,7 +14,6 @@ import javafx.scene.layout.HBox;
 import javafx.stage.*;
 import javafx.fxml.FXML;
 import javafx.event.ActionEvent;
-import javafx.stage.WindowEvent;
 import org.girod.javafx.svgimage.SVGLoader;
 import org.springframework.beans.factory.*;
 

@@ -7,7 +7,6 @@ import com.lhmd.rechnerarchitektur.memory.*;
 import com.lhmd.rechnerarchitektur.registers.ProgramCounter;
 import com.lhmd.rechnerarchitektur.time.RuntimeManager;
 import org.springframework.context.event.EventListener;
-import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 

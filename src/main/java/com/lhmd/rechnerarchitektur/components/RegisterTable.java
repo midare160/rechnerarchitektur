@@ -1,5 +1,6 @@
 package com.lhmd.rechnerarchitektur.components;
 
+import com.lhmd.rechnerarchitektur.components.common.BitPointerTable;
 import com.lhmd.rechnerarchitektur.memory.DataMemory;
 import org.springframework.beans.factory.BeanFactory;
 

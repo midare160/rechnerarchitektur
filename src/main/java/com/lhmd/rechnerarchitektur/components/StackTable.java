@@ -1,5 +1,6 @@
 package com.lhmd.rechnerarchitektur.components;
 
+import com.lhmd.rechnerarchitektur.components.common.BitPointerTable;
 import com.lhmd.rechnerarchitektur.styles.PseudoClasses;
 import com.lhmd.rechnerarchitektur.memory.ProgramStack;
 import org.springframework.beans.factory.BeanFactory;

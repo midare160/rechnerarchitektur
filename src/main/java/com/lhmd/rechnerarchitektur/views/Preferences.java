@@ -1,14 +1,13 @@
 package com.lhmd.rechnerarchitektur.views;
 
 import com.lhmd.rechnerarchitektur.common.FxUtils;
-import com.lhmd.rechnerarchitektur.configuration.UserConfig;
-import com.lhmd.rechnerarchitektur.configuration.UserConfigService;
+import com.lhmd.rechnerarchitektur.components.common.NumberField;
+import com.lhmd.rechnerarchitektur.configuration.*;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.*;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -17,6 +16,12 @@ import org.springframework.stereotype.Component;
 public class Preferences {
     @FXML
     private GridPane root;
+
+    @FXML
+    private NumberField clockField;
+
+    @FXML
+    private NumberField executionIntervalField;
 
     @FXML
     private Button saveButton;
@@ -31,7 +36,18 @@ public class Preferences {
     }
 
     @FXML
-    private void initialize(){
+    private void initialize() {
+        clockField.setText(Double.toString(userConfig.getClock()));
+        executionIntervalField.setText(Long.toString(userConfig.getExecutionInterval()));
+
         closeButton.setOnAction(e -> FxUtils.closeWindow(root.getScene().getWindow()));
+        saveButton.setOnAction(e -> save());
+    }
+
+    private void save() {
+        userConfig.setClock(Double.parseDouble(clockField.getText()));
+        userConfig.setExecutionInterval(Long.parseLong(executionIntervalField.getText()));
+
+        FxUtils.closeWindow(root.getScene().getWindow());
     }
 }

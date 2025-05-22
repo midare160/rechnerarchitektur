@@ -5,7 +5,6 @@ import com.lhmd.rechnerarchitektur.JavaFxApplication;
 import com.lhmd.rechnerarchitektur.configuration.*;
 import javafx.application.Application;
 import javafx.scene.Scene;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
@@ -13,7 +12,7 @@ import java.util.*;
 
 @Component
 @Lazy
-public class ThemeManager implements InitializingBean {
+public class ThemeManager {
     private static final String LIGHTSTYLE_URL = JavaFxApplication.class.getResource("styles/theme-light.css").toExternalForm();
     private static final String DARKSTYLE_URL = JavaFxApplication.class.getResource("styles/theme-dark.css").toExternalForm();
     private static final Map<String, Theme> ALL_THEMES;
@@ -43,15 +42,12 @@ public class ThemeManager implements InitializingBean {
     }
 
     private final UserConfig userConfig;
-    private final List<Scene> scenes;
+    private final WeakHashMap<Scene, Void> scenes;
 
     public ThemeManager(UserConfigService userConfigService) {
         userConfig = userConfigService.config();
-        scenes = new ArrayList<>();
-    }
+        scenes = new WeakHashMap<>();
 
-    @Override
-    public void afterPropertiesSet() {
         setApplicationStylesheet();
     }
 
@@ -67,7 +63,7 @@ public class ThemeManager implements InitializingBean {
     }
 
     public void registerScene(Scene scene) {
-        scenes.add(scene);
+        scenes.put(scene, null);
         applyCurrentStylesheet(scene);
     }
 
@@ -87,7 +83,7 @@ public class ThemeManager implements InitializingBean {
     }
 
     private void onThemeChanged() {
-        for (var scene : scenes) {
+        for (var scene : scenes.keySet()) {
             applyCurrentStylesheet(scene);
         }
     }

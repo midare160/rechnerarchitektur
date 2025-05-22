@@ -1,4 +1,4 @@
-package com.lhmd.rechnerarchitektur.components;
+package com.lhmd.rechnerarchitektur.components.common;
 
 import com.lhmd.rechnerarchitektur.common.IntUtils;
 import com.lhmd.rechnerarchitektur.values.IntBox;
