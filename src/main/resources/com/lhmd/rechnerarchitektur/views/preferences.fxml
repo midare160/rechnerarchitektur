@@ -16,13 +16,13 @@
     <NumberField fx:id="executionIntervalField" type="INTEGER" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
     <Label text="ms" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
 
-    <Label labelFor="$themeCombo" text="Theme" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-    <ComboBox fx:id="themeCombo" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+    <Label labelFor="$themeComboBox" text="Theme" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+    <ComboBox fx:id="themeComboBox" maxWidth="Infinity" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
 
-    <HBox alignment="CENTER_RIGHT" spacing="5" GridPane.rowIndex="3" GridPane.columnIndex="0" GridPane.columnSpan="3">
-        <Button fx:id="saveButton" text="Save" defaultButton="true"/>
-        <Button fx:id="closeButton" text="Close" cancelButton="true"/>
-    </HBox>
+    <TilePane hgap="10" alignment="CENTER_RIGHT" GridPane.rowIndex="3" GridPane.columnIndex="0" GridPane.columnSpan="3">
+        <Button fx:id="okButton" text="OK" defaultButton="true" maxWidth="Infinity"/>
+        <Button fx:id="cancelButton" text="Cancel" cancelButton="true" maxWidth="Infinity"/>
+    </TilePane>
 
     <padding>
         <Insets topRightBottomLeft="10"/>

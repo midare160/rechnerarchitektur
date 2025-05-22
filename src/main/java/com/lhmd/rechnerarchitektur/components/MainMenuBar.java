@@ -41,9 +41,6 @@ public class MainMenuBar extends HBox {
     private MenuItem aboutMenuItem;
 
     @FXML
-    private Menu themeMenu;
-
-    @FXML
     private MenuBar actionsMenuBar;
 
     @FXML
@@ -73,7 +70,6 @@ public class MainMenuBar extends HBox {
 
         initializeEvents();
         initializeOpenRecentMenu();
-        initializeThemeMenu();
         initializeActionMenuBar();
 
         aboutMenuItem.setText("About " + ProgramInfo.PROGRAM_NAME);
@@ -118,21 +114,6 @@ public class MainMenuBar extends HBox {
         }
 
         setReopenAccelerator();
-    }
-
-    private void initializeThemeMenu() {
-        var shortcutIndex = 1;
-
-        for (var themeName : ThemeManager.allThemes().keySet()) {
-            var menuItem = new CheckMenuItem(themeName);
-            menuItem.setOnAction(this::onThemeMenuItemAction);
-            menuItem.setAccelerator(KeyCombination.valueOf("SHORTCUT+" + shortcutIndex++));
-
-            var isCurrentTheme = themeName.equals(themeManager.getCurrentThemeName());
-            menuItem.setSelected(isCurrentTheme);
-
-            themeMenu.getItems().add(menuItem);
-        }
     }
 
     private void initializeActionMenuBar() {
@@ -232,17 +213,6 @@ public class MainMenuBar extends HBox {
                 """);
 
         alert.showAndWait();
-    }
-
-    private void onThemeMenuItemAction(ActionEvent e) {
-        var menuItem = (CheckMenuItem) e.getSource();
-
-        themeManager.setCurrentThemeName(menuItem.getText());
-
-        for (var item : themeMenu.getItems()) {
-            var checkMenuItem = (CheckMenuItem) item;
-            checkMenuItem.setSelected(item == menuItem);
-        }
     }
 
     private void onRunMenuAction(ActionEvent e) {

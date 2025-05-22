@@ -18,7 +18,6 @@
         <Menu text="Help">
             <MenuItem fx:id="aboutMenuItem" text="About" accelerator="F1" />
         </Menu>
-        <Menu fx:id="themeMenu" text="Theme" />
     </MenuBar>
     <Region styleClass="menu-bar" HBox.hgrow="ALWAYS" />
     <MenuBar fx:id="actionsMenuBar">

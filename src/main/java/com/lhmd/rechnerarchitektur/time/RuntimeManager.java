@@ -24,7 +24,7 @@ public class RuntimeManager {
     /**
      * Returns the simulated runtime in microseconds (µs).
      */
-    public Box<Double> runtime() {
+    public DoubleBox runtime() {
         return runtime;
     }
 
@@ -41,7 +41,7 @@ public class RuntimeManager {
 
     public synchronized void reset() {
         cycles = 0;
-        runtime.setValue(0d);
+        runtime.set(0d);
     }
 
     /**

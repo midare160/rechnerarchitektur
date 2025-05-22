@@ -49,7 +49,7 @@ public class MainFooter extends GridPane {
     }
 
     private void updateRuntimeLabel() {
-        var text = "Elapsed: %.2f µs".formatted(runtimeManager.runtime().getValue());
+        var text = "Elapsed: %.2f µs".formatted(runtimeManager.runtime().get());
 
         Platform.runLater(() -> runtimeLabel.setText(text));
     }

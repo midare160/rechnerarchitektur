@@ -13,42 +13,25 @@ import java.util.*;
 @Component
 @Lazy
 public class ThemeManager {
+    @SuppressWarnings("DataFlowIssue")
     private static final String LIGHTSTYLE_URL = JavaFxApplication.class.getResource("styles/theme-light.css").toExternalForm();
+    @SuppressWarnings("DataFlowIssue")
     private static final String DARKSTYLE_URL = JavaFxApplication.class.getResource("styles/theme-dark.css").toExternalForm();
-    private static final Map<String, Theme> ALL_THEMES;
-
-    static {
-        var themes = new Theme[]{
-                new PrimerLight(),
-                new PrimerDark(),
-                new NordLight(),
-                new NordDark(),
-                new CupertinoLight(),
-                new CupertinoDark(),
-                new Dracula(),
-        };
-
-        var map = new LinkedHashMap<String, Theme>();
-
-        for (var theme : themes) {
-            map.put(theme.getName(), theme);
-        }
-
-        ALL_THEMES = Collections.unmodifiableMap(map);
-    }
-
-    public static Map<String, Theme> allThemes() {
-        return ALL_THEMES;
-    }
 
     private final UserConfig userConfig;
+    private final Map<String, Theme> themes;
     private final WeakHashMap<Scene, Void> scenes;
 
     public ThemeManager(UserConfigService userConfigService) {
-        userConfig = userConfigService.config();
-        scenes = new WeakHashMap<>();
+        this.userConfig = userConfigService.config();
+        this.themes = createThemeMap();
+        this.scenes = new WeakHashMap<>();
 
         setApplicationStylesheet();
+    }
+
+    public Map<String, Theme> themes() {
+        return themes;
     }
 
     public String getCurrentThemeName() {
@@ -67,13 +50,33 @@ public class ThemeManager {
         applyCurrentStylesheet(scene);
     }
 
+    private Map<String, Theme> createThemeMap() {
+        var themes = new Theme[]{
+                new PrimerLight(),
+                new PrimerDark(),
+                new NordLight(),
+                new NordDark(),
+                new CupertinoLight(),
+                new CupertinoDark(),
+                new Dracula(),
+        };
+
+        var map = new LinkedHashMap<String, Theme>();
+
+        for (var theme : themes) {
+            map.put(theme.getName(), theme);
+        }
+
+        return Collections.unmodifiableMap(map);
+    }
+
     private void setApplicationStylesheet() {
-        var theme = ALL_THEMES.get(getCurrentThemeName());
+        var theme = themes.get(getCurrentThemeName());
         Application.setUserAgentStylesheet(theme.getUserAgentStylesheet());
     }
 
     private void applyCurrentStylesheet(Scene scene) {
-        var currentTheme = ALL_THEMES.get(getCurrentThemeName());
+        var currentTheme = themes.get(getCurrentThemeName());
 
         var oldStyleUrl = currentTheme.isDarkMode() ? LIGHTSTYLE_URL : DARKSTYLE_URL;
         var newStyleUrl = currentTheme.isDarkMode() ? DARKSTYLE_URL : LIGHTSTYLE_URL;
