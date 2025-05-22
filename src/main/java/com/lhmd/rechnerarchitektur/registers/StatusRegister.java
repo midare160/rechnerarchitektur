@@ -1,9 +1,10 @@
 package com.lhmd.rechnerarchitektur.registers;
 
 import com.lhmd.rechnerarchitektur.common.IntUtils;
-import com.lhmd.rechnerarchitektur.events.ResetEvent;
+import com.lhmd.rechnerarchitektur.events.*;
 import com.lhmd.rechnerarchitektur.memory.DataMemory;
 import org.springframework.context.event.EventListener;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -24,6 +25,7 @@ public class StatusRegister extends SpecialRegister {
     }
 
     @EventListener
+    @Order(EventOrders.DATA)
     public void handleReset(ResetEvent event) {
         var pattern = switch (event.getResetType()) {
             case POWERON -> "00011xxx";

@@ -1,6 +1,6 @@
 package com.lhmd.rechnerarchitektur.views;
 
-import com.lhmd.rechnerarchitektur.computing.Cpu;
+import com.lhmd.rechnerarchitektur.computing.*;
 import com.lhmd.rechnerarchitektur.common.*;
 import com.lhmd.rechnerarchitektur.components.*;
 import com.lhmd.rechnerarchitektur.events.*;
@@ -16,6 +16,7 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.event.EventListener;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;
@@ -63,8 +64,9 @@ public class MainView {
         this.eventPublisher = eventPublisher;
     }
 
-    @EventListener(ResetEvent.class)
-    public void handleReset() {
+    @EventListener
+    @Order(EventOrders.UI)
+    public void handleReset(ResetEvent event) {
         resetChanged();
     }
 

@@ -7,6 +7,8 @@ import com.lhmd.rechnerarchitektur.memory.*;
 import com.lhmd.rechnerarchitektur.registers.ProgramCounter;
 import com.lhmd.rechnerarchitektur.time.RuntimeManager;
 import org.springframework.context.event.EventListener;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -88,8 +90,9 @@ public class Cpu extends Thread implements AutoCloseable {
         notify();
     }
 
-    @EventListener(ResetEvent.class)
-    public void handleReset() {
+    @EventListener
+    @Order(EventOrders.EXECUTION)
+    public void handleReset(ResetEvent event) {
         lastBreakpointAddress = -1;
     }
 

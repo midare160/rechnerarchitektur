@@ -26,15 +26,6 @@ public class ProgramStack {
         }
     }
 
-    @EventListener(ResetEvent.class)
-    public void handleReset() {
-        pointer.set(0);
-
-        for (var element : elements) {
-            element.set(0);
-        }
-    }
-
     public IntBox pointer() {
         return pointer;
     }
