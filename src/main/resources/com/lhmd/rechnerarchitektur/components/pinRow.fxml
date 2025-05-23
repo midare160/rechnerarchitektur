@@ -3,23 +3,12 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<fx:root type="HBox" maxWidth="Infinity" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
-    <Label fx:id="nameLabel" minWidth="70" maxHeight="Infinity" styleClass="monospaced, text-bold" />
-    <Separator orientation="VERTICAL" />
-    <Label fx:id="directionLabel" HBox.hgrow="ALWAYS" minWidth="30" maxWidth="Infinity" maxHeight="Infinity" alignment="CENTER" >
-        <tooltip>
-            <Tooltip text="Direction" />
-        </tooltip>
-    </Label>
-    <Label fx:id="stateLabel" HBox.hgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity" alignment="CENTER" >
-        <tooltip>
-            <Tooltip text="I/O State" />
-        </tooltip>
-    </Label>
-    <Label text="=" />
-    <Label fx:id="valueLabel" HBox.hgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity" alignment="CENTER" >
-        <tooltip>
-            <Tooltip text="Value" />
-        </tooltip>
-    </Label>
+<?import com.lhmd.rechnerarchitektur.components.common.Led?>
+
+<fx:root type="HBox" maxWidth="Infinity" alignment="CENTER" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
+    <Label fx:id="nameLabel" minWidth="70" maxHeight="Infinity" styleClass="monospaced, text-bold"/>
+    <Separator orientation="VERTICAL"/>
+    <Label fx:id="directionLabel" HBox.hgrow="ALWAYS" minWidth="40" maxWidth="Infinity" maxHeight="Infinity" alignment="CENTER"/>
+    <Label fx:id="stateLabel" HBox.hgrow="ALWAYS" minWidth="40" maxWidth="Infinity" maxHeight="Infinity" alignment="CENTER"/>
+    <Led fx:id="valueLed"/>
 </fx:root>

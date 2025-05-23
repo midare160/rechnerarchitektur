@@ -1,6 +1,7 @@
 package com.lhmd.rechnerarchitektur.components;
 
 import com.lhmd.rechnerarchitektur.common.FxUtils;
+import com.lhmd.rechnerarchitektur.components.common.Led;
 import com.lhmd.rechnerarchitektur.pins.*;
 import com.lhmd.rechnerarchitektur.styles.PseudoClasses;
 import javafx.application.Platform;
@@ -20,14 +21,13 @@ public class PinRow extends HBox {
     private Label stateLabel;
 
     @FXML
-    private Label valueLabel;
+    private Led valueLed;
 
     private final String name;
 
     private Pin pin;
     private PinDirection previousDirection;
     private boolean previousState;
-    private boolean previousValue;
 
     public PinRow(@NamedArg("name") String name) {
         this.name = name;
@@ -39,10 +39,10 @@ public class PinRow extends HBox {
     public void setData(Pin pin) {
         this.pin = pin;
 
-        updateLabels();
-        pin.onDirectionChanged().addListener((o, n) -> updateLabels());
-        pin.onStateChanged().addListener((o, n) -> updateLabels());
-        pin.onValueChanged().addListener((o, n) -> updateLabels());
+        updateControls();
+        pin.onDirectionChanged().addListener((o, n) -> updateControls());
+        pin.onStateChanged().addListener((o, n) -> updateControls());
+        pin.onValueChanged().addListener((o, n) -> updateControls());
 
         directionLabel.setOnMouseClicked(e -> pin.toggleDirection());
         stateLabel.setOnMouseClicked(e -> pin.toggleState());
@@ -51,21 +51,19 @@ public class PinRow extends HBox {
     public void resetChanged() {
         previousDirection = pin.getDirection();
         previousState = pin.getState();
-        previousValue = pin.getValue();
 
-        updateLabels();
+        updateControls();
     }
 
-    private void updateLabels() {
+    private void updateControls() {
         Platform.runLater(() -> {
             directionLabel.setText(pin.getDirection() == PinDirection.OUT ? "OUT" : "IN");
             directionLabel.pseudoClassStateChanged(PseudoClasses.CHANGED, pin.getDirection() != previousDirection);
 
-            stateLabel.setText(pin.getState() ? "1" : "0");
+            stateLabel.setText(pin.getState() ? "HIGH" : "LOW");
             stateLabel.pseudoClassStateChanged(PseudoClasses.CHANGED, pin.getState() != previousState);
 
-            valueLabel.setText(pin.getValue() ? "1" : "0");
-            valueLabel.pseudoClassStateChanged(PseudoClasses.CHANGED, pin.getValue() != previousValue);
+            valueLed.setActive(pin.getValue());
         });
     }
 }
