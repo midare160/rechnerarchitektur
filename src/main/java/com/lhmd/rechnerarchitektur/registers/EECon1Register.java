@@ -34,4 +34,16 @@ public class EECon1Register extends SpecialRegister {
     public boolean getWR() {
         return isBitSet(WR_INDEX);
     }
+
+    public void setWR(boolean value) {
+        setBit(WR_INDEX, value);
+    }
+
+    public boolean getEEIF() {
+        return isBitSet(EEIF_INDEX);
+    }
+
+    public void setEEIF(boolean value) {
+        setBit(EEIF_INDEX, value);
+    }
 }
