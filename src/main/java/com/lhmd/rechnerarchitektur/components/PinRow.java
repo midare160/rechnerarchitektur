@@ -46,6 +46,7 @@ public class PinRow extends HBox {
 
         directionLabel.setOnMouseClicked(e -> pin.toggleDirection());
         stateLabel.setOnMouseClicked(e -> pin.toggleState());
+        valueLed.setOnMouseClicked(e -> pin.toggleValue());
     }
 
     public void resetChanged() {

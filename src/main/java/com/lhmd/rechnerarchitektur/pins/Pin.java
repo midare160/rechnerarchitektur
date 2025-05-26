@@ -32,6 +32,10 @@ public class Pin {
         return value.get();
     }
 
+    public void toggleValue() {
+        value.toggle();
+    }
+
     public ChangedEvent<Boolean> onValueChanged() {
         return value.onChanged();
     }
