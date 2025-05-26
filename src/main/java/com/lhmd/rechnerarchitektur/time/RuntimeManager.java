@@ -1,6 +1,7 @@
 package com.lhmd.rechnerarchitektur.time;
 
 import com.lhmd.rechnerarchitektur.configuration.*;
+import com.lhmd.rechnerarchitektur.memory.DataMemory;
 import com.lhmd.rechnerarchitektur.registers.*;
 import com.lhmd.rechnerarchitektur.values.*;
 import org.springframework.stereotype.Component;
@@ -8,17 +9,21 @@ import org.springframework.stereotype.Component;
 @Component
 public class RuntimeManager {
     private final UserConfig userConfig;
-    private final IntBox tmr0;
-    private final OptionRegister option;
+    private final IntBox tmr0Register;
+    private final IntconRegister intconRegister;
+    private final OptionRegister optionRegister;
     private final DoubleBox runtime;
 
     private int cycles;
 
-    public RuntimeManager(UserConfigService userConfigService, Tmr0Register tmr0Register, OptionRegister optionRegister) {
+    public RuntimeManager(UserConfigService userConfigService, Tmr0Register tmr0Register, IntconRegister intconRegister, OptionRegister optionRegister) {
         this.userConfig = userConfigService.config();
-        this.tmr0 = tmr0Register;
-        this.option = optionRegister;
+        this.tmr0Register = tmr0Register;
+        this.intconRegister = intconRegister;
+        this.optionRegister = optionRegister;
         this.runtime = new DoubleBox();
+
+        tmr0Register.onChanged().addListener(this::onTmr0Changed);
     }
 
     /**
@@ -34,7 +39,7 @@ public class RuntimeManager {
 
         // TODO check if assigned to tmr0 or wdt
         if (Math.floorMod(cycles, getPrescalerValue()) == 0) {
-            tmr0.set(tmr0.get() + 1);
+            tmr0Register.set((tmr0Register.get() + 1) % DataMemory.REGISTER_MAX_SIZE);
             addTickTime();
         }
     }
@@ -56,5 +61,11 @@ public class RuntimeManager {
     // TODO read actual value
     private int getPrescalerValue() {
         return 1;
+    }
+
+    private void onTmr0Changed(Integer oldValue, Integer newValue) {
+        if (oldValue == DataMemory.REGISTER_MAX_SIZE - 1 && newValue == 0) {
+            intconRegister.setT0IF(true);
+        }
     }
 }

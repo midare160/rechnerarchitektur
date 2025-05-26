@@ -14,10 +14,6 @@ public class OptionRegister extends SpecialRegister {
     private static final int INTEDG_INDEX = 6;
     private static final int RBPU_INDEX = 7;
 
-    public int getPs02() {
-        return IntUtils.bitRange(get(), 0, 2);
-    }
-
     @Override
     public int getAddress() {
         return 0x81;
@@ -32,5 +28,17 @@ public class OptionRegister extends SpecialRegister {
         };
 
         set(IntUtils.changeBits(get(), pattern));
+    }
+
+    public int getPs02() {
+        return IntUtils.bitRange(get(), 0, 2);
+    }
+
+    public boolean getINTEDG() {
+        return isBitSet(INTEDG_INDEX);
+    }
+
+    public void setINTEDG(boolean value) {
+        setBit(INTEDG_INDEX, value);
     }
 }
