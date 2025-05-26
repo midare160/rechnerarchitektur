@@ -1,5 +1,6 @@
 package com.lhmd.rechnerarchitektur.computing;
 
+import com.lhmd.rechnerarchitektur.InterruptManager;
 import com.lhmd.rechnerarchitektur.common.Runner;
 import com.lhmd.rechnerarchitektur.configuration.*;
 import com.lhmd.rechnerarchitektur.events.*;
@@ -16,6 +17,7 @@ import java.util.*;
 public class Cpu extends Thread implements AutoCloseable {
     private final UserConfig userConfig;
     private final RuntimeManager runtimeManager;
+    private final InterruptManager interruptManager;
     private final ProgramCounter programCounter;
     private final Set<Integer> breakpointAddresses;
 
@@ -28,9 +30,10 @@ public class Cpu extends Thread implements AutoCloseable {
     private volatile boolean isRunning;
     private volatile boolean isPaused;
 
-    public Cpu(UserConfigService userConfigService, RuntimeManager runtimeManager, ProgramCounter programCounter) {
+    public Cpu(UserConfigService userConfigService, RuntimeManager runtimeManager, InterruptManager interruptManager, ProgramCounter programCounter) {
         this.userConfig = userConfigService.config();
         this.runtimeManager = runtimeManager;
+        this.interruptManager = interruptManager;
         this.programCounter = programCounter;
         this.breakpointAddresses = new HashSet<>();
 
@@ -113,11 +116,14 @@ public class Cpu extends Thread implements AutoCloseable {
 
         var currentInstruction = programMemory.get(address);
         currentInstruction.execute();
+
         runtimeManager.addCycle();
 
         if (currentInstruction.isTwoCycle()) {
             runtimeManager.addCycle();
         }
+
+        interruptManager.checkForInterrupt();
     }
 
     private void pauseOnBreakpoint() {
