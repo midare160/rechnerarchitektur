@@ -1,8 +1,9 @@
 package com.lhmd.rechnerarchitektur.registers;
 
 import com.lhmd.rechnerarchitektur.common.IntUtils;
-import com.lhmd.rechnerarchitektur.events.ResetEvent;
+import com.lhmd.rechnerarchitektur.events.*;
 import org.springframework.context.event.EventListener;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -19,6 +20,7 @@ public class EECon1Register extends SpecialRegister {
     }
 
     @EventListener
+    @Order(EventOrders.DATA)
     public void handleReset(ResetEvent event) {
         var pattern = switch (event.getResetType()) {
             case POWERON -> "---0x000";
@@ -31,5 +33,17 @@ public class EECon1Register extends SpecialRegister {
 
     public boolean getWR() {
         return isBitSet(WR_INDEX);
+    }
+
+    public void setWR(boolean value) {
+        setBit(WR_INDEX, value);
+    }
+
+    public boolean getEEIF() {
+        return isBitSet(EEIF_INDEX);
+    }
+
+    public void setEEIF(boolean value) {
+        setBit(EEIF_INDEX, value);
     }
 }

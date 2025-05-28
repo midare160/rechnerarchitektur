@@ -1,4 +1,4 @@
-package com.lhmd.rechnerarchitektur.components;
+package com.lhmd.rechnerarchitektur.components.common;
 
 import com.lhmd.rechnerarchitektur.events.ChangeListener;
 import com.lhmd.rechnerarchitektur.values.IntBox;
@@ -80,7 +80,7 @@ public class BitPointerRow extends HBox {
 
     private Label initializeNameLabel() {
         var label = new Label(name);
-        label.setAlignment(Pos.CENTER);
+        label.setAlignment(Pos.CENTER_RIGHT);
         label.setMaxHeight(Double.MAX_VALUE);
         label.getStyleClass().addAll("monospaced", "text-bold");
 

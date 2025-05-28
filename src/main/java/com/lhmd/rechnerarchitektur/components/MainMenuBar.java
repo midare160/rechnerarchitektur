@@ -1,19 +1,21 @@
 package com.lhmd.rechnerarchitektur.components;
 
 import com.lhmd.rechnerarchitektur.*;
-import com.lhmd.rechnerarchitektur.common.FxUtils;
+import com.lhmd.rechnerarchitektur.common.*;
 import com.lhmd.rechnerarchitektur.configuration.*;
 import com.lhmd.rechnerarchitektur.events.MainMenuBarEvent;
 import com.lhmd.rechnerarchitektur.styles.ThemeManager;
+import com.lhmd.rechnerarchitektur.views.Preferences;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.HBox;
 import javafx.stage.*;
 import javafx.fxml.FXML;
 import javafx.event.ActionEvent;
-import javafx.stage.WindowEvent;
 import org.girod.javafx.svgimage.SVGLoader;
-import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.*;
 
 import java.io.File;
 
@@ -30,13 +32,13 @@ public class MainMenuBar extends HBox {
     private MenuItem closeMenuItem;
 
     @FXML
+    private MenuItem preferencesMenuItem;
+
+    @FXML
     private MenuItem quitMenuItem;
 
     @FXML
     private MenuItem aboutMenuItem;
-
-    @FXML
-    private Menu themeMenu;
 
     @FXML
     private MenuBar actionsMenuBar;
@@ -53,6 +55,7 @@ public class MainMenuBar extends HBox {
     @FXML
     private Menu resetMenu;
 
+    private ObjectProvider<Preferences> preferencesProvider;
     private UserConfig userConfig;
     private ThemeManager themeManager;
 
@@ -61,12 +64,12 @@ public class MainMenuBar extends HBox {
     }
 
     public void initialize(BeanFactory beanFactory) {
+        preferencesProvider = beanFactory.getBeanProvider(Preferences.class);
         userConfig = beanFactory.getBean(UserConfigService.class).config();
         themeManager = beanFactory.getBean(ThemeManager.class);
 
         initializeEvents();
         initializeOpenRecentMenu();
-        initializeThemeMenu();
         initializeActionMenuBar();
 
         aboutMenuItem.setText("About " + ProgramInfo.PROGRAM_NAME);
@@ -90,6 +93,7 @@ public class MainMenuBar extends HBox {
     private void initializeEvents() {
         openMenuItem.setOnAction(this::onOpenMenuItemAction);
         closeMenuItem.setOnAction(this::onCloseMenuItemAction);
+        preferencesMenuItem.setOnAction(this::onPreferencesMenuItemAction);
         quitMenuItem.setOnAction(this::onQuitMenuItemAction);
         aboutMenuItem.setOnAction(this::onAboutMenuItemAction);
 
@@ -110,21 +114,6 @@ public class MainMenuBar extends HBox {
         }
 
         setReopenAccelerator();
-    }
-
-    private void initializeThemeMenu() {
-        var shortcutIndex = 1;
-
-        for (var themeName : ThemeManager.allThemes().keySet()) {
-            var menuItem = new CheckMenuItem(themeName);
-            menuItem.setOnAction(this::onThemeMenuItemAction);
-            menuItem.setAccelerator(KeyCombination.valueOf("SHORTCUT+" + shortcutIndex++));
-
-            var isCurrentTheme = themeName.equals(themeManager.getCurrentThemeName());
-            menuItem.setSelected(isCurrentTheme);
-
-            themeMenu.getItems().add(menuItem);
-        }
     }
 
     private void initializeActionMenuBar() {
@@ -188,9 +177,26 @@ public class MainMenuBar extends HBox {
         fireEvent(new MainMenuBarEvent<>(MainMenuBarEvent.ON_FILE_CLOSED));
     }
 
+    private void onPreferencesMenuItemAction(ActionEvent e) {
+        var loader = new FXMLLoader(JavaFxApplication.class.getResource("views/preferences.fxml"));
+        loader.setControllerFactory(c -> preferencesProvider.getObject());
+
+        var scene = new Scene(Runner.unchecked(() -> loader.load()));
+        themeManager.registerScene(scene);
+
+        var stage = new Stage();
+        stage.initOwner(getScene().getWindow());
+        stage.initModality(Modality.WINDOW_MODAL);
+        stage.setScene(scene);
+        stage.setResizable(false);
+        stage.setTitle("Preferences");
+
+        stage.show();
+        FxUtils.centerStage(stage);
+    }
+
     private void onQuitMenuItemAction(ActionEvent e) {
-        var event = new WindowEvent(getScene().getWindow(), WindowEvent.WINDOW_CLOSE_REQUEST);
-        getScene().getWindow().fireEvent(event);
+        FxUtils.closeWindow(getScene().getWindow());
     }
 
     private void onAboutMenuItemAction(ActionEvent e) {
@@ -207,17 +213,6 @@ public class MainMenuBar extends HBox {
                 """);
 
         alert.showAndWait();
-    }
-
-    private void onThemeMenuItemAction(ActionEvent e) {
-        var menuItem = (CheckMenuItem) e.getSource();
-
-        themeManager.setCurrentThemeName(menuItem.getText());
-
-        for (var item : themeMenu.getItems()) {
-            var checkMenuItem = (CheckMenuItem) item;
-            checkMenuItem.setSelected(item == menuItem);
-        }
     }
 
     private void onRunMenuAction(ActionEvent e) {

@@ -4,7 +4,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 
-<?import com.lhmd.rechnerarchitektur.components.BitPointerRow?>
+<?import com.lhmd.rechnerarchitektur.components.common.BitPointerRow?>
 
 <fx:root type="GridPane" id="mainFooter" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
     <BitPointerRow fx:id="wRegisterRow" numberOfBits="8" name="W" GridPane.columnIndex="0" />

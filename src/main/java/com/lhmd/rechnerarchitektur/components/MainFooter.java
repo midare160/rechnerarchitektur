@@ -2,7 +2,8 @@ package com.lhmd.rechnerarchitektur.components;
 
 import com.lhmd.rechnerarchitektur.JavaFxApplication;
 import com.lhmd.rechnerarchitektur.common.FxUtils;
-import com.lhmd.rechnerarchitektur.computing.RuntimeManager;
+import com.lhmd.rechnerarchitektur.components.common.BitPointerRow;
+import com.lhmd.rechnerarchitektur.time.RuntimeManager;
 import com.lhmd.rechnerarchitektur.registers.*;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -48,7 +49,7 @@ public class MainFooter extends GridPane {
     }
 
     private void updateRuntimeLabel() {
-        var text = "Elapsed: %.2f µs".formatted(runtimeManager.runtime().getValue());
+        var text = "Elapsed: %.2f µs".formatted(runtimeManager.runtime().get());
 
         Platform.runLater(() -> runtimeLabel.setText(text));
     }

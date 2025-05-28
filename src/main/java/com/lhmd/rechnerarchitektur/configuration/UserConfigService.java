@@ -4,8 +4,6 @@ import com.lhmd.rechnerarchitektur.common.Runner;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.yaml.snakeyaml.*;
-import org.yaml.snakeyaml.constructor.Constructor;
-import org.yaml.snakeyaml.representer.Representer;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -20,9 +18,7 @@ public class UserConfigService implements AutoCloseable {
     private UserConfig userConfig;
 
     public UserConfigService() {
-        yaml = new Yaml(
-                new Constructor(UserConfig.class, getLoaderOptions()),
-                new Representer(getDumperOptions()));
+        yaml = new Yaml(getLoaderOptions(), getDumperOptions());
     }
 
     @Override

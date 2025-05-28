@@ -227,6 +227,13 @@ public class InstructionDecoderTest {
     }
 
     @Test
+    public void decode_retfie() {
+        var instruction = instructionDecoder.decode(0x0009);
+
+        assertInstanceOf(Retfie.class, instruction);
+    }
+
+    @Test
     public void decode_return() {
         var instruction = instructionDecoder.decode(0x0008);
 

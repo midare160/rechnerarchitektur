@@ -19,6 +19,11 @@ public final class FxUtils {
         Runner.unchecked(() -> loader.load());
     }
 
+    public static void closeWindow(Window window) {
+        var event = new WindowEvent(window, WindowEvent.WINDOW_CLOSE_REQUEST);
+        window.fireEvent(event);
+    }
+
     @FXML
     public static void setAllAnchors(Node child, Double value) {
         AnchorPane.setTopAnchor(child, value);

@@ -2,9 +2,10 @@ package com.lhmd.rechnerarchitektur.registers;
 
 import com.lhmd.rechnerarchitektur.changes.*;
 import com.lhmd.rechnerarchitektur.common.IntUtils;
-import com.lhmd.rechnerarchitektur.events.ResetEvent;
+import com.lhmd.rechnerarchitektur.events.*;
 import com.lhmd.rechnerarchitektur.values.IntBox;
 import org.springframework.context.event.EventListener;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -34,6 +35,7 @@ public class ProgramCounter extends IntBox {
     }
 
     @EventListener
+    @Order(EventOrders.DATA)
     public void handleReset(ResetEvent event) {
         var newValue = switch (event.getResetType()) {
             case POWERON, WATCHDOG -> 0;

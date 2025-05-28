@@ -6,22 +6,24 @@
 <?import com.lhmd.rechnerarchitektur.components.*?>
 <?import com.lhmd.rechnerarchitektur.common.FxUtils?>
 
-<VBox fx:id="root" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.lhmd.rechnerarchitektur.views.MainView">
-  <MainMenuBar fx:id="mainMenuBar" />
-  <SplitPane dividerPositions="0.75" focusTraversable="true" VBox.vgrow="ALWAYS">
-    <AnchorPane>
-      <InstructionsTableView fx:id="instructionsTableView" FxUtils.allAnchors="0.0" />
-    </AnchorPane>
-    <TabPane tabClosingPolicy="UNAVAILABLE" minWidth="280">
-      <Tab text="Registers">
-        <RegisterTable fx:id="registerTable" FxUtils.allAnchors="0.0" />
-      </Tab>
-      <Tab text="Stack">
-        <StackTable fx:id="stackTable" FxUtils.allAnchors="0.0" />
-      </Tab>
-      <Tab text="Pins">
-      </Tab>
-    </TabPane>
-  </SplitPane>
-  <MainFooter fx:id="mainFooter" />
+<VBox fx:id="root" fx:controller="com.lhmd.rechnerarchitektur.views.MainView" prefWidth="900.0" prefHeight="600.0"
+      xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
+    <MainMenuBar fx:id="mainMenuBar"/>
+    <SplitPane dividerPositions="0.75" focusTraversable="true" VBox.vgrow="ALWAYS">
+        <AnchorPane>
+            <InstructionsTableView fx:id="instructionsTableView" FxUtils.allAnchors="0"/>
+        </AnchorPane>
+        <TabPane tabClosingPolicy="UNAVAILABLE" minWidth="280">
+            <Tab text="Registers">
+                <RegisterTable fx:id="registerTable" FxUtils.allAnchors="0"/>
+            </Tab>
+            <Tab text="Stack">
+                <StackTable fx:id="stackTable" FxUtils.allAnchors="0"/>
+            </Tab>
+            <Tab text="Pins">
+                <PinTable fx:id="pinTable" FxUtils.allAnchors="0"/>
+            </Tab>
+        </TabPane>
+    </SplitPane>
+    <MainFooter fx:id="mainFooter"/>
 </VBox>

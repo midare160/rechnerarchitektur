@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import com.lhmd.rechnerarchitektur.components.common.Led?>
+
+<fx:root type="HBox" maxWidth="Infinity" alignment="CENTER" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
+    <Label fx:id="nameLabel" minWidth="70" maxHeight="Infinity" styleClass="monospaced, text-bold"/>
+    <Separator orientation="VERTICAL"/>
+    <Label fx:id="directionLabel" HBox.hgrow="ALWAYS" minWidth="40" maxWidth="Infinity" maxHeight="Infinity" alignment="CENTER"/>
+    <Label fx:id="stateLabel" HBox.hgrow="ALWAYS" minWidth="40" maxWidth="Infinity" maxHeight="Infinity" alignment="CENTER"/>
+    <Led fx:id="valueLed"/>
+</fx:root>

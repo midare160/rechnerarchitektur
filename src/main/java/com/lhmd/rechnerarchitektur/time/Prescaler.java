@@ -1,4 +1,4 @@
-package com.lhmd.rechnerarchitektur.computing;
+package com.lhmd.rechnerarchitektur.time;
 
 import com.lhmd.rechnerarchitektur.memory.DataMemory;
 import org.springframework.stereotype.Component;
