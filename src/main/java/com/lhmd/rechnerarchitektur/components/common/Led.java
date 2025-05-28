@@ -5,15 +5,15 @@ import javafx.scene.paint.*;
 import javafx.scene.shape.Circle;
 
 public class Led extends Circle {
-    private final Paint onFill;
-    private final Paint offFill;
+    private final Paint activeFill;
+    private final Paint inactiveFill;
     private final BooleanProperty active;
 
     public Led() {
         setRadius(8);
 
-        this.onFill = createOnFill();
-        this.offFill = createOffFill();
+        this.activeFill = createActiveFill();
+        this.inactiveFill = createInactiveFill();
 
         this.active = new SimpleBooleanProperty();
         this.active.addListener((ob, o, n) -> updateFill());
@@ -33,7 +33,7 @@ public class Led extends Circle {
         return active;
     }
 
-    private RadialGradient createOnFill() {
+    private RadialGradient createActiveFill() {
         return new RadialGradient(
                 0, 0,
                 0.5, 0.5,
@@ -44,7 +44,7 @@ public class Led extends Circle {
                 new Stop(1, Color.RED));
     }
 
-    private RadialGradient createOffFill() {
+    private RadialGradient createInactiveFill() {
         return new RadialGradient(
                 0, 0,
                 0.5, 0.5,
@@ -56,6 +56,6 @@ public class Led extends Circle {
     }
 
     private void updateFill() {
-        setFill(active.get() ? onFill : offFill);
+        setFill(active.get() ? activeFill : inactiveFill);
     }
 }
