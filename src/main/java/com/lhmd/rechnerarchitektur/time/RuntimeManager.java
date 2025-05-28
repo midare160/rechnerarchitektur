@@ -2,13 +2,9 @@ package com.lhmd.rechnerarchitektur.time;
 
 import com.lhmd.rechnerarchitektur.changes.ChangeManager;
 import com.lhmd.rechnerarchitektur.configuration.*;
-import com.lhmd.rechnerarchitektur.events.EventOrders;
-import com.lhmd.rechnerarchitektur.events.ResetEvent;
 import com.lhmd.rechnerarchitektur.memory.DataMemory;
 import com.lhmd.rechnerarchitektur.registers.*;
 import com.lhmd.rechnerarchitektur.values.*;
-import org.springframework.context.event.EventListener;
-import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -20,8 +16,6 @@ public class RuntimeManager {
     private final IntconRegister intconRegister;
     private final DoubleBox runtime;
     private final ChangeManager changeManager;
-
-    private int currentWaitCycles;
 
     public RuntimeManager(
             UserConfigService userConfigService,
@@ -38,13 +32,7 @@ public class RuntimeManager {
         this.runtime = new DoubleBox();
         this.changeManager = new ChangeManager();
 
-        tmr0Register.onChanged().addListener(this::onTmr0Changed);
-    }
-
-    @EventListener
-    @Order(EventOrders.EXECUTION)
-    public void handleReset(ResetEvent event) {
-        currentWaitCycles = 0;
+        this.tmr0Register.onChanged().addListener(this::onTmr0Changed);
     }
 
     /**
@@ -66,12 +54,6 @@ public class RuntimeManager {
     }
 
     public synchronized void incrementTimer() {
-        // If the TMR0 register is written, the increment is inhibited for the following two cycles
-        if (currentWaitCycles > 0) {
-            currentWaitCycles--;
-            return;
-        }
-
         // Prescaler is assigned to Timer0 and did not overflow on increment => TMR0 does not get incremented
         if (prescaler.assignment() == PrescalerAssignment.TIMER && !prescaler.increment()) {
             return;
@@ -87,11 +69,9 @@ public class RuntimeManager {
     }
 
     private void onTmr0Changed(Integer oldValue, Integer newValue) {
-        if (!changeManager.isChanging()) {
-            currentWaitCycles = 1; // TODO should be 2
-            prescaler.reset(); // Data sheet states
-            // "When assigned to the Timer0 Module, all instructions writing to the Timer0 Module (e.g., CLRF 1, MOVWF 1, BSF 1,x ....etc.) will clear the prescaler.",
-            // but Lehmann sheet does not
+        // When assigned to the Timer0 Module, all instructions writing to the Timer0 Module will clear the prescaler.
+        if (!changeManager.isChanging() && prescaler.assignment() == PrescalerAssignment.TIMER) {
+            prescaler.reset();
         }
 
         // The TMR0 interrupt is generated when the TMR0 register overflows from 0xFF to 0x00
