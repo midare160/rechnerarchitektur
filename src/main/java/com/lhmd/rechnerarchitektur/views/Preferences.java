@@ -44,10 +44,10 @@ public class Preferences {
 
     @FXML
     private void initialize() {
-        clockField.setText(Double.toString(userConfig.getClock()));
+        clockField.setText(String.valueOf(userConfig.getClock()));
         clockField.textProperty().addListener((ob, o, n) -> setSaveButtonDisabled(n));
 
-        executionIntervalField.setText(Long.toString(userConfig.getExecutionInterval()));
+        executionIntervalField.setText(String.valueOf(userConfig.getExecutionInterval()));
         executionIntervalField.textProperty().addListener((ob, o, n) -> setSaveButtonDisabled(n));
 
         themeComboBox.setItems(FXCollections.observableArrayList(themeManager.themes().keySet()));
