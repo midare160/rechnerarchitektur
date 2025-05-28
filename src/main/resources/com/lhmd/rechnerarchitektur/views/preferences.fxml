@@ -8,18 +8,21 @@
 
 <GridPane fx:id="root" fx:controller="com.lhmd.rechnerarchitektur.views.Preferences" hgap="10" vgap="12"
           xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
-    <Label labelFor="$clockField" text="Clock" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-    <NumberField fx:id="clockField" type="FLOATING" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
-    <Label text="MHz" GridPane.rowIndex="0" GridPane.columnIndex="2"/>
+    <Label labelFor="$themeComboBox" text="Theme" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+    <ComboBox fx:id="themeComboBox" maxWidth="Infinity" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
 
-    <Label labelFor="$executionIntervalField" text="Execution interval" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-    <NumberField fx:id="executionIntervalField" type="INTEGER" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
-    <Label text="ms" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
+    <Label labelFor="$clockField" text="Clock" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+    <NumberField fx:id="clockField" type="FLOATING" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+    <Label text="MHz" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
 
-    <Label labelFor="$themeComboBox" text="Theme" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-    <ComboBox fx:id="themeComboBox" maxWidth="Infinity" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+    <Label labelFor="$executionIntervalField" text="Execution interval" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+    <NumberField fx:id="executionIntervalField" type="INTEGER" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+    <Label text="ms" GridPane.rowIndex="2" GridPane.columnIndex="2"/>
 
-    <TilePane hgap="10" alignment="CENTER_RIGHT" GridPane.rowIndex="3" GridPane.columnIndex="0" GridPane.columnSpan="3">
+    <Label labelFor="$watchdogCheckBox" text="Watchdog" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+    <CheckBox fx:id="watchdogCheckBox" GridPane.rowIndex="3" GridPane.columnIndex="1" />
+
+    <TilePane hgap="10" alignment="CENTER_RIGHT" GridPane.rowIndex="4" GridPane.columnIndex="0" GridPane.columnSpan="3">
         <Button fx:id="okButton" text="OK" defaultButton="true" maxWidth="Infinity"/>
         <Button fx:id="cancelButton" text="Cancel" cancelButton="true" maxWidth="Infinity"/>
     </TilePane>

@@ -39,6 +39,10 @@ public class ThemeManager {
     }
 
     public void setCurrentThemeName(String value) {
+        if (Objects.equals(value, userConfig.getTheme())) {
+            return;
+        }
+
         userConfig.setTheme(value);
 
         setApplicationStylesheet();
