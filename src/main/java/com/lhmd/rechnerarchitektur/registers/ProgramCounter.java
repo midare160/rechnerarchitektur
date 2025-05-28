@@ -37,7 +37,7 @@ public class ProgramCounter extends IntBox {
     @EventListener
     @Order(EventOrders.DATA)
     public void handleReset(ResetEvent event) {
-        var newValue = switch (event.getResetType()) {
+        var newValue = switch (event.resetType()) {
             case POWERON, WATCHDOG -> 0;
             case WAKEUP -> get() + 1;
             // TODO interrupt wakeup

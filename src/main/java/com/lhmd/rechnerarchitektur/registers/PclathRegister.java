@@ -21,7 +21,7 @@ public class PclathRegister extends SpecialRegister {
     @EventListener
     @Order(EventOrders.DATA)
     public void handleReset(ResetEvent event) {
-        var pattern = switch (event.getResetType()) {
+        var pattern = switch (event.resetType()) {
             case POWERON, WATCHDOG -> "---00000";
             case WAKEUP -> "---uuuuu";
         };

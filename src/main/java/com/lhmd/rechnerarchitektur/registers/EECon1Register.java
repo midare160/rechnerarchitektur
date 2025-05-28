@@ -22,7 +22,7 @@ public class EECon1Register extends SpecialRegister {
     @EventListener
     @Order(EventOrders.DATA)
     public void handleReset(ResetEvent event) {
-        var pattern = switch (event.getResetType()) {
+        var pattern = switch (event.resetType()) {
             case POWERON -> "---0x000";
             case WATCHDOG -> "---0%c000".formatted(getWR() ? '1' : '0');
             case WAKEUP -> "---0uuuu";

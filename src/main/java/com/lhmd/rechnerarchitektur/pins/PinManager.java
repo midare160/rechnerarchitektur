@@ -1,6 +1,7 @@
 package com.lhmd.rechnerarchitektur.pins;
 
 import com.lhmd.rechnerarchitektur.registers.*;
+import com.lhmd.rechnerarchitektur.time.RuntimeManager;
 import com.lhmd.rechnerarchitektur.values.IntBox;
 import org.springframework.stereotype.Component;
 
@@ -8,18 +9,21 @@ import java.util.List;
 
 @Component
 public class PinManager {
-    private final List<Pin> raPins;
-    private final List<Pin> rbPins;
+    private final RuntimeManager runtimeManager;
     private final IntconRegister intconRegister;
     private final OptionRegister optionRegister;
+    private final List<Pin> raPins;
+    private final List<Pin> rbPins;
 
     public PinManager(
+            RuntimeManager runtimeManager,
             TrisARegister trisARegister,
             TrisBRegister trisBRegister,
             PortARegister portARegister,
             PortBRegister portBRegister,
             IntconRegister intconRegister,
             OptionRegister optionRegister) {
+        this.runtimeManager = runtimeManager;
         this.intconRegister = intconRegister;
         this.optionRegister = optionRegister;
         this.raPins = createPins(trisARegister, portARegister, PinType.A);
@@ -43,12 +47,21 @@ public class PinManager {
     }
 
     private void addChangeListeners() {
+        var ra4 = raPins.get(4);
+        ra4.onValueChanged().addListener((o, n) -> onRa4PinChanged(ra4));
+
         var rb0 = rbPins.getFirst();
         rb0.onValueChanged().addListener((o, n) -> onRb0PinChanged(rb0));
 
         for (var i = 4; i <= 7; i++) {
             var pin = rbPins.get(i);
             pin.onValueChanged().addListener((o, n) -> onRb47PinChanged(pin));
+        }
+    }
+
+    private void onRa4PinChanged(Pin pin) {
+        if (optionRegister.getT0CS() && pin.getValue() != optionRegister.getT0SE()) {
+            runtimeManager.incrementTimer();
         }
     }
 

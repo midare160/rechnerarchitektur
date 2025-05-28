@@ -30,7 +30,7 @@ public class IntconRegister extends SpecialRegister {
     @EventListener
     @Order(EventOrders.DATA)
     public void handleReset(ResetEvent event) {
-        var pattern = switch (event.getResetType()) {
+        var pattern = switch (event.resetType()) {
             case POWERON, WATCHDOG -> "0000000x";
             case WAKEUP -> "---uuuuu";
         };

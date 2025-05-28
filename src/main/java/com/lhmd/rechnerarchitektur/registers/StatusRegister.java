@@ -27,7 +27,7 @@ public class StatusRegister extends SpecialRegister {
     @EventListener
     @Order(EventOrders.DATA)
     public void handleReset(ResetEvent event) {
-        var pattern = switch (event.getResetType()) {
+        var pattern = switch (event.resetType()) {
             case POWERON -> "00011xxx";
             case WATCHDOG -> "00001uuu";
             case WAKEUP -> "uuu00uuu"; // TODO interrupt wakeup
