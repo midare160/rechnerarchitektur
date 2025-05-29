@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 public class RuntimeManager {
     private final UserConfig userConfig;
     private final Prescaler prescaler;
-    private final IntBox tmr0Register;
+    private final Tmr0Register tmr0Register;
     private final OptionRegister optionRegister;
     private final IntconRegister intconRegister;
     private final DoubleBox runtime;
@@ -32,6 +32,7 @@ public class RuntimeManager {
         this.runtime = new DoubleBox();
         this.changeManager = new ChangeManager();
 
+        this.tmr0Register.onWritten().addListener(this::onTmr0Written);
         this.tmr0Register.onChanged().addListener(this::onTmr0Changed);
     }
 
@@ -68,12 +69,14 @@ public class RuntimeManager {
         runtime.set(0);
     }
 
-    private void onTmr0Changed(Integer oldValue, Integer newValue) {
+    private void onTmr0Written() {
         // When assigned to the Timer0 Module, all instructions writing to the Timer0 Module will clear the prescaler.
         if (!changeManager.isChanging() && prescaler.assignment() == PrescalerAssignment.TIMER) {
             prescaler.reset();
         }
+    }
 
+    private void onTmr0Changed(Integer oldValue, Integer newValue) {
         // The TMR0 interrupt is generated when the TMR0 register overflows from 0xFF to 0x00
         if (oldValue == DataMemory.REGISTER_MAX_SIZE - 1 && newValue == 0) {
             intconRegister.setT0IF(true);

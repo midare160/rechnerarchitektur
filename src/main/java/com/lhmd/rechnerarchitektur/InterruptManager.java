@@ -30,6 +30,7 @@ public class InterruptManager {
         this.programCounter = programCounter;
         this.intconRegister = intconRegister;
         this.eeCon1Register = eeCon1Register;
+
         this.interruptMap = getInterruptMap();
     }
 

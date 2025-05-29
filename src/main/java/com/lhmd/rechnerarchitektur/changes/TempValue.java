@@ -10,23 +10,23 @@ import java.util.function.Consumer;
  */
 public class TempValue<T> implements AutoCloseable {
     private final T initialValue;
-    private final Consumer<T> resetValue;
+    private final Consumer<T> setValue;
     private final boolean isValueSet;
 
-    public TempValue(T initialValue, T temporaryValue, Consumer<T> resetValue) {
+    public TempValue(T initialValue, T temporaryValue, Consumer<T> setValue) {
         this.initialValue = initialValue;
-        this.resetValue = resetValue;
+        this.setValue = setValue;
         this.isValueSet = !Objects.equals(initialValue, temporaryValue);
 
         if (isValueSet) {
-            resetValue.accept(temporaryValue);
+            setValue.accept(temporaryValue);
         }
     }
 
     @Override
     public void close() {
         if (isValueSet) {
-            resetValue.accept(initialValue);
+            setValue.accept(initialValue);
         }
     }
 }
