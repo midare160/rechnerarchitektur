@@ -12,6 +12,8 @@ public class StatusRegister extends SpecialRegister {
     private static final int C_INDEX = 0;
     private static final int DC_INDEX = 1;
     private static final int Z_INDEX = 2;
+    private static final int PD_INDEX = 3;
+    private static final int TO_INDEX = 4;
     private static final int RP0_INDEX = 5;
 
     @Override
@@ -58,6 +60,22 @@ public class StatusRegister extends SpecialRegister {
 
     public void setZ(boolean value) {
         setBit(Z_INDEX, value);
+    }
+
+    public boolean getPD() {
+        return isBitSet(PD_INDEX);
+    }
+
+    public void setPD(boolean value) {
+        setBit(PD_INDEX, value);
+    }
+
+    public boolean getTO() {
+        return isBitSet(TO_INDEX);
+    }
+
+    public void setTO(boolean value) {
+        setBit(TO_INDEX, value);
     }
 
     public boolean getRP0() {

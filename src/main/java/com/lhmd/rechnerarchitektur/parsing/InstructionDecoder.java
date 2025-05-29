@@ -43,6 +43,7 @@ public class InstructionDecoder {
         opCodes.put(0b00_0001_1000_0000, Clrf.class);
         opCodes.put(0b00_0001_0000_0000, Clrw.class);
         opCodes.put(0b00_0000_1000_0000, Movwf.class);
+        opCodes.put(0b00_0000_0110_0100, Clrwdt.class);
         opCodes.put(0b00_0000_0000_1001, Retfie.class);
         opCodes.put(0b00_0000_0000_1000, Return.class);
         opCodes.put(0b00_0000_0000_0000, Nop.class);

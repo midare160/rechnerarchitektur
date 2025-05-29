@@ -227,6 +227,13 @@ public class InstructionDecoderTest {
     }
 
     @Test
+    public void decode_clrwdt() {
+        var instruction = instructionDecoder.decode(0x0064);
+
+        assertInstanceOf(Clrwdt.class, instruction);
+    }
+
+    @Test
     public void decode_retfie() {
         var instruction = instructionDecoder.decode(0x0009);
 
