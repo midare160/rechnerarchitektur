@@ -8,14 +8,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class RuntimeManager {
     private final UserConfig userConfig;
-    private final Timer timer;
+    private final Timer0 timer0;
     private final Watchdog watchdog;
     private final OptionRegister optionRegister;
     private final DoubleBox runtime;
 
-    public RuntimeManager(UserConfigService userConfigService, Timer timer, Watchdog watchdog, OptionRegister optionRegister) {
+    public RuntimeManager(UserConfigService userConfigService, Timer0 timer0, Watchdog watchdog, OptionRegister optionRegister) {
         this.userConfig = userConfigService.config();
-        this.timer = timer;
+        this.timer0 = timer0;
         this.watchdog = watchdog;
         this.optionRegister = optionRegister;
 
@@ -36,7 +36,7 @@ public class RuntimeManager {
         // Timer mode is selected by clearing the T0CS bit.
         // In timer mode, the Timer0 module will increment every instruction cycle
         if (!optionRegister.getT0CS()) {
-            timer.increment();
+            timer0.increment();
         }
 
         if (userConfig.isWatchdogEnabled()) {

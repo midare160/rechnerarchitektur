@@ -1,7 +1,7 @@
 package com.lhmd.rechnerarchitektur.pins;
 
 import com.lhmd.rechnerarchitektur.registers.*;
-import com.lhmd.rechnerarchitektur.time.Timer;
+import com.lhmd.rechnerarchitektur.time.Timer0;
 import com.lhmd.rechnerarchitektur.values.IntBox;
 import org.springframework.stereotype.Component;
 
@@ -9,21 +9,21 @@ import java.util.List;
 
 @Component
 public class PinManager {
-    private final Timer timer;
+    private final Timer0 timer0;
     private final IntconRegister intconRegister;
     private final OptionRegister optionRegister;
     private final List<Pin> raPins;
     private final List<Pin> rbPins;
 
     public PinManager(
-            Timer timer,
+            Timer0 timer0,
             TrisARegister trisARegister,
             TrisBRegister trisBRegister,
             PortARegister portARegister,
             PortBRegister portBRegister,
             IntconRegister intconRegister,
             OptionRegister optionRegister) {
-        this.timer = timer;
+        this.timer0 = timer0;
         this.intconRegister = intconRegister;
         this.optionRegister = optionRegister;
         this.raPins = createPins(trisARegister, portARegister, PinType.A);
@@ -61,7 +61,7 @@ public class PinManager {
 
     private void onRa4PinChanged(Pin pin) {
         if (optionRegister.getT0CS() && pin.getValue() != optionRegister.getT0SE()) {
-            timer.increment();
+            timer0.increment();
         }
     }
 

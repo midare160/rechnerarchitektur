@@ -1,6 +1,6 @@
 package com.lhmd.rechnerarchitektur.instructions;
 
-import com.lhmd.rechnerarchitektur.SleepManager;
+import com.lhmd.rechnerarchitektur.execution.SleepManager;
 import com.lhmd.rechnerarchitektur.registers.StatusRegister;
 import com.lhmd.rechnerarchitektur.time.*;
 import org.springframework.context.annotation.Scope;

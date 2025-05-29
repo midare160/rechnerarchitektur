@@ -1,4 +1,4 @@
-package com.lhmd.rechnerarchitektur;
+package com.lhmd.rechnerarchitektur.execution;
 
 import com.lhmd.rechnerarchitektur.memory.ProgramStack;
 import com.lhmd.rechnerarchitektur.registers.*;

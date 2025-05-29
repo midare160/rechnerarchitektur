@@ -6,13 +6,13 @@ import com.lhmd.rechnerarchitektur.registers.*;
 import org.springframework.stereotype.Component;
 
 @Component
-public class Timer {
+public class Timer0 {
     private final Prescaler prescaler;
     private final Tmr0Register tmr0Register;
     private final IntconRegister intconRegister;
     private final ChangeManager changeManager;
 
-    public Timer(Prescaler prescaler, Tmr0Register tmr0Register, IntconRegister intconRegister) {
+    public Timer0(Prescaler prescaler, Tmr0Register tmr0Register, IntconRegister intconRegister) {
         this.prescaler = prescaler;
         this.tmr0Register = tmr0Register;
         this.intconRegister = intconRegister;
