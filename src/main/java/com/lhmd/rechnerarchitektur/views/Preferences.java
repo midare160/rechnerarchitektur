@@ -53,10 +53,10 @@ public class Preferences {
         themeComboBox.setValue(themeManager.getCurrentThemeName());
 
         clockField.setText(String.valueOf(userConfig.getClock()));
-        clockField.textProperty().addListener((ob, o, n) -> setSaveButtonDisabled(n));
+        clockField.textProperty().addListener((ob, o, n) -> setSaveButtonDisable(n));
 
         executionIntervalField.setText(String.valueOf(userConfig.getExecutionInterval()));
-        executionIntervalField.textProperty().addListener((ob, o, n) -> setSaveButtonDisabled(n));
+        executionIntervalField.textProperty().addListener((ob, o, n) -> setSaveButtonDisable(n));
 
         watchdogCheckBox.setSelected(userConfig.isWatchdogEnabled());
 
@@ -79,7 +79,7 @@ public class Preferences {
         FxUtils.closeWindow(root.getScene().getWindow());
     }
 
-    private void setSaveButtonDisabled(String numberInput) {
+    private void setSaveButtonDisable(String numberInput) {
         var invalid = StringUtils.isNullOrWhitespace(numberInput) || Double.parseDouble(numberInput) <= 0;
         okButton.setDisable(invalid);
     }
