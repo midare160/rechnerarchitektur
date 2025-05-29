@@ -23,7 +23,7 @@ public class PclathRegister extends SpecialRegister {
     public void handleReset(ResetEvent event) {
         var pattern = switch (event.resetType()) {
             case POWERON, WATCHDOG -> "---00000";
-            case WAKEUP -> "---uuuuu";
+            case WAKEUP_WATCHDOG, WAKEUP_INTERRUPT -> "---uuuuu";
         };
 
         set(IntUtils.changeBits(get(), pattern));

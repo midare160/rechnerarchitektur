@@ -24,7 +24,7 @@ public class OptionRegister extends SpecialRegister {
     public void handleReset(ResetEvent event) {
         var pattern = switch (event.resetType()) {
             case POWERON, WATCHDOG -> "11111111";
-            case WAKEUP -> "uuuuuuuu";
+            case WAKEUP_WATCHDOG, WAKEUP_INTERRUPT -> "uuuuuuuu";
         };
 
         set(IntUtils.changeBits(get(), pattern));

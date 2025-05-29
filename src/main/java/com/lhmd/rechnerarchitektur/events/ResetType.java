@@ -3,5 +3,6 @@ package com.lhmd.rechnerarchitektur.events;
 public enum ResetType {
     POWERON,
     WATCHDOG,
-    WAKEUP,
+    WAKEUP_WATCHDOG,
+    WAKEUP_INTERRUPT,
 }

@@ -41,6 +41,29 @@ public class Cpu extends Thread implements AutoCloseable {
         this.isPaused = true;
     }
 
+    // Implementation as described in https://docs.oracle.com/javase/7/docs/technotes/guides/concurrency/threadPrimitiveDeprecation.html
+    @Override
+    public void run() {
+        while (isRunning) {
+            Runner.unchecked(() -> sleep(userConfig.getExecutionInterval()));
+            pauseOnBreakpoint();
+
+            synchronized (this) {
+                while (isPaused && isRunning) {
+                    Runner.unchecked(() -> wait());
+                }
+            }
+
+            nextInstruction();
+        }
+    }
+
+    @Override
+    public synchronized void close() {
+        isRunning = false;
+        notify();
+    }
+
     public void setProgramMemory(ProgramMemory programMemory) {
         this.programMemory = programMemory;
     }
@@ -63,29 +86,6 @@ public class Cpu extends Thread implements AutoCloseable {
 
     public void clearBreakpoints() {
         breakpointAddresses.clear();
-    }
-
-    // Implementation as described in https://docs.oracle.com/javase/7/docs/technotes/guides/concurrency/threadPrimitiveDeprecation.html
-    @Override
-    public void run() {
-        while (isRunning) {
-            Runner.unchecked(() -> sleep(userConfig.getExecutionInterval()));
-            pauseOnBreakpoint();
-
-            synchronized (this) {
-                while (isPaused && isRunning) {
-                    Runner.unchecked(() -> wait());
-                }
-            }
-
-            nextInstruction();
-        }
-    }
-
-    @Override
-    public synchronized void close() {
-        isRunning = false;
-        notify();
     }
 
     public synchronized void setPaused(boolean value) {
@@ -113,7 +113,7 @@ public class Cpu extends Thread implements AutoCloseable {
             runtimeManager.addCycle();
         }
 
-        interruptManager.checkForInterrupt();
+        interruptManager.handleInterrupt();
     }
 
     private void pauseOnBreakpoint() {

@@ -18,7 +18,7 @@ public class TrisARegister extends SpecialRegister {
     public void handleReset(ResetEvent event) {
         var pattern = switch (event.resetType()) {
             case POWERON, WATCHDOG -> "---11111";
-            case WAKEUP -> "---uuuuu";
+            case WAKEUP_WATCHDOG, WAKEUP_INTERRUPT -> "---uuuuu";
         };
 
         set(IntUtils.changeBits(get(), pattern));

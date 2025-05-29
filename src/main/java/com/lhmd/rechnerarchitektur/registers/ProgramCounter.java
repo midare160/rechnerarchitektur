@@ -39,8 +39,7 @@ public class ProgramCounter extends IntBox {
     public void handleReset(ResetEvent event) {
         var newValue = switch (event.resetType()) {
             case POWERON, WATCHDOG -> 0;
-            case WAKEUP -> get() + 1;
-            // TODO interrupt wakeup
+            case WAKEUP_WATCHDOG, WAKEUP_INTERRUPT -> get() + 1;
         };
 
         set(newValue);

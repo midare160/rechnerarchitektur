@@ -25,7 +25,7 @@ public class EECon1Register extends SpecialRegister {
         var pattern = switch (event.resetType()) {
             case POWERON -> "---0x000";
             case WATCHDOG -> "---0%c000".formatted(getWR() ? '1' : '0');
-            case WAKEUP -> "---0uuuu";
+            case WAKEUP_WATCHDOG, WAKEUP_INTERRUPT -> "---0uuuu";
         };
 
         set(IntUtils.changeBits(get(), pattern));

@@ -32,7 +32,8 @@ public class StatusRegister extends SpecialRegister {
         var pattern = switch (event.resetType()) {
             case POWERON -> "00011xxx";
             case WATCHDOG -> "00001uuu";
-            case WAKEUP -> "uuu00uuu"; // TODO interrupt wakeup
+            case WAKEUP_WATCHDOG -> "uuu00uuu";
+            case WAKEUP_INTERRUPT -> "uuu10uuu";
         };
 
         set(IntUtils.changeBits(get(), pattern));
@@ -84,6 +85,10 @@ public class StatusRegister extends SpecialRegister {
 
     public void setRP0(boolean value) {
         setBit(RP0_INDEX, value);
+    }
+
+    public boolean isSleepMode() {
+        return getTO() && !getPD();
     }
 
     public void updateC_Add(int a, int b) {
