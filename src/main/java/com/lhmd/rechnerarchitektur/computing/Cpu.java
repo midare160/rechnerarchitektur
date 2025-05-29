@@ -7,8 +7,6 @@ import com.lhmd.rechnerarchitektur.events.*;
 import com.lhmd.rechnerarchitektur.memory.*;
 import com.lhmd.rechnerarchitektur.registers.ProgramCounter;
 import com.lhmd.rechnerarchitektur.time.RuntimeManager;
-import org.springframework.context.event.EventListener;
-import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -25,7 +23,6 @@ public class Cpu extends Thread implements AutoCloseable {
     private final ActionEvent onNextInstruction;
 
     private volatile ProgramMemory programMemory;
-    private volatile int lastBreakpointAddress;
 
     private volatile boolean isRunning;
     private volatile boolean isPaused;
@@ -40,7 +37,6 @@ public class Cpu extends Thread implements AutoCloseable {
         this.onBreakpointReached = new ActionEvent();
         this.onNextInstruction = new ActionEvent();
 
-        this.lastBreakpointAddress = -1;
         this.isRunning = true;
         this.isPaused = true;
     }
@@ -92,12 +88,6 @@ public class Cpu extends Thread implements AutoCloseable {
         notify();
     }
 
-    @EventListener
-    @Order(EventOrders.EXECUTION)
-    public void handleReset(ResetEvent event) {
-        lastBreakpointAddress = -1;
-    }
-
     public synchronized void setPaused(boolean value) {
         isPaused = value;
 
@@ -129,12 +119,11 @@ public class Cpu extends Thread implements AutoCloseable {
     private void pauseOnBreakpoint() {
         var currentAddress = Math.floorMod(programCounter.get(), ProgramMemory.MAX_SIZE);
 
-        if (currentAddress == lastBreakpointAddress || !breakpointAddresses.contains(currentAddress)) {
+        if (!breakpointAddresses.contains(currentAddress)) {
             return;
         }
 
         isPaused = true;
-        lastBreakpointAddress = currentAddress;
         onBreakpointReached.fire();
     }
 }

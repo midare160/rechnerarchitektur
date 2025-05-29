@@ -39,4 +39,7 @@
     <columnResizePolicy>
         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN"/>
     </columnResizePolicy>
+    <placeholder>
+        <Label/>
+    </placeholder>
 </fx:root>
