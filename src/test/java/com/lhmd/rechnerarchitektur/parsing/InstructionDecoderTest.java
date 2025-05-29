@@ -15,7 +15,7 @@ public class InstructionDecoderTest {
     public InstructionDecoderTest(InstructionDecoder instructionDecoder) {
         this.instructionDecoder = instructionDecoder;
     }
-    
+
     @Test
     public void decode_movlw() {
         var instruction = instructionDecoder.decode(0x3011);
@@ -224,6 +224,20 @@ public class InstructionDecoderTest {
         var instruction = instructionDecoder.decode(0x008C);
 
         assertInstanceOf(Movwf.class, instruction);
+    }
+
+    @Test
+    public void decode_clrwdt() {
+        var instruction = instructionDecoder.decode(0x0064);
+
+        assertInstanceOf(Clrwdt.class, instruction);
+    }
+
+    @Test
+    public void decode_sleep() {
+        var instruction = instructionDecoder.decode(0x0063);
+
+        assertInstanceOf(Sleep.class, instruction);
     }
 
     @Test

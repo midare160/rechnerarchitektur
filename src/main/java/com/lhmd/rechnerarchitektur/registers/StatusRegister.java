@@ -12,6 +12,8 @@ public class StatusRegister extends SpecialRegister {
     private static final int C_INDEX = 0;
     private static final int DC_INDEX = 1;
     private static final int Z_INDEX = 2;
+    private static final int PD_INDEX = 3;
+    private static final int TO_INDEX = 4;
     private static final int RP0_INDEX = 5;
 
     @Override
@@ -27,10 +29,11 @@ public class StatusRegister extends SpecialRegister {
     @EventListener
     @Order(EventOrders.DATA)
     public void handleReset(ResetEvent event) {
-        var pattern = switch (event.getResetType()) {
+        var pattern = switch (event.resetType()) {
             case POWERON -> "00011xxx";
             case WATCHDOG -> "00001uuu";
-            case WAKEUP -> "uuu00uuu"; // TODO interrupt wakeup
+            case WAKEUP_WATCHDOG -> "uuu00uuu";
+            case WAKEUP_INTERRUPT -> "uuu10uuu";
         };
 
         set(IntUtils.changeBits(get(), pattern));
@@ -60,12 +63,32 @@ public class StatusRegister extends SpecialRegister {
         setBit(Z_INDEX, value);
     }
 
+    public boolean getPD() {
+        return isBitSet(PD_INDEX);
+    }
+
+    public void setPD(boolean value) {
+        setBit(PD_INDEX, value);
+    }
+
+    public boolean getTO() {
+        return isBitSet(TO_INDEX);
+    }
+
+    public void setTO(boolean value) {
+        setBit(TO_INDEX, value);
+    }
+
     public boolean getRP0() {
         return isBitSet(RP0_INDEX);
     }
 
     public void setRP0(boolean value) {
         setBit(RP0_INDEX, value);
+    }
+
+    public boolean isSleepMode() {
+        return getTO() && !getPD();
     }
 
     public void updateC_Add(int a, int b) {

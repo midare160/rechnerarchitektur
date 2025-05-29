@@ -10,7 +10,7 @@ public class ResetEvent extends ApplicationEvent {
         this.resetType = resetType;
     }
 
-    public ResetType getResetType() {
+    public ResetType resetType() {
         return resetType;
     }
 }

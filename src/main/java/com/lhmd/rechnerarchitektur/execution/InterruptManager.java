@@ -1,4 +1,4 @@
-package com.lhmd.rechnerarchitektur;
+package com.lhmd.rechnerarchitektur.execution;
 
 import com.lhmd.rechnerarchitektur.memory.ProgramStack;
 import com.lhmd.rechnerarchitektur.registers.*;
@@ -30,33 +30,25 @@ public class InterruptManager {
         this.programCounter = programCounter;
         this.intconRegister = intconRegister;
         this.eeCon1Register = eeCon1Register;
+
         this.interruptMap = getInterruptMap();
     }
 
-    public void checkForInterrupt() {
-        if (!intconRegister.getGIE()) {
+    public boolean isInterrupted() {
+        for (var entry : interruptMap.entrySet()) {
+            if (entry.getKey().get() && entry.getValue().get()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public void handleInterrupt() {
+        if (!intconRegister.getGIE() || !isInterrupted()) {
             return;
         }
 
-        for (var entry : interruptMap.entrySet()) {
-            if (!entry.getKey().get() || !entry.getValue().get()) {
-                continue;
-            }
-
-            handleInterrupt();
-            break;
-        }
-    }
-
-    private Map<Supplier<Boolean>, Supplier<Boolean>> getInterruptMap() {
-        return Map.of(
-                intconRegister::getRBIE, intconRegister::getRBIF,
-                intconRegister::getINTE, intconRegister::getINTF,
-                intconRegister::getT0IE, intconRegister::getT0IF,
-                intconRegister::getEEIE, eeCon1Register::getEEIF);
-    }
-
-    private void handleInterrupt() {
         intconRegister.setGIE(false);
 
         programStack.push(programCounter.get());
@@ -65,5 +57,13 @@ public class InterruptManager {
         runtimeManager.addCycle();
         runtimeManager.addCycle();
         runtimeManager.addCycle();
+    }
+
+    private Map<Supplier<Boolean>, Supplier<Boolean>> getInterruptMap() {
+        return Map.of(
+                intconRegister::getRBIE, intconRegister::getRBIF,
+                intconRegister::getINTE, intconRegister::getINTF,
+                intconRegister::getT0IE, intconRegister::getT0IF,
+                intconRegister::getEEIE, eeCon1Register::getEEIF);
     }
 }

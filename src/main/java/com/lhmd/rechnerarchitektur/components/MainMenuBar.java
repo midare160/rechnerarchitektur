@@ -6,6 +6,7 @@ import com.lhmd.rechnerarchitektur.configuration.*;
 import com.lhmd.rechnerarchitektur.events.MainMenuBarEvent;
 import com.lhmd.rechnerarchitektur.styles.ThemeManager;
 import com.lhmd.rechnerarchitektur.views.Preferences;
+import javafx.animation.PauseTransition;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -14,6 +15,7 @@ import javafx.scene.layout.HBox;
 import javafx.stage.*;
 import javafx.fxml.FXML;
 import javafx.event.ActionEvent;
+import javafx.util.Duration;
 import org.girod.javafx.svgimage.SVGLoader;
 import org.springframework.beans.factory.*;
 
@@ -55,11 +57,17 @@ public class MainMenuBar extends HBox {
     @FXML
     private Menu resetMenu;
 
+    private final PauseTransition actionsDisablePause;
+
     private ObjectProvider<Preferences> preferencesProvider;
     private UserConfig userConfig;
     private ThemeManager themeManager;
+    private boolean actionsDisable;
 
     public MainMenuBar() {
+        this.actionsDisablePause = new PauseTransition(Duration.seconds(1));
+        this.actionsDisablePause.setOnFinished(event -> actionsMenuBar.setDisable(actionsDisable));
+
         FxUtils.loadHierarchy(this, "components/mainMenuBar.fxml");
     }
 
@@ -75,11 +83,16 @@ public class MainMenuBar extends HBox {
         aboutMenuItem.setText("About " + ProgramInfo.PROGRAM_NAME);
     }
 
-    public void setRunnable(boolean runnable) {
-        runMenu.setDisable(!runnable);
-        nextMenu.setDisable(!runnable);
+    public void setActionsDisable(boolean value) {
+        actionsDisable = value;
+        actionsDisablePause.playFromStart();
+    }
 
-        if (!runnable) {
+    public void setRunnable(boolean value) {
+        runMenu.setDisable(!value);
+        nextMenu.setDisable(!value);
+
+        if (!value) {
             pauseMenu.setDisable(true);
         }
     }

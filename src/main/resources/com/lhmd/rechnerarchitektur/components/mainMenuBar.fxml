@@ -11,9 +11,9 @@
             <SeparatorMenuItem />
             <MenuItem fx:id="closeMenuItem" text="Close" accelerator="SHORTCUT+W" />
             <SeparatorMenuItem />
-            <MenuItem fx:id="preferencesMenuItem" text="Preferences…" accelerator="SHORTCUT+ALT+S" />
+            <MenuItem fx:id="preferencesMenuItem" text="Preferences…" accelerator="SHORTCUT+COMMA" />
             <SeparatorMenuItem />
-            <MenuItem fx:id="quitMenuItem" text="Quit" accelerator="ALT+F4" />
+            <MenuItem fx:id="quitMenuItem" text="Quit" accelerator="SHORTCUT+Q" />
         </Menu>
         <Menu text="Help">
             <MenuItem fx:id="aboutMenuItem" text="About" accelerator="F1" />

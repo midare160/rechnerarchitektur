@@ -5,6 +5,7 @@ import java.util.*;
 public class UserConfig {
     private long executionInterval = 200;
     private double clock = 4;
+    private boolean watchdogEnabled = false;
     private String theme = "Primer Light";
     private List<String> fileHistory;
 
@@ -22,6 +23,14 @@ public class UserConfig {
 
     public void setClock(double clock) {
         this.clock = clock;
+    }
+
+    public boolean isWatchdogEnabled() {
+        return watchdogEnabled;
+    }
+
+    public void setWatchdogEnabled(boolean watchdogEnabled) {
+        this.watchdogEnabled = watchdogEnabled;
     }
 
     public String getTheme() {
