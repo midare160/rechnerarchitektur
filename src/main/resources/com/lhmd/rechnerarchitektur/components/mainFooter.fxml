@@ -7,18 +7,19 @@
 <?import com.lhmd.rechnerarchitektur.components.common.BitPointerRow?>
 
 <fx:root type="GridPane" id="mainFooter" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
-    <BitPointerRow fx:id="wRegisterRow" numberOfBits="8" name="W" GridPane.columnIndex="0" />
+    <BitPointerRow fx:id="wRegisterRow" numberOfBits="8" name="W" GridPane.columnIndex="0"/>
     <HBox alignment="CENTER" spacing="10" GridPane.columnIndex="1">
-        <Label fx:id="runtimeLabel" />
-        <Button fx:id="resetRuntimeButton" prefWidth="30" prefHeight="20" minWidth="30" minHeight="20" maxWidth="30" maxHeight="20" />
+        <Label fx:id="runtimeLabel"/>
+        <Button fx:id="resetRuntimeButton" prefWidth="30" prefHeight="20" minWidth="30" minHeight="20" maxWidth="30" maxHeight="20"/>
+        <Label fx:id="watchdogLabel"/>
     </HBox>
-    <BitPointerRow fx:id="programCounterRow" numberOfBits="13" name="PC" GridPane.columnIndex="2" />
+    <BitPointerRow fx:id="programCounterRow" numberOfBits="13" name="PC" GridPane.columnIndex="2"/>
     <columnConstraints>
-        <ColumnConstraints percentWidth="20" />
-        <ColumnConstraints percentWidth="45" />
-        <ColumnConstraints percentWidth="35" />
+        <ColumnConstraints percentWidth="20"/>
+        <ColumnConstraints percentWidth="45"/>
+        <ColumnConstraints percentWidth="35"/>
     </columnConstraints>
     <padding>
-        <Insets topRightBottomLeft="3" />
+        <Insets topRightBottomLeft="3"/>
     </padding>
 </fx:root>

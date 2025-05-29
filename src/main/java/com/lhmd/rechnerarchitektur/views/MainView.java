@@ -94,7 +94,8 @@ public class MainView {
         root.addEventHandler(MainMenuBarEvent.ON_RESET, e -> eventPublisher.publishEvent(new ResetEvent(this, ResetType.POWERON)));
 
         cpu.onBreakpointReached().addListener(mainMenuBar::pause);
-        cpu.onNextInstruction().addListener(this::resetChanged);
+        cpu.onBeforeInstruction().addListener(this::onBeforeInstruction);
+        cpu.onAfterInstruction().addListener(this::onAfterInstruction);
     }
 
     private void onMainMenuBarFileOpened(MainMenuBarEvent<String> e) {
@@ -123,6 +124,15 @@ public class MainView {
         }
 
         cpu.setPaused(false);
+    }
+
+    private void onBeforeInstruction() {
+        resetChanged();
+        mainMenuBar.setActionsDisable(true);
+    }
+
+    private void onAfterInstruction() {
+        mainMenuBar.setActionsDisable(false);
     }
 
     private void onBreakpointToggled(ListChangeListener.Change<? extends InstructionRowModel> c) {

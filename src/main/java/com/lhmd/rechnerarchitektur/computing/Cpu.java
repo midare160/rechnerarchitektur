@@ -1,6 +1,6 @@
 package com.lhmd.rechnerarchitektur.computing;
 
-import com.lhmd.rechnerarchitektur.InterruptManager;
+import com.lhmd.rechnerarchitektur.*;
 import com.lhmd.rechnerarchitektur.common.Runner;
 import com.lhmd.rechnerarchitektur.configuration.*;
 import com.lhmd.rechnerarchitektur.events.*;
@@ -16,26 +16,30 @@ public class Cpu extends Thread implements AutoCloseable {
     private final UserConfig userConfig;
     private final RuntimeManager runtimeManager;
     private final InterruptManager interruptManager;
+    private final SleepManager sleepManager;
     private final ProgramCounter programCounter;
     private final Set<Integer> breakpointAddresses;
 
     private final ActionEvent onBreakpointReached;
-    private final ActionEvent onNextInstruction;
+    private final ActionEvent onBeforeInstruction;
+    private final ActionEvent onAfterInstruction;
 
     private volatile ProgramMemory programMemory;
 
     private volatile boolean isRunning;
     private volatile boolean isPaused;
 
-    public Cpu(UserConfigService userConfigService, RuntimeManager runtimeManager, InterruptManager interruptManager, ProgramCounter programCounter) {
+    public Cpu(UserConfigService userConfigService, RuntimeManager runtimeManager, InterruptManager interruptManager, SleepManager sleepManager, ProgramCounter programCounter) {
         this.userConfig = userConfigService.config();
         this.runtimeManager = runtimeManager;
         this.interruptManager = interruptManager;
+        this.sleepManager = sleepManager;
         this.programCounter = programCounter;
         this.breakpointAddresses = new HashSet<>();
 
         this.onBreakpointReached = new ActionEvent();
-        this.onNextInstruction = new ActionEvent();
+        this.onBeforeInstruction = new ActionEvent();
+        this.onAfterInstruction = new ActionEvent();
 
         this.isRunning = true;
         this.isPaused = true;
@@ -72,8 +76,12 @@ public class Cpu extends Thread implements AutoCloseable {
         return onBreakpointReached;
     }
 
-    public ActionEvent onNextInstruction() {
-        return onNextInstruction;
+    public ActionEvent onBeforeInstruction() {
+        return onBeforeInstruction;
+    }
+
+    public ActionEvent onAfterInstruction() {
+        return onAfterInstruction;
     }
 
     public void addBreakpoint(int address) {
@@ -94,19 +102,21 @@ public class Cpu extends Thread implements AutoCloseable {
         if (!isPaused) {
             notify();
         }
+
+        sleepManager.wakeup();
     }
 
     public void nextInstruction() {
         if (!isRunning) return;
 
-        onNextInstruction.fire();
+        onBeforeInstruction.fire();
 
         var address = programCounter.get();
+        var currentInstruction = programMemory.get(address);
+
         programCounter.increment();
 
-        var currentInstruction = programMemory.get(address);
         currentInstruction.execute();
-
         runtimeManager.addCycle();
 
         if (currentInstruction.isTwoCycle()) {
@@ -114,6 +124,8 @@ public class Cpu extends Thread implements AutoCloseable {
         }
 
         interruptManager.handleInterrupt();
+
+        onAfterInstruction.fire();
     }
 
     private void pauseOnBreakpoint() {

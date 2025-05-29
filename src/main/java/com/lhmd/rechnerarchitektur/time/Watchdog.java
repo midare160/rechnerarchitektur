@@ -2,6 +2,7 @@ package com.lhmd.rechnerarchitektur.time;
 
 import com.lhmd.rechnerarchitektur.events.*;
 import com.lhmd.rechnerarchitektur.registers.StatusRegister;
+import com.lhmd.rechnerarchitektur.values.IntBox;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.annotation.Order;
@@ -15,12 +16,14 @@ public class Watchdog {
     private final StatusRegister statusRegister;
     private final ApplicationEventPublisher eventPublisher;
 
-    private int timer;
+    private final IntBox timer;
 
     public Watchdog(Prescaler prescaler, StatusRegister statusRegister, ApplicationEventPublisher eventPublisher) {
         this.prescaler = prescaler;
         this.statusRegister = statusRegister;
         this.eventPublisher = eventPublisher;
+
+        this.timer = new IntBox();
     }
 
     @EventListener
@@ -29,15 +32,19 @@ public class Watchdog {
         reset();
     }
 
+    public IntBox timer() {
+        return timer;
+    }
+
     public void increment() {
         // Prescaler is assigned to Watchdog and did not overflow on increment => WDT does not get incremented
         if (prescaler.assignment() == PrescalerAssignment.WATCHDOG && !prescaler.increment()) {
             return;
         }
 
-        timer++;
+        timer.increment();
 
-        if (timer < RESET_TIME) {
+        if (timer.get() < RESET_TIME) {
             return;
         }
 
@@ -46,6 +53,6 @@ public class Watchdog {
     }
 
     public void reset() {
-        timer = 0;
+        timer.set(0);
     }
 }
