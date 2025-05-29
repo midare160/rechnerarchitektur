@@ -2,11 +2,18 @@ package com.lhmd.rechnerarchitektur.values;
 
 import com.lhmd.rechnerarchitektur.events.ChangedEvent;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.*;
 
-public class Box<T extends Comparable<T>> implements Comparable<Box<T>> {
+public class Box<T extends Comparable<T>> implements Comparable<Box<T>>, Serializable {
+    @Serial
+    private static final long serialVersionUID = 1;
+
     private final boolean nullable;
-    private final ChangedEvent<T> onChanged;
+    private transient ChangedEvent<T> onChanged;
 
     private T value;
 
@@ -63,7 +70,13 @@ public class Box<T extends Comparable<T>> implements Comparable<Box<T>> {
         return value.compareTo(other.value);
     }
 
-    private void throwWhenNotNullable(T value){
+    @Serial
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        onChanged = new ChangedEvent<>();
+    }
+
+    private void throwWhenNotNullable(T value) {
         if (value == null && !nullable) {
             throw new NullPointerException("Value cannot be null");
         }
