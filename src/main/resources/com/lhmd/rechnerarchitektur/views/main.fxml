@@ -23,6 +23,9 @@
             <Tab text="Pins">
                 <PinTable fx:id="pinTable" FxUtils.allAnchors="0"/>
             </Tab>
+            <Tab text="EEPROM">
+                <EEMemoryTable fx:id="eeMemoryTable" FxUtils.allAnchors="0"/>
+            </Tab>
         </TabPane>
     </SplitPane>
     <MainFooter fx:id="mainFooter"/>

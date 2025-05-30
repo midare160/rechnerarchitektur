@@ -2,10 +2,7 @@ package com.lhmd.rechnerarchitektur.values;
 
 import com.lhmd.rechnerarchitektur.events.ChangedEvent;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.Serial;
-import java.io.Serializable;
+import java.io.*;
 import java.util.*;
 
 public class Box<T extends Comparable<T>> implements Comparable<Box<T>>, Serializable {

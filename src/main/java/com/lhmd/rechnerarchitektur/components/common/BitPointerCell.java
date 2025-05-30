@@ -40,6 +40,7 @@ public class BitPointerCell extends Label {
         this.intBox = intBox;
         this.intBox.onChanged().addListener(changeListener);
 
+        updateText();
         resetChanged();
     }
 
