@@ -1,12 +1,15 @@
 package com.lhmd.rechnerarchitektur.components.common;
 
+import com.lhmd.rechnerarchitektur.common.IntUtils;
 import com.lhmd.rechnerarchitektur.events.ChangeListener;
 import com.lhmd.rechnerarchitektur.values.IntBox;
 import javafx.application.Platform;
 import javafx.beans.NamedArg;
+import javafx.beans.binding.Bindings;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
 import javafx.util.Duration;
@@ -83,6 +86,7 @@ public class BitPointerRow extends HBox {
         label.setAlignment(Pos.CENTER_RIGHT);
         label.setMaxHeight(Double.MAX_VALUE);
         label.getStyleClass().addAll("monospaced", "text-bold");
+        label.setOnMouseClicked(this::onNameLabelMouseClicked);
 
         getChildren().addAll(label, new Separator(Orientation.VERTICAL));
 
@@ -94,5 +98,25 @@ public class BitPointerRow extends HBox {
         var text = "%sb\n%Xh\n%<dd".formatted(Integer.toBinaryString(currentValue), currentValue);
 
         Platform.runLater(() -> tooltip.setText(text));
+    }
+
+    private void onNameLabelMouseClicked(MouseEvent event) {
+        if (intBox == null || event.getClickCount() < 2) {
+            return;
+        }
+
+        var dialog = new TextInputDialog(String.valueOf(intBox.get()));
+        var okButton = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
+        var inputField = dialog.getEditor();
+        var isInvalid = Bindings.createBooleanBinding(() -> IntUtils.tryDecode(inputField.getText()) == null, inputField.textProperty());
+
+        okButton.disableProperty().bind(isInvalid);
+        dialog.initOwner(getScene().getWindow());
+        dialog.setHeaderText(name);
+        dialog.setTitle("Edit value");
+
+        dialog.showAndWait()
+                .map(IntUtils::tryDecode)
+                .ifPresent(intBox::set);
     }
 }

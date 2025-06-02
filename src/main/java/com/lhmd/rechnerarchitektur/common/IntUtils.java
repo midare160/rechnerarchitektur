@@ -26,6 +26,41 @@ public final class IntUtils {
         }
     }
 
+    /**
+     * Tries to decode the passed {@code value}.
+     * <p>Supported formats:</p>
+     * <ul>
+     *     <li>Decimal: {@code 1}, {@code 1d}</li>
+     *     <li>Hex: {@code 0x1}, {@code 1h}</li>
+     *     <li>Binary: {@code 0b1}</li>
+     * </ul>
+     */
+    public static Integer tryDecode(String value) {
+        if (StringUtils.isNullOrWhitespace(value)) {
+            return null;
+        }
+
+        value = value.toLowerCase();
+
+        if (value.startsWith("0x")) {
+            return tryParse(value.substring(2), 16);
+        }
+
+        if (value.endsWith("h")) {
+            return tryParse(value.substring(0, value.length() - 1), 16);
+        }
+
+        if (value.startsWith("0b")) {
+            return tryParse(value.substring(2), 2);
+        }
+
+        if (value.endsWith("d")) {
+            return tryParse(value.substring(0, value.length() - 1), 10);
+        }
+
+        return tryParse(value, 10);
+    }
+
     public static boolean isBitSet(int value, int index) {
         requireValidBitIndex(index);
 
