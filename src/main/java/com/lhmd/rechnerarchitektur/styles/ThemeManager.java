@@ -14,9 +14,9 @@ import java.util.*;
 @Lazy
 public class ThemeManager {
     @SuppressWarnings("DataFlowIssue")
-    private static final String LIGHTSTYLE_URL = JavaFxApplication.class.getResource("styles/theme-light.css").toExternalForm();
+    private static final String LIGHTSTYLE_URL = JavaFxApplication.class.getResource("styles/theme-light.css").toString();
     @SuppressWarnings("DataFlowIssue")
-    private static final String DARKSTYLE_URL = JavaFxApplication.class.getResource("styles/theme-dark.css").toExternalForm();
+    private static final String DARKSTYLE_URL = JavaFxApplication.class.getResource("styles/theme-dark.css").toString();
 
     private final UserConfig userConfig;
     private final Map<String, Theme> themes;
