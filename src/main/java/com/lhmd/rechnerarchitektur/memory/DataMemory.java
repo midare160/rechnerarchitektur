@@ -1,10 +1,8 @@
 package com.lhmd.rechnerarchitektur.memory;
 
-import com.lhmd.rechnerarchitektur.events.ResetEvent;
 import com.lhmd.rechnerarchitektur.values.IntBox;
 import com.lhmd.rechnerarchitektur.common.IntUtils;
 import com.lhmd.rechnerarchitektur.registers.*;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -18,7 +16,7 @@ public class DataMemory {
     public static final int REGISTER_MAX_SIZE = (int) Math.pow(2, REGISTER_WIDTH);
 
     private final StatusRegister statusRegister;
-    private final IntBox[] registers;
+    private final List<IntBox> registers;
 
     public DataMemory(List<SpecialRegister> specialRegisters, StatusRegister statusRegister) {
         this.statusRegister = statusRegister;
@@ -32,14 +30,14 @@ public class DataMemory {
             address = IntUtils.changeBit(address, 7, statusRegister.getRP0());
         }
 
-        return registers[address];
+        return registers.get(address);
     }
 
     public List<IntBox> registers() {
-        return List.of(registers);
+        return registers;
     }
 
-    private IntBox[] createInitialRegisters(List<SpecialRegister> specialRegisters) {
+    private List<IntBox> createInitialRegisters(List<SpecialRegister> specialRegisters) {
         var specialRegistersMap = getSpecialRegistersMap(specialRegisters);
         var mirroredAddresses = getMirroredAddresses(specialRegistersMap);
         var registerArray = new IntBox[MAX_SIZE];
@@ -63,7 +61,7 @@ public class DataMemory {
             }
         }
 
-        return registerArray;
+        return List.of(registerArray);
     }
 
     private Map<Integer, SpecialRegister> getSpecialRegistersMap(List<SpecialRegister> specialRegisters) {

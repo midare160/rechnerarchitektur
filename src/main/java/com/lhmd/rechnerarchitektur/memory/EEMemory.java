@@ -1,5 +1,6 @@
 package com.lhmd.rechnerarchitektur.memory;
 
+import com.lhmd.rechnerarchitektur.changes.ChangeManager;
 import com.lhmd.rechnerarchitektur.common.Runner;
 import com.lhmd.rechnerarchitektur.registers.*;
 import com.lhmd.rechnerarchitektur.time.RuntimeManager;
@@ -22,7 +23,8 @@ public class EEMemory implements AutoCloseable {
     private final EECon2Register eeCon2Register;
     private final EEDataRegister eeDataRegister;
     private final EEAdrRegister eeAdrRegister;
-    private final IntBox[] registers;
+    private final List<IntBox> registers;
+    private final ChangeManager changeManager;
 
     private boolean isEECon2Unlocked;
 
@@ -34,6 +36,7 @@ public class EEMemory implements AutoCloseable {
         this.eeAdrRegister = eeAdrRegister;
 
         this.registers = Runner.unchecked(this::loadRegisters);
+        this.changeManager = new ChangeManager();
 
         this.eeCon1Register.onChanged().addListener(this::onEECon1Changed);
         this.eeCon2Register.onChanged().addListener(this::onEECon2Changed);
@@ -47,27 +50,27 @@ public class EEMemory implements AutoCloseable {
     }
 
     public List<IntBox> registers() {
-        return List.of(registers);
+        return registers;
     }
 
-    private IntBox[] loadRegisters() throws IOException, ClassNotFoundException {
+    private List<IntBox> loadRegisters() throws IOException, ClassNotFoundException {
         if (Files.notExists(Path.of(FILE_PATH))) {
             return createInitialRegisters();
         }
 
         try (var reader = new ObjectInputStream(new FileInputStream(FILE_PATH))) {
-            return (IntBox[]) reader.readObject();
+            return (List<IntBox>) reader.readObject();
         }
     }
 
-    private IntBox[] createInitialRegisters() {
-        var registers = new IntBox[MAX_SIZE];
+    private List<IntBox> createInitialRegisters() {
+        var registerArray = new IntBox[MAX_SIZE];
 
-        for (int i = 0; i < registers.length; i++) {
-            registers[i] = new IntBox();
+        for (int i = 0; i < registerArray.length; i++) {
+            registerArray[i] = new IntBox();
         }
 
-        return registers;
+        return List.of(registerArray);
     }
 
     /**
@@ -76,13 +79,13 @@ public class EEMemory implements AutoCloseable {
      * EEDATA will hold this value until another read or until it is written to by the user (during a write operation).
      * At the completion of the read cycle, the RD bit is cleared.
      */
-    private void read() {
+    private void tryRead() {
         if (!eeCon1Register.getRD()) {
             return;
         }
 
         var address = eeAdrRegister.get();
-        var data = registers[address].get();
+        var data = registers.get(address).get();
 
         eeDataRegister.set(data);
 
@@ -94,7 +97,7 @@ public class EEMemory implements AutoCloseable {
      * Additionally, the WREN bit in EECON1 must be set to enable write.
      * At the completion of the write cycle, the WR bit is cleared and the EE Write Complete Interrupt Flag bit (EEIF) is set.
      */
-    private void write() {
+    private void tryWrite() {
         if (!isEECon2Unlocked || !eeCon1Register.getWR() || !eeCon1Register.getWREN()) {
             return;
         }
@@ -102,7 +105,7 @@ public class EEMemory implements AutoCloseable {
         var address = eeAdrRegister.get();
         var data = eeDataRegister.get();
 
-        registers[address].set(data);
+        registers.get(address).set(data);
 
         // Write cycles have a write time of ~1ms => 1000µs
         runtime.set(runtime.get() + 1000);
@@ -113,8 +116,14 @@ public class EEMemory implements AutoCloseable {
     }
 
     private void onEECon1Changed(Integer oldValue, Integer newValue) {
-        read();
-        write();
+        if (changeManager.isChanging()) {
+            return;
+        }
+
+        try (var ignored = changeManager.beginChange()) {
+            tryRead();
+            tryWrite();
+        }
     }
 
     private void onEECon2Changed(Integer oldValue, Integer newValue) {
