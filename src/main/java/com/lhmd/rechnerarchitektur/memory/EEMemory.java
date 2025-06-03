@@ -53,6 +53,7 @@ public class EEMemory implements AutoCloseable {
         return registers;
     }
 
+    @SuppressWarnings("unchecked")
     private List<IntBox> loadRegisters() throws IOException, ClassNotFoundException {
         if (Files.notExists(Path.of(FILE_PATH))) {
             return createInitialRegisters();
@@ -66,7 +67,7 @@ public class EEMemory implements AutoCloseable {
     private List<IntBox> createInitialRegisters() {
         var registerArray = new IntBox[MAX_SIZE];
 
-        for (int i = 0; i < registerArray.length; i++) {
+        for (var i = 0; i < registerArray.length; i++) {
             registerArray[i] = new IntBox();
         }
 

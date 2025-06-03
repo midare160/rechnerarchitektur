@@ -18,16 +18,12 @@ import java.io.IOException;
 
 @SpringBootApplication
 public class JavaFxApplication extends Application {
-    public static void main(String[] args) {
-        Thread.setDefaultUncaughtExceptionHandler((t, e) -> ExceptionHandler.handle(e));
-
-        launch(args);
-    }
-
     private ConfigurableApplicationContext context;
 
     @Override
     public void init() {
+        Thread.setDefaultUncaughtExceptionHandler((t, e) -> ExceptionHandler.handle(e));
+
         context = new SpringApplicationBuilder()
                 .bannerMode(Banner.Mode.OFF)
                 .sources(JavaFxApplication.class)
