@@ -43,6 +43,9 @@ public class MainView {
     private PinTable pinTable;
 
     @FXML
+    private EEMemoryTable eeMemoryTable;
+
+    @FXML
     private MainFooter mainFooter;
 
     private final Cpu cpu;
@@ -82,6 +85,7 @@ public class MainView {
         registerTable.initialize(beanFactory);
         stackTable.initialize(beanFactory);
         pinTable.initialize(beanFactory);
+        eeMemoryTable.initialize(beanFactory);
         mainFooter.initialize(beanFactory);
     }
 
@@ -168,6 +172,7 @@ public class MainView {
         registerTable.resetChanged();
         stackTable.resetChanged();
         pinTable.resetChanged();
+        eeMemoryTable.resetChanged();
         mainFooter.resetChanged();
     }
 }

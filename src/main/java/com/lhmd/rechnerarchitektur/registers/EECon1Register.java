@@ -31,12 +31,36 @@ public class EECon1Register extends SpecialRegister {
         set(IntUtils.changeBits(get(), pattern));
     }
 
+    public boolean getRD() {
+        return isBitSet(RD_INDEX);
+    }
+
+    public void setRD(boolean value) {
+        setBit(RD_INDEX, value);
+    }
+
     public boolean getWR() {
         return isBitSet(WR_INDEX);
     }
 
     public void setWR(boolean value) {
         setBit(WR_INDEX, value);
+    }
+
+    public boolean getWREN() {
+        return isBitSet(WREN_INDEX);
+    }
+
+    public void setWREN(boolean value) {
+        setBit(WREN_INDEX, value);
+    }
+
+    public boolean getWRERR() {
+        return isBitSet(WRERR_INDEX);
+    }
+
+    public void setWRERR(boolean value) {
+        setBit(WRERR_INDEX, value);
     }
 
     public boolean getEEIF() {

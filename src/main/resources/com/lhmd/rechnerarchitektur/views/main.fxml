@@ -6,14 +6,14 @@
 <?import com.lhmd.rechnerarchitektur.components.*?>
 <?import com.lhmd.rechnerarchitektur.common.FxUtils?>
 
-<VBox fx:id="root" fx:controller="com.lhmd.rechnerarchitektur.views.MainView" prefWidth="900.0" prefHeight="600.0"
+<VBox fx:id="root" fx:controller="com.lhmd.rechnerarchitektur.views.MainView" prefWidth="900" prefHeight="600"
       xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
     <MainMenuBar fx:id="mainMenuBar"/>
-    <SplitPane dividerPositions="0.75" focusTraversable="true" VBox.vgrow="ALWAYS">
+    <SplitPane dividerPositions="0.66" focusTraversable="true" VBox.vgrow="ALWAYS">
         <AnchorPane>
             <InstructionsTableView fx:id="instructionsTableView" FxUtils.allAnchors="0"/>
         </AnchorPane>
-        <TabPane tabClosingPolicy="UNAVAILABLE" minWidth="280">
+        <TabPane tabClosingPolicy="UNAVAILABLE" minWidth="200" SplitPane.resizableWithParent="false">
             <Tab text="Registers">
                 <RegisterTable fx:id="registerTable" FxUtils.allAnchors="0"/>
             </Tab>
@@ -22,6 +22,9 @@
             </Tab>
             <Tab text="Pins">
                 <PinTable fx:id="pinTable" FxUtils.allAnchors="0"/>
+            </Tab>
+            <Tab text="EEPROM">
+                <EEMemoryTable fx:id="eeMemoryTable" FxUtils.allAnchors="0"/>
             </Tab>
         </TabPane>
     </SplitPane>

@@ -9,7 +9,7 @@ public class ProgramMemory {
     public static final int INSTRUCTION_WIDTH = 14;
     public static final int INSTRUCTION_MAX_SIZE = (int) Math.pow(2, INSTRUCTION_WIDTH);
 
-    private final InstructionBase[] instructions;
+    private final List<InstructionBase> instructions;
 
     /**
      * Initializes this instance with the passed {@code instructionMap}.
@@ -21,21 +21,27 @@ public class ProgramMemory {
             throw new IllegalArgumentException("Instructions collection may only be " + MAX_SIZE + " elements big");
         }
 
-        instructions = new InstructionBase[MAX_SIZE];
+        this.instructions = createInstructionList(instructionMap);
+    }
 
-        for (var i = 0; i < instructions.length; i++) {
-            instructions[i] = instructionMap.getOrDefault(i, Nop.DEFAULT);
-        }
+    public List<InstructionBase> instructions() {
+        return instructions;
     }
 
     public InstructionBase get(int address) {
         // Accessing a location above the physically implemented address will cause a wrap-around.
         // For example, for the locations 20h, 420h, 820h, C20h, 1020h, 1420h, 1820h, and 1C20h
         // will be the same instruction.
-        return instructions[Math.floorMod(address, MAX_SIZE)];
+        return instructions.get(Math.floorMod(address, MAX_SIZE));
     }
 
-    public List<InstructionBase> instructions() {
-        return List.of(instructions);
+    private List<InstructionBase> createInstructionList(Map<Integer, InstructionBase> instructionMap) {
+        var instructionArray = new InstructionBase[MAX_SIZE];
+
+        for (var i = 0; i < instructionArray.length; i++) {
+            instructionArray[i] = instructionMap.getOrDefault(i, Nop.DEFAULT);
+        }
+
+        return List.of(instructionArray);
     }
 }

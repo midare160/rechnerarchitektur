@@ -56,7 +56,7 @@ public class UserConfigService implements AutoCloseable {
     }
 
     private UserConfig load() throws IOException {
-        if (!Files.exists(FILE_PATH)) {
+        if (Files.notExists(FILE_PATH)) {
             return new UserConfig();
         }
 

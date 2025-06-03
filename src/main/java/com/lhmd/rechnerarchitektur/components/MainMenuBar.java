@@ -10,6 +10,7 @@ import javafx.animation.PauseTransition;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.HBox;
 import javafx.stage.*;
@@ -190,6 +191,7 @@ public class MainMenuBar extends HBox {
         fireEvent(new MainMenuBarEvent<>(MainMenuBarEvent.ON_FILE_CLOSED));
     }
 
+    @SuppressWarnings("DataFlowIssue")
     private void onPreferencesMenuItemAction(ActionEvent e) {
         var loader = new FXMLLoader(JavaFxApplication.class.getResource("views/preferences.fxml"));
         loader.setControllerFactory(c -> preferencesProvider.getObject());
@@ -202,6 +204,7 @@ public class MainMenuBar extends HBox {
         stage.initModality(Modality.WINDOW_MODAL);
         stage.setScene(scene);
         stage.setResizable(false);
+        stage.getIcons().add(new Image(JavaFxApplication.class.getResource("images/settings.png").toString()));
         stage.setTitle("Preferences");
 
         stage.show();
