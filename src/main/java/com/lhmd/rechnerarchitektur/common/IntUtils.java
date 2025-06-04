@@ -54,6 +54,10 @@ public final class IntUtils {
             return tryParse(value.substring(2), 2);
         }
 
+        if (value.endsWith("b")) {
+            return tryParse(value.substring(0, value.length() - 1), 2);
+        }
+
         if (value.endsWith("d")) {
             return tryParse(value.substring(0, value.length() - 1), 10);
         }
