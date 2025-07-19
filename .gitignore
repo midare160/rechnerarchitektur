@@ -36,4 +36,4 @@ build/
 
 application.yml
 user.yml
-eeprom.txt
+eeprom.bin

@@ -16,7 +16,7 @@ public class EEMemory implements AutoCloseable {
     public static final int MAX_SIZE = 64;
     public static final int REGISTER_WIDTH = 8;
 
-    private static final String FILE_PATH = "eeprom.txt";
+    private static final String FILE_PATH = "eeprom.bin";
 
     private final DoubleBox runtime;
     private final EECon1Register eeCon1Register;
